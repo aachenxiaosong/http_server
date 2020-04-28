@@ -1,2 +1,18 @@
-git clone https://github.com/libevent/libevent.git
-see README for compiling
+安装了gcc和git之后，将此仓库clone到机器下。
+
+第一步 准备
+》关闭防火墙 - 关闭和禁止开机启动
+systemctl stop firewalld.service
+systemctl disable firewalld.service 
+》查看ip
+Ifconfig
+
+
+第二步 配置supervisor
+1，修改配置文件/etc/supervisord.conf
+2，在/etc/supervisord.d/下添加http.ini
+3，配置supervisor服务开机启动：systemctrl enable supervisord.service
+4，启动/关闭/重启supervisor服务：systemctrl start/stop/restart supervisord.service
+5，supervisorctrl进入命令行
+开启或关闭某个进程：start/stop xxx
+查看状态：status
