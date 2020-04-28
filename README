@@ -21,8 +21,9 @@ $ systemctl start supervisord
 1，修改配置文件/etc/supervisord.conf
 2，sudo cp config/http.ini /etc/supervisord.d/
 3, mkdir /home/centos/log/
-4，配置supervisor服务开机启动：systemctrl enable supervisord.service
-5，启动/关闭/重启supervisor服务：systemctrl start/stop/restart supervisord.service
-6，supervisorctrl进入命令行
+4, touch /var/run/supervisor/supervisor.sock 
+5，配置supervisor服务开机启动：systemctrl enable supervisord.service
+6，启动/关闭/重启supervisor服务：systemctrl start/stop/restart supervisord.service
+7，supervisorctrl进入命令行
 开启或关闭某个进程：start/stop xxx
 查看状态：status
