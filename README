@@ -7,6 +7,15 @@ systemctl disable firewalld.service 
 》查看ip
 Ifconfig
 
+第二步 安装supervisor
+$ yum install epel-release -y 
+##安装supervisor服务
+$ yum install -y supervisor
+##加入开机启动
+$ systemctl enable supervisord
+##启动服务
+$ systemctl start supervisord
+
 
 第二步 配置supervisor
 1，修改配置文件/etc/supervisord.conf
