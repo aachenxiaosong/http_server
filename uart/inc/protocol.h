@@ -1,6 +1,10 @@
 #ifndef UART_INC_PROTOCOL_H_
 #define UART_INC_PROTOCOL_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
   EVENT_CALL_LIFT = 2,
   EVENT_EXTER_VISIT = 3,
@@ -12,5 +16,8 @@ typedef enum {
 
 int protocol_send(int event_type, void *request, void *response);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  //  UART_INC_PROTOCOL_H_
 

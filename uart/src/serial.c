@@ -216,7 +216,7 @@ static void *_sending_process(void *arg) {
   return 0;
 }
 
-static void *_recving_process() {
+static void *_recving_process(void *arg) {
   char recv_byte;
   fd_set rfds;
   struct timeval tv;

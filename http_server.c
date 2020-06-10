@@ -197,7 +197,7 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
 int main() {
   struct evhttp *http_server = NULL;
   short http_port = 8080;
-  char *http_addr = "0.0.0.0";
+  const char *http_addr = "0.0.0.0";
 
   //串口
   if (0 != serial_init()) {

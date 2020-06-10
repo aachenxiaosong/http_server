@@ -24,7 +24,7 @@ INC := -Iinclude \
 LIB := -Llib -levent-2.2 -lm -lpthread
 
 $(target):
-	gcc $(src_file) $(INC) $(LIB) -o $@
+	g++ $(src_file) $(INC) $(LIB) -o $@
 
 clean:
 	rm -rf $(target)
