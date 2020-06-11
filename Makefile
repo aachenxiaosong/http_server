@@ -4,6 +4,7 @@ all: $(target)
 src_file := src/main.c \
 						src/http_server/http_server.cpp \
 						src/http_server/http_request_handler.cpp \
+						src/service/rili/rili_call_lift.cpp \
 						src/service/call_lift.c \
 						src/service/exter_visit.c \
 						src/service/inter_visit.c \
@@ -18,6 +19,7 @@ src_file := src/main.c \
 
 INC := -Iinclude \
 			-Isrc/http_server \
+			-Isrc/service/rili \
 			 -Isrc/service \
        		 -Isrc/uart/inc \
 			 -Isrc/utils/cJSON/inc \

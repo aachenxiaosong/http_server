@@ -8,7 +8,7 @@ class HttpRequestHandler {
     private:
     string name;
     public:
-    HttpRequestHandler(string& name) ;
+    HttpRequestHandler(const char* name) ;
     string getName(); 
     virtual int handle(string& path, string& request, string&response) = 0;
 };

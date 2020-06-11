@@ -1,6 +1,8 @@
 #include "log.h"
 #include "serial.h"
 #include "http_server.h"
+#include "http_request_handler.h"
+#include "rili_call_lift.h"
 
 int main() { 
   //串口
@@ -12,6 +14,8 @@ int main() {
       LOGE("http server init failed");
       //return -1;
   }
+  HttpRequestHandler *handler = new RiliCallLift();
+  http_server_add_handler(handler);
   while(1) {
     sleep(100);    
   }

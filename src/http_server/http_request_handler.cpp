@@ -1,6 +1,6 @@
 #include "http_request_handler.h"
 
-HttpRequestHandler::HttpRequestHandler(string& name) {
+HttpRequestHandler::HttpRequestHandler(const char* name) {
     this->name = name;
 }
 
