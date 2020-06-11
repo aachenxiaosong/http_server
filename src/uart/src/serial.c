@@ -269,14 +269,14 @@ static int _init_thread() {
     LOGE("_recving_process pthread_create fail!");
     return ret;
   }
-  LOGE("create recving thread success");
+  LOGT("create recving thread success");
   usleep(500 * 1000);
   ret = pthread_create(&sending_pid, NULL, &_sending_process, NULL);
   if (ret != 0) {
     LOGE("_sending_process pthread_create fail!");
     return ret;
   }
-  LOGE("create sending thread success");
+  LOGT("create sending thread success");
   return 0;
 }
 

@@ -3,6 +3,7 @@
 #include <evhttp.h>
 #include <event.h>
 #include <string.h>
+#include <pthread.h>
 #include "event2/http.h"
 #include "event2/event.h"
 #include "event2/buffer.h"
@@ -18,25 +19,27 @@
 #include "inter_visit.h"
 #include "get_home.h"
 #include "lift_status.h"
-#include "serial.h"
 #include "log.h"
+#include <vector>
+
+#include "http_request_handler.h"
+#include "http_server.h"
 
 #define BUF_MAX (1024 * 16)
 
+vector<HttpRequestHandler *> g_http_handlers;
 
 //解析http url中的path
-int find_http_path(struct evhttp_request *req, char *result) {
+static int find_http_path(struct evhttp_request *req, char *result) {
   if(req == NULL) {
     LOGE("wrong params");
     return -1;
   }
-
   struct evhttp_uri *decoded = NULL;
   char *query = NULL;
   char *query_result = NULL;
   const char *path;
   const char *uri = evhttp_request_get_uri(req);//获取请求uri
-
   if(uri == NULL) {
     LOGE("get uri failed");
     return -1;
@@ -149,16 +152,28 @@ void http_handler_testget_msg(struct evhttp_request *req,void *arg) {
 }
 
 int process_post_request(char *path, char *request, char *response) {
-  if (strcmp(path, "/liftCtrl/v1/callLift") == 0) {
-    return call_lift(request, response);
-  } else if (strcmp(path, "/liftCtrl/v1/exterVisit") == 0) {
-    return exter_visit(request, response);
-  } else if (strcmp(path, "/liftCtrl/v1/interVisit") == 0) {
-    return inter_visit(request, response);
-  } else if (strcmp(path, "/liftCtrl/v1/getHome") == 0) {
-    return get_home(request, response);
-  } else if (strcmp(path, "/liftCtrl/v1/liftStatus") == 0) {
-    return lift_status(request, response);
+  // if (strcmp(path, "/liftCtrl/v1/callLift") == 0) {
+  //   return call_lift(request, response);
+  // } else if (strcmp(path, "/liftCtrl/v1/exterVisit") == 0) {
+  //   return exter_visit(request, response);
+  // } else if (strcmp(path, "/liftCtrl/v1/interVisit") == 0) {
+  //   return inter_visit(request, response);
+  // } else if (strcmp(path, "/liftCtrl/v1/getHome") == 0) {
+  //   return get_home(request, response);
+  // } else if (strcmp(path, "/liftCtrl/v1/liftStatus") == 0) {
+  //   return lift_status(request, response);
+  // }
+  string spath = path;
+  string srequest = request;
+  string sresponse = "";
+  HttpRequestHandler *handler;
+  for (vector<HttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
+    handler = *it;
+    if (0 == handler->handle(spath, srequest, sresponse)) {
+      sprintf(response, "%s", sresponse.c_str());
+      LOGT("request is handled by %s", handler->getName().c_str());
+      break;
+    }
   }
   return 0;
 }
@@ -194,23 +209,18 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
   evbuffer_free(retbuff);
 }
 
-int main() {
+static void* _httpserver_routine(void *param) {
+  //start http server here
   struct evhttp *http_server = NULL;
   short http_port = 8080;
   const char *http_addr = "0.0.0.0";
-
-  //串口
-  if (0 != serial_init()) {
-    LOGE("uart init failed");
-    return -1;
-  }
   //初始化
   event_init();
   //启动http服务端
   http_server = evhttp_start(http_addr,http_port);
   if(http_server == NULL) {
     LOGE("http server starts failed");
-    return -1;
+    return NULL;
   }
 
   //设置请求超时时间(s)
@@ -224,7 +234,33 @@ int main() {
   event_dispatch();
   //实际上不会释放，代码不会运行到这一步
   evhttp_free(http_server);
-  serial_release();
+  
+  return NULL;
+}
 
+int http_server_start() {
+  pthread_t pid;
+  if (0 != pthread_create(&pid, NULL, _httpserver_routine, NULL)) {
+    LOGE("craete http server routine failed"); 
+    return -1;
+  }
+  pthread_detach(pid);
   return 0;
+}
+
+int http_server_add_handler(HttpRequestHandler *handler) {
+  g_http_handlers.push_back(handler);
+}
+
+int http_server_remove_handler(string handler_name) {
+  HttpRequestHandler *handler;
+  for (vector<HttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
+    handler = *it;
+    if (handler->getName().compare(handler_name) == 0) {
+      g_http_handlers.erase(it);
+      delete handler;
+      return 0;
+    }
+  }
+  return -1;
 }
