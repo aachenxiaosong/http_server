@@ -43,8 +43,8 @@ utils_inc := -Isrc/utils/bitmap/inc \
                            -Isrc/utils/memcheck/inc
 
 src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
-						src/http_server/HttpServer.cpp \
-						src/http_server/IHttpRequestHandler.cpp \
+						src/http_server/src/HttpServer.cpp \
+						src/http_server/src/IHttpRequestHandler.cpp \
 						src/http_service/IHttpService.cpp \
 						src/http_service/rili/RiliHttpService.cpp \
 						src/http_service/rili/RiliCallLiftHttpHandler.cpp \
@@ -56,8 +56,8 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
 						src/http_service/wlong/WlongTakeLiftHttpHandler.cpp
 					
 
-INC := $(hal_inc) $(utils_inc) -Iinclude \
-			-Isrc/http_server \
+INC := $(hal_inc) $(utils_inc) \
+			-Isrc/http_server/inc \
 			-Isrc/http_service \
 			-Isrc/http_service/rili \
 			-Isrc/http_service/wlong \
