@@ -3,6 +3,7 @@
 #include "HttpServer.hpp"
 #include "IHttpService.hpp"
 #include "RiliHttpService.hpp"
+#include "WlongHttpService.hpp"
 
 
 int main() { 
@@ -16,7 +17,7 @@ int main() {
         //return -1;
     }
     
-    IHttpService *http_service = new RiliHttpService();
+    IHttpService *http_service = new WlongHttpService();
     http_service->registerHttpHandler();
     while(1) {
         sleep(100); 

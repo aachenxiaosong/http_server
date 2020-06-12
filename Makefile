@@ -9,6 +9,10 @@ src_file := src/Main.cpp \
 						src/http_service/rili/RiliCallLiftHttpHandler.cpp \
 						src/http_service/rili/RiliBookLiftHttpHandler.cpp \
 						src/http_service/rili/RiliTakeLiftHttpHandler.cpp \
+						src/http_service/wlong/WlongHttpService.cpp \
+						src/http_service/wlong/WlongCallLiftHttpHandler.cpp \
+						src/http_service/wlong/WlongBookLiftHttpHandler.cpp \
+						src/http_service/wlong/WlongTakeLiftHttpHandler.cpp \
 						src/uart/src/serial.c \
 						src/utils/cJSON/src/cJSON.c \
 						src/utils/list/src/list_head.c \
@@ -18,6 +22,7 @@ INC := -Iinclude \
 			-Isrc/http_server \
 			-Isrc/http_service \
 			-Isrc/http_service/rili \
+			-Isrc/http_service/wlong \
 			-Isrc/uart/inc \
 			-Isrc/utils/cJSON/inc \
 			-Isrc/utils/list/inc \
