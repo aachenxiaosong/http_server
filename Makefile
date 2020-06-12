@@ -18,10 +18,12 @@ utils_src_file := src/utils/bitmap/src/uni_bitmap.c \
             src/utils/cJSON/src/uni_json.c \
             src/utils/cJSON/src/cJSON.c \
             src/utils/data_buf/src/uni_databuf.c \
+			src/utils/encrypt/src/uni_sha.c \
             src/utils/event/src/uni_event.c \
             src/utils/event_list/src/uni_event_list.c \
             src/utils/fsm/src/uni_fsm.c \
             src/utils/hash/src/bkdr_hash.c \
+            src/utils/http/src/uni_http.c \
             src/utils/interruptable_sleep/src/uni_interruptable.c \
             src/utils/list/src/list_head.c \
             src/utils/log/src/uni_log.c \
@@ -31,9 +33,11 @@ utils_src_file := src/utils/bitmap/src/uni_bitmap.c \
 utils_inc := -Isrc/utils/bitmap/inc \
                            -Isrc/utils/cJSON/inc \
                            -Isrc/utils/data_buf/inc \
+						   -Isrc/utils/encrypt/inc \
                            -Isrc/utils/event/inc \
                            -Isrc/utils/event_list/inc \
                            -Isrc/utils/hash/inc \
+                           -Isrc/utils/http/inc \
                            -Isrc/utils/fsm/inc \
                            -Isrc/utils/interruptable_sleep/inc \
                            -Isrc/utils/list/inc \
@@ -53,7 +57,13 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
 						src/http_service/wlong/WlongHttpService.cpp \
 						src/http_service/wlong/WlongCallLiftHttpHandler.cpp \
 						src/http_service/wlong/WlongBookLiftHttpHandler.cpp \
-						src/http_service/wlong/WlongTakeLiftHttpHandler.cpp
+						src/http_service/wlong/WlongTakeLiftHttpHandler.cpp \
+						src/mc/src/MQTTClient.c \
+						src/mc/src/MQTTLinux.c \
+						src/mc/src/uni_mc_param.c \
+						src/mc/src/uni_mc_service.c \
+						src/mc/src/uni_msg_center.c \
+						src/mc/src/uni_cloud_utils.c
 					
 
 INC := $(hal_inc) $(utils_inc) \
@@ -61,12 +71,10 @@ INC := $(hal_inc) $(utils_inc) \
 			-Isrc/http_service \
 			-Isrc/http_service/rili \
 			-Isrc/http_service/wlong \
-			-Isrc/uart/inc \
-			-Isrc/utils/cJSON/inc \
-			-Isrc/utils/list/inc \
-			-Isrc/utils/log/inc
+			-Isrc/mc/inc \
+			-Isrc/mc/inc/mqtt
 
-LIB := -Llib -levent-2.2 -lm -lpthread
+LIB := -Llib -levent-2.2 -lpaho-embed-mqtt3c -lcurl -lm -lpthread
 
 $(target):
 	g++ $(src_file) $(INC) $(LIB) -o $@

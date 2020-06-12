@@ -195,7 +195,7 @@ static char *_urlencode_strcpy(char *buf, const char *str) {
 
 char *HttpUrlEncode(const char *str) {
   char *res;
-  res = uni_malloc(_urlencode_strlen(str) + 1);
+  res = (char *)uni_malloc(_urlencode_strlen(str) + 1);
   if (res == NULL) {
     return NULL;
   }
