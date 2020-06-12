@@ -1,11 +1,11 @@
-#include "rili_call_lift.h"
+#include "RiliCallLiftHttpHandler.hpp"
 #include "log.h"
 
-RiliCallLift::RiliCallLift() : HttpRequestHandler("rili_call_lift") {
+RiliCallLiftHttpHandler :: RiliCallLiftHttpHandler() : IHttpRequestHandler("rili_call_lift") {
     LOGT("RiliCallLift object created");
 }
 
-int RiliCallLift::handle(string& path, string& request, string& response) {
+int RiliCallLiftHttpHandler :: handle(string& path, string& request, string& response) {
     if (path.compare("/liftCtrl/v2/callLift") != 0) {
         LOGT("%s is not for RiliCallLift", path.c_str());
         return -1;

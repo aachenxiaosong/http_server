@@ -14,20 +14,20 @@
 #include "event2/util.h"
 #include "event2/listener.h"
 
-#include "call_lift.h"
-#include "exter_visit.h"
-#include "inter_visit.h"
-#include "get_home.h"
-#include "lift_status.h"
+// #include "call_lift.h"
+// #include "exter_visit.h"
+// #include "inter_visit.h"
+// #include "get_home.h"
+// #include "lift_status.h"
 #include "log.h"
 #include <vector>
 
-#include "http_request_handler.h"
-#include "http_server.h"
+#include "IHttpRequestHandler.hpp"
+#include "HttpServer.hpp"
 
 #define BUF_MAX (1024 * 16)
 
-vector<HttpRequestHandler *> g_http_handlers;
+vector<IHttpRequestHandler *> g_http_handlers;
 
 //解析http url中的path
 static int find_http_path(struct evhttp_request *req, char *result) {
@@ -166,8 +166,8 @@ int process_post_request(char *path, char *request, char *response) {
   string spath = path;
   string srequest = request;
   string sresponse = "";
-  HttpRequestHandler *handler;
-  for (vector<HttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
+  IHttpRequestHandler *handler;
+  for (vector<IHttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
     handler = *it;
     if (0 == handler->handle(spath, srequest, sresponse)) {
       sprintf(response, "%s", sresponse.c_str());
@@ -248,13 +248,13 @@ int http_server_start() {
   return 0;
 }
 
-int http_server_add_handler(HttpRequestHandler *handler) {
+int http_server_add_handler(IHttpRequestHandler *handler) {
   g_http_handlers.push_back(handler);
 }
 
 int http_server_remove_handler(string handler_name) {
-  HttpRequestHandler *handler;
-  for (vector<HttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
+  IHttpRequestHandler *handler;
+  for (vector<IHttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
     handler = *it;
     if (handler->getName().compare(handler_name) == 0) {
       g_http_handlers.erase(it);
