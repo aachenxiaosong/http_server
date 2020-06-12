@@ -31,6 +31,7 @@
 #include <limits.h>
 #include <ctype.h>
 #include "cJSON.h"
+#include "uni_iot.h"
 
 static const char *ep;
 
@@ -43,8 +44,8 @@ static int cJSON_strcasecmp(const char *s1,const char *s2)
   return tolower(*(const unsigned char *)s1) - tolower(*(const unsigned char *)s2);
 }
 
-static void *(*cJSON_malloc)(size_t sz) = malloc;
-static void (*cJSON_free)(void *ptr) = free;
+static void *(*cJSON_malloc)(size_t sz) = uni_malloc;
+static void (*cJSON_free)(void *ptr) = uni_free;
 
 static char* cJSON_strdup(const char* str)
 {

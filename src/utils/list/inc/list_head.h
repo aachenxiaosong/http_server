@@ -5,12 +5,9 @@
 extern "C" {
 #endif
 
-#ifndef LIST_HEAD_STRUCT
-#define LIST_HEAD_STRUCT
 typedef struct list_head {
   struct list_head *next, *prev;
 } list_head;
-#endif
 
 #define LIST_HEAD_INIT(obj) { &(obj), &(obj) }
 

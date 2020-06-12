@@ -1,10 +1,12 @@
 #include "WlongHttpService.hpp"
 #include "HttpServer.hpp"
-#include "log.h"
+#include "uni_log.h"
+
+#define WLONG_SERVICE_TAG "wlong_http_service"
 
 WlongHttpService :: WlongHttpService() : 
     IHttpService("wlong_http_service") {
-    LOGT("wlong http service created");
+    LOGT(WLONG_SERVICE_TAG, "wlong http service created");
 }
 
 int WlongHttpService :: registerHttpHandler() {

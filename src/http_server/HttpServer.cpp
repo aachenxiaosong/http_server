@@ -19,20 +19,21 @@
 // #include "inter_visit.h"
 // #include "get_home.h"
 // #include "lift_status.h"
-#include "log.h"
+#include "uni_log.h"
 #include <vector>
 
 #include "IHttpRequestHandler.hpp"
 #include "HttpServer.hpp"
 
 #define BUF_MAX (1024 * 16)
+#define HTTP_SERVER_TAG "http_server"
 
 vector<IHttpRequestHandler *> g_http_handlers;
 
 //解析http url中的path
 static int find_http_path(struct evhttp_request *req, char *result) {
   if(req == NULL) {
-    LOGE("wrong params");
+    LOGE(HTTP_SERVER_TAG, "wrong params");
     return -1;
   }
   struct evhttp_uri *decoded = NULL;
@@ -41,14 +42,14 @@ static int find_http_path(struct evhttp_request *req, char *result) {
   const char *path;
   const char *uri = evhttp_request_get_uri(req);//获取请求uri
   if(uri == NULL) {
-    LOGE("get uri failed");
+    LOGE(HTTP_SERVER_TAG, "get uri failed");
     return -1;
   }
 
   //解码uri
   decoded = evhttp_uri_parse(uri);
   if (!decoded) {
-    LOGE("parse url failed");
+    LOGE(HTTP_SERVER_TAG, "parse url failed");
     evhttp_send_error(req, HTTP_BADREQUEST, 0);
     return -1;
   }
@@ -58,7 +59,7 @@ static int find_http_path(struct evhttp_request *req, char *result) {
   if (path == NULL) {
     path = "/";
   }
-  LOGT("get path: %s", path);
+  LOGT(HTTP_SERVER_TAG, "get path: %s", path);
   strcpy(result, path);
   evhttp_uri_free(decoded);
   return 0;
@@ -71,13 +72,13 @@ int get_post_request(char *request, struct evhttp_request *req) {
   size_t copy_len;
   post_size = evbuffer_get_length(req->input_buffer);//获取数据长度
   if (post_size <= 0) {
-    LOGE("post request is empty!");
+    LOGE(HTTP_SERVER_TAG, "post request is empty!");
     return -1;
   }
   copy_len = post_size > BUF_MAX ? BUF_MAX : post_size;
   memcpy(request, evbuffer_pullup(req->input_buffer, -1), copy_len);
   request[copy_len] = '\0';
-  LOGT("get post request: %s", request);
+  LOGT(HTTP_SERVER_TAG, "get post request: %s", request);
   return 0;
 }
 
@@ -89,26 +90,26 @@ int find_http_header(struct evhttp_request *req, const char *query_char, char *r
   char *query_result = NULL;
   const char *uri;
   if(req == NULL || query_char == NULL || result == NULL) {
-    LOGE("wrong params");
+    LOGE(HTTP_SERVER_TAG, "wrong params");
     return -1;
   }
   uri = evhttp_request_get_uri(req);//获取请求uri
   if(uri == NULL) {
-    LOGE("get uri failed");
+    LOGE(HTTP_SERVER_TAG, "get uri failed");
     return -1;
   }
-  LOGT("get request uri: %s", uri);
+  LOGT(HTTP_SERVER_TAG, "get request uri: %s", uri);
   //解码uri
   decoded = evhttp_uri_parse(uri);
   if (!decoded) {
-    LOGE("parse url failed");
+    LOGE(HTTP_SERVER_TAG, "parse url failed");
     evhttp_send_error(req, HTTP_BADREQUEST, 0);
     return -1;
   }
   //获取uri中的参数部分
   query = (char*)evhttp_uri_get_query(decoded);
   if(query == NULL) {
-    LOGE("get query failed");
+    LOGE(HTTP_SERVER_TAG, "get query failed");
     evhttp_uri_free(decoded);
     return -1;
   }
@@ -128,22 +129,22 @@ void http_handler_testget_msg(struct evhttp_request *req,void *arg) {
   char data[64] = {0};
   struct evbuffer *retbuff = NULL;
   if(req == NULL) {
-    LOGE("req is null");
+    LOGE(HTTP_SERVER_TAG, "req is null");
     return;
   }
   ret = find_http_header(req, "sign", sign);//获取get请求uri中的sign参数
   if(ret != 0) {
-    LOGE("get param sign failed");
+    LOGE(HTTP_SERVER_TAG, "get param sign failed");
   }
   ret = find_http_header(req, "data", data);//获取get请求uri中的data参数
   if(ret != 0) {
-    LOGE("get param data failed");
+    LOGE(HTTP_SERVER_TAG, "get param data failed");
   }
-  LOGT("get request param sign:%s data:%s", sign, data);
+  LOGT(HTTP_SERVER_TAG, "get request param sign:%s data:%s", sign, data);
   //回响应
   retbuff = evbuffer_new();
   if(retbuff == NULL) {
-    LOGE("alloc retbuff failed");
+    LOGE(HTTP_SERVER_TAG, "alloc retbuff failed");
     return;
   }
   evbuffer_add_printf(retbuff,"Receive get request,Thanks for the request!");
@@ -171,7 +172,7 @@ int process_post_request(char *path, char *request, char *response) {
     handler = *it;
     if (0 == handler->handle(spath, srequest, sresponse)) {
       sprintf(response, "%s", sresponse.c_str());
-      LOGT("request is handled by %s", handler->getName().c_str());
+      LOGT(HTTP_SERVER_TAG, "request is handled by %s", handler->getName().c_str());
       break;
     }
   }
@@ -186,13 +187,13 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
   char response[BUF_MAX] = {0};
   struct evbuffer *retbuff = NULL;
   if(req == NULL) {
-    LOGE("req is null");
+    LOGE(HTTP_SERVER_TAG, "req is null");
     return;
   }
   find_http_path(req, path);
   ret = get_post_request(request, req);//获取请求数据，一般是json格式的数据
   if(ret != 0) {
-    LOGE("get post request failed");
+    LOGE(HTTP_SERVER_TAG, "get post request failed");
     return;
   }
   //处理请求，可以使用json库解析需要的数据
@@ -200,7 +201,7 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
   //回响应
   retbuff = evbuffer_new();
   if(retbuff == NULL) {
-    LOGE("alloc retbuff failed");
+    LOGE(HTTP_SERVER_TAG, "alloc retbuff failed");
     return;
   }
   evhttp_add_header(req->output_headers, "Content-Type", "application/json; charset=UTF-8");
@@ -219,7 +220,7 @@ static void* _httpserver_routine(void *param) {
   //启动http服务端
   http_server = evhttp_start(http_addr,http_port);
   if(http_server == NULL) {
-    LOGE("http server starts failed");
+    LOGE(HTTP_SERVER_TAG, "http server starts failed");
     return NULL;
   }
 
@@ -241,7 +242,7 @@ static void* _httpserver_routine(void *param) {
 int http_server_start() {
   pthread_t pid;
   if (0 != pthread_create(&pid, NULL, _httpserver_routine, NULL)) {
-    LOGE("craete http server routine failed"); 
+    LOGE(HTTP_SERVER_TAG, "craete http server routine failed"); 
     return -1;
   }
   pthread_detach(pid);

@@ -1,10 +1,12 @@
 #include "RiliHttpService.hpp"
 #include "HttpServer.hpp"
-#include "log.h"
+#include "uni_log.h"
+
+#define RILI_SERVICE_TAG "rili_http_service"
 
 RiliHttpService :: RiliHttpService() : 
     IHttpService("rili_http_service") {
-    LOGT("rili http service created");
+    LOGT(RILI_SERVICE_TAG, "rili http service created");
 }
 
 int RiliHttpService :: registerHttpHandler() {

@@ -1,15 +1,17 @@
 #include "RiliTakeLiftHttpHandler.hpp"
-#include "log.h"
+#include "uni_log.h"
+
+#define RILI_TAKE_TAG "rili_take"
 
 RiliTakeLiftHttpHandler :: RiliTakeLiftHttpHandler() : IHttpRequestHandler("rili_take_lift") {
-    LOGT("RiliTakeLift object created");
+    LOGT(RILI_TAKE_TAG, "RiliTakeLift object created");
 }
 
 int RiliTakeLiftHttpHandler :: handle(string& path, string& request, string& response) {
     if (path.compare("/liftCtrl/v2/takeLift") != 0) {
-        LOGT("%s is not for RiliTakeLift", path.c_str());
+        LOGT(RILI_TAKE_TAG, "%s is not for RiliTakeLift", path.c_str());
         return -1;
     }
-    LOGT("RiliTakeLift takeed");
+    LOGT(RILI_TAKE_TAG, "RiliTakeLift takeed");
     return 0;
 }
