@@ -9,6 +9,7 @@
                 "${workspaceFolder}/src/http_client",
                 "${workspaceFolder}/src/http_service",
                 "${workspaceFolder}/src/http_service/rili",
+                "${workspaceFolder}/src/msg_center/inc",
                 "${workspaceFolder}/src/utils/device/inc",
                 "${workspaceFolder}/src/utils/timer/inc",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5",

@@ -237,8 +237,10 @@ static Result _parse_connect_platform_register_result(MsgCenter *mc, char *resul
   char *ip = NULL;
   char *port = NULL;
   char subscribe[64] = {0};
-  if(jresult == NULL)
+  char publish[64] = {0};
+  if(jresult == NULL) {
     return E_FAILED;
+  }
   
   if (0 != JsonReadItemInt(jresult, "retcode", &return_code)) {
     cJSON_Delete(jresult);
@@ -250,11 +252,6 @@ static Result _parse_connect_platform_register_result(MsgCenter *mc, char *resul
     LOGT(MSG_CENTER_TAG, "register failed, return code=%d", return_code);
     return E_FAILED;
   }
-  //TODO 注册的内容要改一下
-  snprintf(subscribe, sizeof(subscribe), "shimao/miniprogram/home/%d/state",
-           0);
-  
-  LOGT(MSG_CENTER_TAG, "subscribe is %s", subscribe);
   /* set mqtt param */
   if(JsonReadItemString(jresult, "data.clientId", &client_id) != 0) {
     cJSON_Delete(jresult);
@@ -285,8 +282,21 @@ static Result _parse_connect_platform_register_result(MsgCenter *mc, char *resul
   }
   MqttParamSet(param, MQTT_PARAM_PORT, port);
   uni_free(port);
+  /* subscribte topic filter: 
+   * shimao/ipc/yzs/<udid>/liftControl/command
+   * shimao/ipc/yzs/<udid>/liftControl/command/init
+   * publish topic filter:
+   * shimao/ipc/yzs/<udid>/liftControl/state 
+   */
+ // snprintf(subscribe, sizeof(subscribe), "shimao/ipc/yzs/%s/liftControl/command/#",
+  snprintf(subscribe, sizeof(subscribe), "shimao/ipc/yzs/%s/#",
+              DeviceGetUdid());
+  LOGT(MSG_CENTER_TAG, "subscribe topic %s", subscribe);
   MqttParamSet(param, MQTT_PARAM_SUBSCRIBE, subscribe);
-  MqttParamSet(param, MQTT_PARAM_PUBLISH, "");
+  snprintf(publish, sizeof(publish), "shimao/ipc/yzs/%s/liftControl/state",
+              DeviceGetUdid());
+  LOGT(MSG_CENTER_TAG, "publish topic %s", publish);
+  MqttParamSet(param, MQTT_PARAM_PUBLISH, publish);
   cJSON_Delete(jresult);
   return E_OK;
 }
