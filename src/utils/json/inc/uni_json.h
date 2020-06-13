@@ -36,7 +36,6 @@ extern "C" {
 int JsonReadItemInt(cJSON *root, const char *fmt, int *dst);
 int JsonReadItemDouble(cJSON *root, const char *fmt, double *dst);
 int JsonReadItemString(cJSON *root, const char *fmt, char **dst);
-int JsonReadItemObject(cJSON *root, const char *fmt, cJSON **dst);
 
 int JsonCheckItemInt(cJSON *root, const char *fmt);
 int JsonCheckItemDouble(cJSON *root, const char *fmt);

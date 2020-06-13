@@ -173,27 +173,6 @@ int JsonReadItemInt(cJSON *root, const char *fmt, int *dst) {
   return _read_item_int(root, fmt, dst);
 }
 
-int JsonReadItemObject(cJSON *root, const char *fmt, cJSON **dst) {
-  cJSON *obj;
-  if (NULL == root || NULL == fmt) {
-    LOGW(UNI_JSON_TAG, "invalid input root %p fmt %p", root, fmt);
-    return -1;
-  }
-  obj = _read_item_object(root, fmt);
-  if (NULL == obj) {
-    LOGD(UNI_JSON_TAG, "parse error, fmt=%s", fmt);
-    return -1;
-  }
-  if (NULL != dst) {
-    *dst = cJSON_Duplicate(obj, 1);
-    if (NULL == *dst) {
-      LOGE(UNI_JSON_TAG, "memory alloc failed");
-      return -1;
-    }
-  }
-  return 0;
-}
-
 int JsonReadItemDouble(cJSON *root, const char *fmt, double *dst) {
   return _read_item_double(root, fmt, dst);
 }
