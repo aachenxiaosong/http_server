@@ -1,5 +1,5 @@
 /**************************************************************************
- * Copyright (C) 2017-2017  Unisound
+ * Copyright (C) 2019-2019  Unisound
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,42 +16,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  **************************************************************************
  *
- * Description : uni_msg_center.h
- * Author      : chenxiaosong@unisound.com
- * Date        : 2020.03.31
+ * Description : uni_device.h
+ * Author      : liuwenzheng.unisound.com
+ * Date        : 2019.09.27
  *
  **************************************************************************/
-#ifndef SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
-#define SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
+#ifndef SDK_DEV_CENTER_INC_UNI_DEVICE_H_
+#define SDK_DEV_CENTER_INC_UNI_DEVICE_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include "uni_iot.h"
-#include "MQTTClient.h"
 
-#define MC_TC_DEVICE_ID "u4-testdeviceid1234"
-#define MC_SUBSYSTEM_ID "9"
-#define MC_DATA_VERSION "v1"
-#define MC_APP_OS_TYPE "1"
-#define MC_TOKEN ""
-#define MC_EXTRAS "extras+params"
+const char* DeviceGetMac(void);
+const char* DeviceGetUdid(void);
+const char* DeviceGetAppKey(void);
+const char* DeviceGetSecretKey(void);
 
-typedef void* McHandle;
-
-typedef void (*McRecvHandler) (char *data, int len);
-typedef void (*McDiscHandler) (void);
-
-Result   McSend(McHandle handle, char *data, uni_s32 len);
-Result   McConnect(McHandle handle, McRecvHandler recv_handler,
-                   McDiscHandler disc_handler);
-void     McDisconnect(McHandle handle);
-McHandle McCreate(const char *name, const char *url);
-void     McDestroy(McHandle handle);
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif  //  SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
+#endif /*SDK_DEV_CENTER_INC_UNI_DEVICE_H_*/

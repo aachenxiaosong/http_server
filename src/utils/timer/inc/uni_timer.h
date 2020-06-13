@@ -16,42 +16,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  **************************************************************************
  *
- * Description : uni_msg_center.h
- * Author      : chenxiaosong@unisound.com
- * Date        : 2020.03.31
+ * Description : uni_timer.h
+ * Author      : shangjinlong.unisound.com
+ * Date        : 2018.06.19
  *
  **************************************************************************/
-#ifndef SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
-#define SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
+#ifndef UTILS_TIMER_INC_UNI_TIMER_H_
+#define UTILS_TIMER_INC_UNI_TIMER_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "uni_iot.h"
-#include "MQTTClient.h"
+#define INVALID_TIMERHANDLE             (0)
+#define TIMER_ERRNO_STOP_PERIODICAL     (0x09ABCDEF)
 
-#define MC_TC_DEVICE_ID "u4-testdeviceid1234"
-#define MC_SUBSYSTEM_ID "9"
-#define MC_DATA_VERSION "v1"
-#define MC_APP_OS_TYPE "1"
-#define MC_TOKEN ""
-#define MC_EXTRAS "extras+params"
+typedef enum {
+  TIMER_TYPE_ONESHOT,
+  TIMER_TYPE_PERIODICAL
+} TimerType;
 
-typedef void* McHandle;
+typedef int (*TimerExpireCallback)(void *arg);
+typedef unsigned long long TimerHandle;
 
-typedef void (*McRecvHandler) (char *data, int len);
-typedef void (*McDiscHandler) (void);
-
-Result   McSend(McHandle handle, char *data, uni_s32 len);
-Result   McConnect(McHandle handle, McRecvHandler recv_handler,
-                   McDiscHandler disc_handler);
-void     McDisconnect(McHandle handle);
-McHandle McCreate(const char *name, const char *url);
-void     McDestroy(McHandle handle);
+TimerHandle TimerStart(int interval_msec, TimerType type,
+                       TimerExpireCallback fct, void *arg);
+void        TimerStop(TimerHandle handle);
+int         TimerInitialize(void);
+void        TimerFinalize(void);
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif  //  SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
+#endif

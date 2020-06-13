@@ -44,6 +44,7 @@ extern "C" {
 #include <sys/poll.h>
 #include <sys/reboot.h>
 #include <sys/un.h>
+#include <sys/prctl.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <netinet/in.h>

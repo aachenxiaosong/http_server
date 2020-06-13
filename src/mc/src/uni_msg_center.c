@@ -27,9 +27,12 @@
 #include "uni_cloud_utils.h"
 #include "uni_mc_param.h"
 #include "uni_event_list.h"
+#include "uni_auth_http.h"
 #include "uni_http.h"
 #include "uni_json.h"
 #include "uni_log.h"
+#include "uni_device.h"
+#include "uni_iot.h"
 
 #define MSG_CENTER_TAG "msg_center"
 
@@ -67,14 +70,14 @@ typedef struct {
   McDiscHandler         disc_handler;
 } MsgCenter;
 
-#if UNI_APPSERVICE_ENABLE
+
 static char* _try_get_udid(MsgCenter *mc) {
   RegisterParam *param = &mc->register_param;
   char *udid = RegisterParamGet(param, REGISTER_PARAM_UDID);
   if (0 != uni_strlen(udid)) {
     return udid;
   }
-  RegisterParamSet(param, REGISTER_PARAM_UDID, MC_UDID);
+  RegisterParamSet(param, REGISTER_PARAM_UDID, DeviceGetUdid());
   return RegisterParamGet(param, REGISTER_PARAM_UDID);
 }
 
@@ -234,7 +237,6 @@ static Result _parse_connect_platform_register_result(MsgCenter *mc, char *resul
   char *ip = NULL;
   char *port = NULL;
   char subscribe[64] = {0};
-  CommunityInfo* community_info;
   if(jresult == NULL)
     return E_FAILED;
   
@@ -248,15 +250,10 @@ static Result _parse_connect_platform_register_result(MsgCenter *mc, char *resul
     LOGT(MSG_CENTER_TAG, "register failed, return code=%d", return_code);
     return E_FAILED;
   }
-  community_info = HttpGetCommunityCache();
-  if (community_info == NULL) {
-    cJSON_Delete(jresult);
-    LOGT(MSG_CENTER_TAG, "get community info failed");
-    return E_FAILED;
-  }
+  //TODO 注册的内容要改一下
   snprintf(subscribe, sizeof(subscribe), "shimao/miniprogram/home/%d/state",
-           community_info->house.id);
-  HttpGetCommunityFree(community_info);
+           0);
+  
   LOGT(MSG_CENTER_TAG, "subscribe is %s", subscribe);
   /* set mqtt param */
   if(JsonReadItemString(jresult, "data.clientId", &client_id) != 0) {
@@ -310,9 +307,9 @@ static Result _register_internal_connect_platform(MsgCenter *mc) {
   char reg_param[128] = {0};
   char *result = NULL;
   char token[128];
-  char *http_headers[2][2] = {{"Content-Type",
-                               "application/json;charset=UTF-8"},
-                              {NULL, NULL}};
+  const char *http_headers[2][2] = {{"Content-Type",
+                                     "application/json;charset=UTF-8"},
+                                    {NULL, NULL}};
   if (0 != _get_token(token)) {
     return E_FAILED;
   }
@@ -441,8 +438,8 @@ static void _register_param_init(MsgCenter *mc) {
   RegisterParamSet(param, REGISTER_PARAM_TOKEN, MC_TOKEN);
   RegisterParamSet(param, REGISTER_PARAM_APP_OS_TYPE, MC_APP_OS_TYPE);
   RegisterParamSet(param, REGISTER_PARAM_EXTRAS, MC_EXTRAS);
-   RegisterParamSet(param, REGISTER_PARAM_APPKEY, MC_APPKEY);
-  RegisterParamSet(param, REGISTER_PARAM_SECRETKEY, MC_SECKEY);
+   RegisterParamSet(param, REGISTER_PARAM_APPKEY, DeviceGetAppKey());
+  RegisterParamSet(param, REGISTER_PARAM_SECRETKEY, DeviceGetSecretKey());
 }
 
 static void _mqtt_param_init(MsgCenter *mc) {
@@ -500,7 +497,7 @@ static Result _destroy_long_connect_task(MsgCenter *mc) {
 }
 
 static uni_s32 _cloud_comm_event_handler(Event *event) {
-  MsgCenter *mc = event->content.extend_info;
+  MsgCenter *mc = (MsgCenter *)event->content.extend_info;
   switch (event->type) {
     case MC_EVENT_SEND:
     {
@@ -610,11 +607,3 @@ void McDestroy(McHandle handle) {
   EventListDestroy(mc->event_list);
   uni_free(mc);
 }
-#else
-Result   McConnect(McHandle handle, McRecvHandler recv_handler,
-                   McDiscHandler disc_handler) { return E_OK; }
-void     McDisconnect(McHandle handle) {}
-Result   McSend(McHandle handle, char *data, uni_s32 len) { return E_OK; }
-McHandle McCreate(const char *name, const char *url) { return NULL; }
-void     McDestroy(McHandle handle) {}
-#endif

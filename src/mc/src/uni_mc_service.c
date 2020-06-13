@@ -27,14 +27,13 @@
 #include "uni_msg_center.h"
 #include "uni_json.h"
 #include "uni_log.h"
+#include "configurable_info.h"
 
 #define MC_SERVICE_TAG "mc_service"
-#if UNI_APPSERVICE_ENABLE
 
 #define MAX_RECVER_NUM 32
 
 typedef struct {
-  McHandle feature_mc;
   McHandle cp_mc;
   McRecver recvers[MAX_RECVER_NUM];
   int      recver_num;
@@ -61,21 +60,12 @@ static void _mc_recv_routine(char *data, int len) {
   pthread_mutex_unlock(&g_recver_mutex);
 }
 
-static void _feature_mc_disc_routine() {
-  McConnect(g_mc_service.feature_mc, _mc_recv_routine, _feature_mc_disc_routine);
-}
-
 static void _cp_mc_disc_routine() {
   McConnect(g_mc_service.cp_mc, _mc_recv_routine, _cp_mc_disc_routine);
 }
 
 Result McServiceConnect(void) {
   Result rc;
-  rc = McConnect(g_mc_service.feature_mc, _mc_recv_routine, _feature_mc_disc_routine);
-  if (rc != E_OK) {
-    LOGE(MC_SERVICE_TAG, "feature mc connect failed");
-    return rc;
-  }
   rc = McConnect(g_mc_service.cp_mc, _mc_recv_routine, _cp_mc_disc_routine);
   if (rc != E_OK) {
     LOGE(MC_SERVICE_TAG, "connect platform mc connect failed");
@@ -85,7 +75,6 @@ Result McServiceConnect(void) {
 }
 
 void McServiceDisconnect(void) {
-  McDisconnect(g_mc_service.feature_mc);
   McDisconnect(g_mc_service.cp_mc);
 }
 
@@ -93,15 +82,12 @@ Result McServiceInit(void) {
   /* step 1: init g_mc_service */
   memset(&g_mc_service, 0, sizeof(McService));
   g_mc_service.recver_num = 0;
-  /* step 2: create feature mc */
-  g_mc_service.feature_mc = McCreate("feature_mc", MC_REGISTER_URL_FEATURE);
   /* step 3: create connect platform mc */
   g_mc_service.cp_mc = McCreate("cp_mc", MC_REGISTER_URL_CP);
   return E_OK;
 }
 
 void McServiceFinal(void) {
-  McDestroy(g_mc_service.feature_mc);
   McDestroy(g_mc_service.cp_mc);
   g_mc_service.recver_num = 0;
 }
@@ -121,14 +107,3 @@ Result McServiceRegisterRecver(McRecver recver) {
   pthread_mutex_unlock(&g_recver_mutex);
   return E_OK;
 }
-
-
-#else // UNI_APPSERVICE_ENABLE else
-
-Result McServiceConnect(void) { return E_OK; }
-void   McServiceDisconnect(void) {}
-Result McServiceInit(void) { return E_OK; }
-void   McServiceFinal(void) {}
-Result McServiceRegisterRecver(McRecver recver) { return E_OK; }
-
-#endif // UNI_APPSERVICE_ENABLE end

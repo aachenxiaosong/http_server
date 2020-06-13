@@ -18,6 +18,7 @@ utils_src_file := src/utils/bitmap/src/uni_bitmap.c \
             src/utils/cJSON/src/uni_json.c \
             src/utils/cJSON/src/cJSON.c \
             src/utils/data_buf/src/uni_databuf.c \
+			src/utils/device/src/uni_device.c \
 			src/utils/encrypt/src/uni_sha.c \
             src/utils/event/src/uni_event.c \
             src/utils/event_list/src/uni_event_list.c \
@@ -29,10 +30,13 @@ utils_src_file := src/utils/bitmap/src/uni_bitmap.c \
             src/utils/log/src/uni_log.c \
             src/utils/uart/src/serial.c \
             src/utils/md5sum/src/uni_md5sum.c \
-            src/utils/memcheck/src/uni_memcheck.c
+            src/utils/memcheck/src/uni_memcheck.c \
+			src/utils/timer/src/uni_timer.c
+
 utils_inc := -Isrc/utils/bitmap/inc \
                            -Isrc/utils/cJSON/inc \
                            -Isrc/utils/data_buf/inc \
+						   -Isrc/utils/device/inc \
 						   -Isrc/utils/encrypt/inc \
                            -Isrc/utils/event/inc \
                            -Isrc/utils/event_list/inc \
@@ -44,11 +48,14 @@ utils_inc := -Isrc/utils/bitmap/inc \
                            -Isrc/utils/log/inc \
                            -Isrc/utils/uart/inc \
                            -Isrc/utils/md5sum/inc \
-                           -Isrc/utils/memcheck/inc
+                           -Isrc/utils/memcheck/inc \
+						   -Isrc/utils/timer/inc
 
 src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
 						src/http_server/src/HttpServer.cpp \
 						src/http_server/src/IHttpRequestHandler.cpp \
+						src/http_client/auth/src/uni_auth_http.c \
+						src/http_client/resource_prefetch/src/uni_resource_prefetch.c \
 						src/http_service/IHttpService.cpp \
 						src/http_service/rili/RiliHttpService.cpp \
 						src/http_service/rili/RiliCallLiftHttpHandler.cpp \
@@ -67,7 +74,10 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
 					
 
 INC := $(hal_inc) $(utils_inc) \
+			-Isrc \
 			-Isrc/http_server/inc \
+			-Isrc/http_client/auth/inc \
+			-Isrc/http_client/resource_prefetch/inc \
 			-Isrc/http_service \
 			-Isrc/http_service/rili \
 			-Isrc/http_service/wlong \
@@ -77,7 +87,7 @@ INC := $(hal_inc) $(utils_inc) \
 LIB := -Llib -levent-2.2 -lpaho-embed-mqtt3c -lcurl -lm -lpthread
 
 $(target):
-	g++ $(src_file) $(INC) $(LIB) -o $@
+	g++ -g $(src_file) $(INC) $(LIB) -o $@
 
 clean:
 	rm -rf $(target)

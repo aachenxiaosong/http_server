@@ -4,9 +4,13 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/src",
                 "${workspaceFolder}/src/http_server",
+                "${workspaceFolder}/src/http_client",
                 "${workspaceFolder}/src/http_service",
                 "${workspaceFolder}/src/http_service/rili",
+                "${workspaceFolder}/src/utils/device/inc",
+                "${workspaceFolder}/src/utils/timer/inc",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/x86_64-redhat-linux",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/backward",

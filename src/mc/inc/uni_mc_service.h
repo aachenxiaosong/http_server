@@ -30,19 +30,6 @@ extern "C" {
 
 #include "uni_iot.h"
 
-#if (IGAICLOUD_TYPE == 0)
-#define MC_REGISTER_URL_FEATURE "http://test-route.igaicloud.cn:8088/msg-center/rest/v1/client/register"
-//#define MC_REGISTER_URL_CP "http://test-route.igaicloud.cn:8088/ym-connect-device/api/auth/deviceClientInfo"
-#define MC_REGISTER_URL_CP "http://test-route.igaicloud.cn:8088/ym-connect-device/api/auth/operateHomeDeviceClientInfo"
-#elif (IGAICLOUD_TYPE == 1)
-#define MC_REGISTER_URL_FEATURE "http://uat-route.igaicloud.cn:8088/msg-center/rest/v1/client/register"
-//#define MC_REGISTER_URL_CP "http://uat-route.igaicloud.cn:8088/ym-connect-device/api/auth/deviceClientInfo"
-#define MC_REGISTER_URL_CP "http://uat-route.igaicloud.cn:8088/ym-connect-device/api/auth/operateHomeDeviceClientInfo"
-#else
-#define MC_REGISTER_URL_FEATURE "http://route.igaicloud.cn:8088/msg-center/rest/v1/client/register"
-//#define MC_REGISTER_URL_CP "http://route.igaicloud.cn:8088/ym-connect-device/api/auth/deviceClientInfo"
-#define MC_REGISTER_URL_CP "http://route.igaicloud.cn:8088/ym-connect-device/api/auth/operateHomeDeviceClientInfo"
-#endif
 typedef int (*McRecver) (char *data, int len);
 
 Result McServiceConnect(void);
