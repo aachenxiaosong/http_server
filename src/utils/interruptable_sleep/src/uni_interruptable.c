@@ -124,7 +124,7 @@ int InterruptableSleep(InterruptHandle handle, int sleep_msec) {
     LOGE(INTERRUPTABLE_TAG, "invalid input %d", sleep_msec);
     return -1;
   }
-  LOGT(INTERRUPTABLE_TAG, "start sleeping...");
+  //LOGT(INTERRUPTABLE_TAG, "start sleeping...");
   FD_ZERO(&readfds);
   _interruptable_select(interrupter, 0, &readfds, NULL, NULL, sleep_msec);
   return interrupter->flag;
@@ -133,6 +133,6 @@ int InterruptableSleep(InterruptHandle handle, int sleep_msec) {
 int InterruptableBreak(InterruptHandle handle) {
   Interruptable *interrupter = (Interruptable *)handle;
   char c[1] = {0x5A};
-  LOGT(INTERRUPTABLE_TAG, "break sleeping...");
+  //LOGT(INTERRUPTABLE_TAG, "break sleeping...");
   return (write(interrupter->fd[1], c, sizeof(c)) == sizeof(c) ? 0 : -1);
 }

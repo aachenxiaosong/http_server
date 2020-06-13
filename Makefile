@@ -67,10 +67,19 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
 						src/http_service/wlong/WlongTakeLiftHttpHandler.cpp \
 						src/msg_center/src/MQTTClient.c \
 						src/msg_center/src/MQTTLinux.c \
+						src/msg_center/src/uni_cloud_utils.c \
 						src/msg_center/src/uni_mc_param.c \
-						src/msg_center/src/uni_mc_service.c \
-						src/msg_center/src/uni_msg_center.c \
-						src/msg_center/src/uni_cloud_utils.c
+						src/msg_center/src/uni_mc.c \
+						src/msg_center/src/IMcMsgHandler.cpp \
+						src/msg_center/src/McBroker.cpp \
+						src/msg_center_subscriber/IMcSubscriber.cpp \
+						src/msg_center_subscriber/wlong/WlongBookLiftMsgHandler.cpp \
+						src/msg_center_subscriber/wlong/WlongInitMsgHandler.cpp \
+						src/msg_center_subscriber/wlong/WlongMcSubscriber.cpp \
+						src/msg_center_subscriber/rili/RiliBookLiftMsgHandler.cpp \
+						src/msg_center_subscriber/rili/RiliInitMsgHandler.cpp \
+						src/msg_center_subscriber/rili/RiliMcSubscriber.cpp
+						
 					
 
 INC := $(hal_inc) $(utils_inc) \
@@ -82,7 +91,10 @@ INC := $(hal_inc) $(utils_inc) \
 			-Isrc/http_service/rili \
 			-Isrc/http_service/wlong \
 			-Isrc/msg_center/inc \
-			-Isrc/msg_center/inc/mqtt
+			-Isrc/msg_center/inc/mqtt \
+			-Isrc/msg_center_subscriber \
+			-Isrc/msg_center_subscriber/wlong \
+			-Isrc/msg_center_subscriber/rili
 
 LIB := -Llib -levent-2.2 -lpaho-embed-mqtt3c -lcurl -lm -lpthread
 

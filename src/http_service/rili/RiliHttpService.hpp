@@ -1,5 +1,5 @@
-#ifndef SERVICE_RILI_RILI_HTTP_SERVICE_H_
-#define SERVICE_RILI_RILI_HTTP_SERVICE_H_
+#ifndef HTTP_SERVICE_RILI_RILI_HTTP_SERVICE_H_
+#define HTTP_SERVICE_RILI_RILI_HTTP_SERVICE_H_
 
 #include "IHttpService.hpp"
 #include "RiliCallLiftHttpHandler.hpp"
@@ -19,4 +19,4 @@ class RiliHttpService :  public IHttpService {
     int registerHttpHandler();
 };
 
-#endif  //  SERVICE_RILI_RILI_HTTP_SERVICE_H_
+#endif  //  HTTP_SERVICE_RILI_RILI_HTTP_SERVICE_H_

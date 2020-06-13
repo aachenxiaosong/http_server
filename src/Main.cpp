@@ -6,7 +6,7 @@
 #include "IHttpService.hpp"
 #include "RiliHttpService.hpp"
 #include "WlongHttpService.hpp"
-#include "uni_mc_service.h"
+#include "McBroker.hpp"
 
 #define MAIN_TAG "main"
 
@@ -23,11 +23,11 @@ static int _http_client_init() {
 }
 
 static int _msg_center_init() {
-    if (E_OK != McServiceInit()) {
+    if (E_OK != McBrokerInit()) {
         LOGE(MAIN_TAG, "mc service init failed");
         return -1;
     }
-    if (E_OK != McServiceConnect()) {
+    if (E_OK != McBrokerConnect()) {
         LOGE(MAIN_TAG, "mc service connect failed");
         return -1;        
     }

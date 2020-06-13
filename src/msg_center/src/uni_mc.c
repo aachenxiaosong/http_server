@@ -22,7 +22,7 @@
  *
  **************************************************************************/
 
-#include "uni_msg_center.h"
+#include "uni_mc.h"
 
 #include "uni_cloud_utils.h"
 #include "uni_mc_param.h"

@@ -1,5 +1,5 @@
-#ifndef SERVICE_I_HTTP_SERVICE_H_
-#define SERVICE_I_HTTP_SERVICE_H_
+#ifndef HTTP_SERVICE_I_HTTP_SERVICE_H_
+#define HTTP_SERVICE_I_HTTP_SERVICE_H_
 
 #include "IHttpRequestHandler.hpp"
 
@@ -11,4 +11,4 @@ class IHttpService{
     virtual int registerHttpHandler() = 0;
 };
 
-#endif
+#endif  //  HTTP_SERVICE_I_HTTP_SERVICE_H_

@@ -16,42 +16,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  **************************************************************************
  *
- * Description : uni_msg_center.h
+ * Description : uni_mc_service.h
  * Author      : chenxiaosong@unisound.com
- * Date        : 2020.03.31
+ * Date        : 2020.04.01
  *
  **************************************************************************/
-#ifndef SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
-#define SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
+#ifndef SDK_CLOUD_MC_INC_MC_BROKER_H_
+#define SDK_CLOUD_MC_INC_MC_BROKER_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#include "IMcMsgHandler.hpp"
 #include "uni_iot.h"
-#include "MQTTClient.h"
 
-#define MC_TC_DEVICE_ID "u4-testdeviceid1234"
-#define MC_SUBSYSTEM_ID "9"
-#define MC_DATA_VERSION "v1"
-#define MC_APP_OS_TYPE "1"
-#define MC_TOKEN ""
-#define MC_EXTRAS "extras+params"
 
-typedef void* McHandle;
+Result McBrokerConnect(void);
+void   McBrokerDisconnect(void);
+Result McBrokerInit(void);
+void   McBrokerFinal(void);
+Result McBrokerAddHandler(IMcMsgHandler* handler);
+Result McBrokerRemoveHandler(string *handler_name);
 
-typedef void (*McRecvHandler) (char *data, int len);
-typedef void (*McDiscHandler) (void);
-
-Result   McSend(McHandle handle, char *data, uni_s32 len);
-Result   McConnect(McHandle handle, McRecvHandler recv_handler,
-                   McDiscHandler disc_handler);
-void     McDisconnect(McHandle handle);
-McHandle McCreate(const char *name, const char *url);
-void     McDestroy(McHandle handle);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif  //  SDK_CLOUD_MC_INC_UNI_MSG_CENTER_H_
+#endif  //  SDK_CLOUD_MC_INC_MC_BROKER_H_
