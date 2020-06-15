@@ -1,11 +1,11 @@
 #include "WlongCallLiftHttpHandler.hpp"
 #include "configurable_info.h"
 #include "uni_log.h"
-#include "unistd.h"
+#include "uni_iot.h"
 
 #define WLONG_CALL_TAG "wlong_call"
 
-WlongCallLiftHttpHandler :: WlongCallLiftHttpHandler() : IHttpRequestHandler("wlong_call") {
+WlongCallLiftHttpHandler :: WlongCallLiftHttpHandler() : IHttpRequestHandler("wlong_call_lift") {
     LOGT(WLONG_CALL_TAG, "WlongCallLift object created");
 }
 
@@ -53,7 +53,11 @@ int WlongCallLiftHttpHandler :: handle(string& path, string& request, string& re
     usleep(1000 * 500);
     jresponse.Add("errCode", 0);
     jresponse.Add("errMsg", "OK");
-    jresponse.Add("ackCode", 1);
+    if (rand() % 2 == 0) {
+        jresponse.Add("ackCode", 1);
+    } else {
+        jresponse.Add("ackCode", 0);
+    }
     jresponse.Add("elevatorId", -1);
     response = jresponse.ToString();
     #else

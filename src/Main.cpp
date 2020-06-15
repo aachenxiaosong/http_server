@@ -35,6 +35,7 @@ static int _msg_center_init() {
 }
 
 int main() { 
+    srand(time(0));
     //串口
     if (0 != serial_init()) {
         LOGE(MAIN_TAG, "uart init failed");
