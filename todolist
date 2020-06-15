@@ -5,3 +5,14 @@
 4，旺龙的接口过来，要试一试，并且封装成http client里的接口：1天
 5，接到请求，解析，转换成王龙接口，请求，返回 --》整个链路跑一遍：1天
 整体完成50%，预计18下班开发都差不多完成了(包括跟连接平台连调万，跟旺龙对接完，开始对终端)
+
+
+
+appkey:
+测试环境：
+c32tov4l4nehqm4364a2nct43db5swuynsgutlig
+ae8142f81dc1abc5cc639f262450eb54
+生产和UAT环境：
+jnilinu245equw5xy3iyid2qklz5e2266qe3zja4
+bc5300620e7bc0b8b063464f7e97e04c
+注意：appkey要在健全中心配置
