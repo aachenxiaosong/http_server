@@ -67,8 +67,8 @@ const char* DeviceGetMac(void) {
 }
 
 const char* DeviceGetUdid(void) {
-  //return DeviceGetMac();
-  return "000c29051f71";
+  return DeviceGetMac();
+  //return "000c29051f71";
 }
 
 const char* DeviceGetAppKey(void) {

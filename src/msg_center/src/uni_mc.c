@@ -325,7 +325,7 @@ static Result _register_internal_connect_platform(MsgCenter *mc) {
   }
   uni_snprintf(reg_param, sizeof(reg_param),
                "{"
-                 "\"deviceCode\": \"%s\""
+                 "\"entityCode\": \"%s\""
                "}",
                _try_get_udid(mc));
   LOGT(MSG_CENTER_TAG, "mc name=%s url=%s token=%s",
@@ -596,7 +596,7 @@ McHandle McCreate(const char *name, const char *url) {
   uni_memset(mc, 0, sizeof(MsgCenter));
   snprintf(mc->name, sizeof(mc->name), "%s", name);
   snprintf(mc->url, sizeof(mc->url), "%s", url);
-  if (strstr(mc->url, "operateHomeDeviceClientInfo") != NULL) {
+  if (strstr(mc->url, "deviceClientInfo") != NULL) {
     //api/auth/deviceClientInfo
     mc->type = MC_TYPE_CONNECT_PLATFROM;
   } else {
