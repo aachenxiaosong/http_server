@@ -3,6 +3,7 @@
 
 #include "IHttpService.hpp"
 #include "WlongCallLiftHttpHandler.hpp"
+#include "WlongCallLiftOutHttpHandler.hpp"
 #include "WlongBookLiftHttpHandler.hpp"
 #include "WlongTakeLiftHttpHandler.hpp"
 
@@ -11,6 +12,7 @@ using namespace std;
 class WlongHttpService :  public IHttpService {
     private:
     WlongCallLiftHttpHandler mCallLiftHandler;
+    WlongCallLiftOutHttpHandler mCallLiftOutHandler;
     WlongBookLiftHttpHandler mBookLiftHandler;
     WlongTakeLiftHttpHandler mTakeLiftHandler;
 

@@ -1,15 +1,15 @@
-#include "WlongCallLiftHttpHandler.hpp"
+#include "WlongCallLiftOutHttpHandler.hpp"
 #include "configurable_info.h"
 #include "uni_log.h"
 #include "unistd.h"
 
-#define WLONG_CALL_TAG "wlong_call"
+#define WLONG_CALL_OUT_TAG "wlong_call_out"
 
-WlongCallLiftHttpHandler :: WlongCallLiftHttpHandler() : IHttpRequestHandler("wlong_call") {
-    LOGT(WLONG_CALL_TAG, "WlongCallLift object created");
+WlongCallLiftOutHttpHandler :: WlongCallLiftOutHttpHandler() : IHttpRequestHandler("wlong_call_litf_out") {
+    LOGT(WLONG_CALL_OUT_TAG, "WlongCallLiftOut object created");
 }
 
-int WlongCallLiftHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_field) {
+int WlongCallLiftOutHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_field) {
     int ivalue;
     string svalue;
     if (true != jrequest.Get("buildingId", ivalue)) {
@@ -20,8 +20,8 @@ int WlongCallLiftHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_f
         err_field = "unitId";
         return -1;
     }
-     if (true != jrequest.Get("homeId", ivalue)) {
-        err_field = "homeId";
+     if (true != jrequest.Get("elevatorHallId", ivalue)) {
+        err_field = "elevatorHallId";
         return -1;
     }
      if (true != jrequest.Get("upDown", svalue) || (svalue.compare("up") != 0 && svalue.compare("down") != 0)) {
@@ -31,17 +31,17 @@ int WlongCallLiftHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_f
     return 0;
 }
 
-int WlongCallLiftHttpHandler :: handle(string& path, string& request, string& response) {
-    if (path.compare("/liftCtrl/v2/callLift") != 0) {
-        LOGT(WLONG_CALL_TAG, "%s is not for WlongCallLift", path.c_str());
+int WlongCallLiftOutHttpHandler :: handle(string& path, string& request, string& response) {
+    if (path.compare("/liftCtrl/v2/callLift/outSide") != 0) {
+        LOGT(WLONG_CALL_OUT_TAG, "%s is not for WlongCallLiftOut", path.c_str());
         return -1;
     }
-    LOGT(WLONG_CALL_TAG, "WlongCallLift called");
+    LOGT(WLONG_CALL_OUT_TAG, "WlongCallLiftOut called");
     CJsonObject jrequest(request);
     CJsonObject jresponse;
     string err_field = "";
     if (0 != checkRqeust(jrequest, err_field)) {
-        LOGT(WLONG_CALL_TAG, "check request %s failed", request.c_str());
+        LOGT(WLONG_CALL_OUT_TAG, "check request %s failed", request.c_str());
         jresponse.Add("errCode", 1);
         jresponse.Add("errMsg", "wrong param " + err_field);
         jresponse.Add("ackCode", 0);

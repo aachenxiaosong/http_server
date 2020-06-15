@@ -64,6 +64,7 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
             src/http_service/rili/RiliTakeLiftHttpHandler.cpp \
             src/http_service/wlong/WlongHttpService.cpp \
             src/http_service/wlong/WlongCallLiftHttpHandler.cpp \
+            src/http_service/wlong/WlongCallLiftOutHttpHandler.cpp \
             src/http_service/wlong/WlongBookLiftHttpHandler.cpp \
             src/http_service/wlong/WlongTakeLiftHttpHandler.cpp \
             src/msg_center/src/MQTTClient.c \
