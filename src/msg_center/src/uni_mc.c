@@ -32,6 +32,7 @@
 #include "uni_json.h"
 #include "uni_log.h"
 #include "uni_device.h"
+#include "uni_uuid.h"
 #include "uni_iot.h"
 
 #define MSG_CENTER_TAG "msg_center"
@@ -289,10 +290,14 @@ static Result _parse_connect_platform_register_result(MsgCenter *mc, char *resul
    * shimao/ipc/yzs/<udid>/liftControl/state 
    */
  // snprintf(subscribe, sizeof(subscribe), "shimao/ipc/yzs/%s/liftControl/command/#",
-  snprintf(subscribe, sizeof(subscribe), "shimao/ipc/yzs/%s/#",
+  snprintf(subscribe, sizeof(subscribe), "shimao/ipc/yzs/%s/liftControl/command/init",
               DeviceGetUdid());
   LOGT(MSG_CENTER_TAG, "subscribe topic %s", subscribe);
   MqttParamSet(param, MQTT_PARAM_SUBSCRIBE, subscribe);
+  snprintf(subscribe, sizeof(subscribe), "shimao/ipc/yzs/%s/liftControl/command",
+              DeviceGetUdid());
+  LOGT(MSG_CENTER_TAG, "subscribe1 topic %s", subscribe);
+  MqttParamSet(param, MQTT_PARAM_SUBSCRIBE1, subscribe);
   snprintf(publish, sizeof(publish), "shimao/ipc/yzs/%s/liftControl/state",
               DeviceGetUdid());
   LOGT(MSG_CENTER_TAG, "publish topic %s", publish);
@@ -359,8 +364,53 @@ Result _register_internal(MsgCenter *mc) {
   return E_FAILED;
 }
 
+/*
+{
+    "reqId":"734a6a0bfb564df8a34108e3288024e8",
+    "timestamp":"1585194053162",
+    "entityCode":"SZ19011304S41600118",
+    "typeCode":"F1",
+    "msgType":"up",
+    "attributesEntities":[
+        {
+            "attributeCode":"intranetNetAddr",
+            "value":"http://177.28.12.32"
+        }]
+}
+ */
+static int _publish_device_info(MsgCenter *mc) {
+    char sdata[1024] = {0};
+    char timestamp[16];
+    char uuid[UUID_LEN + 1] = {0};
+    GetUuid(uuid);
+    time_t timeval;
+    time(&timeval);
+    snprintf(timestamp, sizeof(timestamp), "%d000", (unsigned int)timeval);
+    snprintf(sdata, sizeof(sdata),
+                "{"
+                    "\"reqId\":\"%s\","
+                    "\"timestamp\":\"%s\","
+                    "\"entityCode\":\"%s\","
+                    "\"typeCode\":\"%s\","
+                    "\"msgType\":\"up\","
+                    "\"attributesEntities\":["
+                        "{"
+                              "\"attributeCode\":\"intranetNetAddr\","
+                              "\"value\":\"%s\""
+                        "}"
+                    "]"
+                 "}", uuid, timestamp, DeviceGetUdid(), DeviceGetType(), DeviceGetServerUrl());
+    LOGT(MSG_CENTER_TAG, "publish of device info: %s", sdata);
+    if (E_OK != McSend(mc, sdata, strlen(sdata) + 1)) {
+        LOGT(MSG_CENTER_TAG, "publish of device info failed");
+        return -1;
+    }
+    return 0;
+}
+
 static Result _connect_internal(MsgCenter *mc) {
   int ret = 0;
+  char *subscribe = NULL;
   MqttParam *param = &mc->mqtt_param;
   MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
   LOGT(MSG_CENTER_TAG, "mqtt %s connecting...", mc->name);
@@ -385,17 +435,26 @@ static Result _connect_internal(MsgCenter *mc) {
     LOGE(MSG_CENTER_TAG, "mqtt connect failed");
     goto L_ERROR0;
   }
-  LOGT(MSG_CENTER_TAG, "mqtt connect succeed, subscribe %s",
-       MqttParamGet(param, MQTT_PARAM_SUBSCRIBE));
-  ret = MQTTSubscribe(&mc->mqtt_client,
-                      MqttParamGet(param, MQTT_PARAM_SUBSCRIBE),
-                      QOS0, mc->recv_handler);
-  if (ret != 0) {
-    LOGE(MSG_CENTER_TAG, "mqtt subscribe failed");
-    goto L_ERROR1;
+  subscribe = MqttParamGet(param, MQTT_PARAM_SUBSCRIBE);
+  if (subscribe && strlen(subscribe) > 0) {
+    ret = MQTTSubscribe(&mc->mqtt_client, subscribe, QOS0, mc->recv_handler);
+    if (ret != 0) {
+      LOGE(MSG_CENTER_TAG, "mqtt subscribe %s failed", subscribe);
+      goto L_ERROR1;
+    } 
+    LOGT(MSG_CENTER_TAG, "mqtt subscribe %s succeed", subscribe);
   }
-  LOGT(MSG_CENTER_TAG, "mqtt subscribe succeed, will try to refresh data");
+  subscribe = MqttParamGet(param, MQTT_PARAM_SUBSCRIBE1);
+  if (subscribe && strlen(subscribe) > 0) {
+    ret = MQTTSubscribe(&mc->mqtt_client, subscribe, QOS0, mc->recv_handler);
+    if (ret != 0) {
+      LOGE(MSG_CENTER_TAG, "mqtt subscribe %s failed", subscribe);
+      goto L_ERROR1;
+    } 
+    LOGT(MSG_CENTER_TAG, "mqtt subscribe %s succeed", subscribe);
+  }
   mc->connected = TRUE;
+  _publish_device_info(mc);
   return E_OK;
 
 L_ERROR1:
@@ -435,7 +494,7 @@ static Result _send_internal(MsgCenter *mc, char *data, uni_s32 len) {
     LOGE(MSG_CENTER_TAG, "mqtt send failed");
     return E_FAILED;
   }
-  LOGT(MSG_CENTER_TAG, "mqtt send succedd");
+  LOGT(MSG_CENTER_TAG, "mqtt send succeed");
   return E_OK;
 }
 
@@ -539,7 +598,7 @@ static uni_s32 _cloud_comm_event_handler(Event *event) {
   return 0;
 }
 
-Result McSend(McHandle handle, char *data, uni_s32 len) {
+Result McSend(McHandle handle, const char *data, uni_s32 len) {
   MsgCenter *mc = (MsgCenter *)handle;
   Event *event;
   EventContent event_content;

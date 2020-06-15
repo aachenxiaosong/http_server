@@ -56,8 +56,8 @@ typedef enum {
 #define PASSWORD_LEN       32
 #define IP_MAX_LEN         64
 #define PORT_MAX_LEN       15
-#define SUBSCRIBE_MAX_LEN  64
-#define PUBLISH_MAX_LEN    64
+#define SUBSCRIBE_MAX_LEN  128
+#define PUBLISH_MAX_LEN    128
 
 typedef enum {
   MQTT_PARAM_CLIENT_ID,
@@ -66,6 +66,7 @@ typedef enum {
   MQTT_PARAM_IP,
   MQTT_PARAM_PORT,
   MQTT_PARAM_SUBSCRIBE,
+  MQTT_PARAM_SUBSCRIBE1,
   MQTT_PARAM_PUBLISH
 } MqttParamType;
 
@@ -88,6 +89,7 @@ typedef struct {
   char password[PASSWORD_LEN + 1];
   char ip[IP_MAX_LEN + 1];
   char subscribe[SUBSCRIBE_MAX_LEN + 1];
+  char subscribe1[SUBSCRIBE_MAX_LEN + 1];
   char publish[PUBLISH_MAX_LEN + 1];
   char port[PORT_MAX_LEN];
   uni_mutex_t mutex;

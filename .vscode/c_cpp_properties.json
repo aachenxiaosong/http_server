@@ -13,6 +13,7 @@
                 "${workspaceFolder}/src/utils/device/inc",
                 "${workspaceFolder}/src/utils/timer/inc",
                 "${workspaceFolder}/src/utils/json/inc",
+                "${workspaceFolder}/src/utils/uuid/inc",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/x86_64-redhat-linux",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/backward",

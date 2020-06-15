@@ -29,6 +29,7 @@ utils_src_file := src/utils/bitmap/src/uni_bitmap.c \
                   src/utils/interruptable_sleep/src/uni_interruptable.c \
                   src/utils/list/src/list_head.c \
                   src/utils/log/src/uni_log.c \
+                  src/utils/uuid/src/uni_uuid.c \
                   src/utils/uart/src/serial.c \
                   src/utils/md5sum/src/uni_md5sum.c \
                   src/utils/memcheck/src/uni_memcheck.c \
@@ -47,6 +48,7 @@ utils_inc := -Isrc/utils/bitmap/inc \
              -Isrc/utils/interruptable_sleep/inc \
              -Isrc/utils/list/inc \
              -Isrc/utils/log/inc \
+             -Isrc/utils/uuid/inc \
              -Isrc/utils/uart/inc \
              -Isrc/utils/md5sum/inc \
              -Isrc/utils/memcheck/inc \

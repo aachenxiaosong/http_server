@@ -1,5 +1,5 @@
 /**************************************************************************
- * Copyright (C) 2019-2019  Unisound
+ * Copyright (C) 2017-2017  Unisound
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,29 +16,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  **************************************************************************
  *
- * Description : uni_device.h
- * Author      : liuwenzheng.unisound.com
- * Date        : 2019.09.27
+ * Description : uni_uuid.c
+ * Author      : chenxiaosong@unisound.com
+ * Date        : 2020.06.19
  *
  **************************************************************************/
-#ifndef SDK_DEV_CENTER_INC_UNI_DEVICE_H_
-#define SDK_DEV_CENTER_INC_UNI_DEVICE_H_
+#include "stdlib.h"
+#include "stdio.h"
+#include "unistd.h"
+#include "uni_uuid.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define CHARACTOR_NUM 36
+static const char *c_charactors = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-#include "uni_iot.h"
-
-const char* DeviceGetMac(void);
-const char* DeviceGetUdid(void);
-const char* DeviceGetType(void);
-const char* DeviceGetAppKey(void);
-const char* DeviceGetSecretKey(void);
-const char* DeviceGetServerUrl(void);
-
-
-#ifdef __cplusplus
+int GetUuid(char *uuid) {
+  if (NULL == uuid) {
+    return -1;
+  }
+  int i;
+  for (i = 0; i < UUID_LEN; i++) {
+    uuid[i] = c_charactors[rand() % CHARACTOR_NUM];
+  }
+  uuid[i] = '\0';
+  return 0;
 }
-#endif
-#endif /*SDK_DEV_CENTER_INC_UNI_DEVICE_H_*/

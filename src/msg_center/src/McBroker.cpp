@@ -70,13 +70,21 @@ Result McBrokerConnect(void) {
   rc = McConnect(g_mc_service.cp_mc, _mc_recv_routine, _cp_mc_disc_routine);
   if (rc != E_OK) {
     LOGE(MC_SERVICE_TAG, "connect platform mc connect failed");
-    return rc;
   }
   return rc;
 }
 
 void McBrokerDisconnect(void) {
   McDisconnect(g_mc_service.cp_mc);
+}
+
+Result McBrokerSend(string &data) {
+  Result rc;
+  rc = McSend(g_mc_service.cp_mc, data.c_str(), data.size());
+  if (rc != E_OK) {
+    LOGE(MC_SERVICE_TAG, "connect platform mc connect failed");
+  }
+  return rc;
 }
 
 Result McBrokerInit(void) {

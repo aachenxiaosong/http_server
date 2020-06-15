@@ -298,6 +298,16 @@ static Result _set_subscribe(MqttParam *param, const char *subscribe) {
   return E_OK;
 }
 
+static Result _set_subscribe1(MqttParam *param, const char *subscribe1) {
+  uni_s32 len = uni_strlen(subscribe1);
+  if (len > SUBSCRIBE_MAX_LEN) {
+    LOGE(MC_PARAM_TAG, "invalid param size %d", len);
+    return E_FAILED;
+  }
+  uni_strcpy(param->subscribe1, subscribe1);
+  return E_OK;
+}
+
 static Result _set_publish(MqttParam *param, const char *publish) {
   uni_s32 len = uni_strlen(publish);
   if (len > PUBLISH_MAX_LEN) {
@@ -334,6 +344,9 @@ Result MqttParamSet(MqttParam *param, MqttParamType param_type, const char *valu
     case MQTT_PARAM_SUBSCRIBE:
       ret = _set_subscribe(param, value);
       break;
+    case MQTT_PARAM_SUBSCRIBE1:
+      ret = _set_subscribe1(param, value);
+      break;
     case MQTT_PARAM_PUBLISH:
       ret = _set_publish(param, value);
       break;
@@ -366,6 +379,9 @@ char* MqttParamGet(MqttParam *param, MqttParamType param_type) {
     case MQTT_PARAM_SUBSCRIBE:
       ret = param->subscribe;
       break;
+    case MQTT_PARAM_SUBSCRIBE1:
+      ret = param->subscribe1;
+      break;
     case MQTT_PARAM_PUBLISH:
       ret = param->publish;
       break;
@@ -384,6 +400,7 @@ void MqttParamPrint(MqttParam *param) {
          "ip:%s\n"
          "port:%s\n"
          "subscribe:%s\n"
+         "subscribe1:%s\n"
          "publish:%s\n",
          param->client_id,
          param->username,
@@ -391,6 +408,7 @@ void MqttParamPrint(MqttParam *param) {
          param->ip,
          param->port,
          param->subscribe,
+         param->subscribe1,
          param->publish);
 }
 

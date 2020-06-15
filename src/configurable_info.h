@@ -6,11 +6,13 @@ extern "C" {
 #endif
 
 /******************* common info of device *******************/
-#define NET_NAME "enp2s0"
-
-/************************ device info***********************/
+#define NET_NAME  "enp2s0"
+#define MY_TYPE     "ELEVATOR_IPC"
 #define MY_APPKEY "gkmgvhnht2gcb4m35vy6emffztfdxdlirtkhhhin"
 #define MY_SECKEY "efecfa5a4f75a915140c526e8201832c"
+
+/************************* http info************************/
+#define MY_SERVER_URL "http://192.168.6.10:8080"
 
 /************************* urls info************************/
 #define CLOUD_TYPE 0

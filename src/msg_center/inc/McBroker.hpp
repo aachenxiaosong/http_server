@@ -30,6 +30,7 @@
 
 Result McBrokerConnect(void);
 void   McBrokerDisconnect(void);
+Result McBrokerSend(string &data);
 Result McBrokerInit(void);
 void   McBrokerFinal(void);
 Result McBrokerAddHandler(IMcMsgHandler* handler);

@@ -71,10 +71,18 @@ const char* DeviceGetUdid(void) {
   //return "000c29051f71";
 }
 
+const char* DeviceGetType(void) {
+  return MY_TYPE;
+}
+
 const char* DeviceGetAppKey(void) {
   return MY_APPKEY;
 }
 
 const char* DeviceGetSecretKey(void) {
   return MY_SECKEY;
+}
+
+const char* DeviceGetServerUrl(void) {
+  return MY_SERVER_URL;
 }
