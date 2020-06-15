@@ -12,7 +12,8 @@ extern "C" {
 #define MY_SECKEY "efecfa5a4f75a915140c526e8201832c"
 
 /************************* http info************************/
-#define MY_SERVER_URL "http://192.168.6.10:8080"
+//#define MY_SERVER_URL "http://192.168.6.10:8080"
+#define MY_SERVER_URL "http://101.231.106.182:8081"
 
 /************************* urls info************************/
 #define CLOUD_TYPE 0
