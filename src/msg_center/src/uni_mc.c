@@ -38,7 +38,7 @@
 #define MSG_CENTER_TAG "msg_center"
 
 #define MQTT_SEND_BUF_SIZE 10240
-#define MQTT_RECV_BUF_SIZE 10240
+#define MQTT_RECV_BUF_SIZE 204800
 #define MQTT_CONNECT_TIMEOUT_MS 5000
 
 enum {
@@ -454,7 +454,12 @@ static Result _connect_internal(MsgCenter *mc) {
     LOGT(MSG_CENTER_TAG, "mqtt subscribe %s succeed", subscribe);
   }
   mc->connected = TRUE;
-  _publish_device_info(mc);
+  ret = _publish_device_info(mc);
+  if (ret != 0) {
+    LOGE(MSG_CENTER_TAG, "publish device info failed");
+    mc->connected = FALSE;
+    goto L_ERROR1;
+  }
   return E_OK;
 
 L_ERROR1:
@@ -489,6 +494,11 @@ static Result _send_internal(MsgCenter *mc, char *data, uni_s32 len) {
   msg.payloadlen = len;
   ret = MQTTPublish(&mc->mqtt_client,
                     MqttParamGet(param, MQTT_PARAM_PUBLISH), &msg);
+  //try again
+  if (ret != 0) {
+    ret = MQTTPublish(&mc->mqtt_client,
+                      MqttParamGet(param, MQTT_PARAM_PUBLISH), &msg);
+  }
   uni_free(data);
   if (ret != 0) {
     LOGE(MSG_CENTER_TAG, "mqtt send failed");

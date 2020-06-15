@@ -3,10 +3,12 @@
 
 #include "IMcSubscriber.hpp"
 #include "WlongBookLiftMsgHandler.hpp"
+#include "WlongInitMsgHandler.hpp"
 
 class WlongMcSubscriber : public IMcSubscriber {
     private:
     WlongBookLiftMsgHandler mBookLiftHandler;
+    WlongInitMsgHandler mInitHandler;
     public:
     WlongMcSubscriber();
     int registerMsgHandler();

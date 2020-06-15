@@ -1,4 +1,5 @@
 #include "WlongInitMsgHandler.hpp"
+#include "WlongInfo.hpp"
 #include <iostream>
 #include "uni_log.h"
 
@@ -12,12 +13,16 @@ WlongInitMsgHandler ::WlongInitMsgHandler() : IMcMsgHandler("wlong_init_msg")
 int WlongInitMsgHandler ::handle(string &msg)
 {
     int ret;
+    string msg_type;
     CJsonObject djson;
     CJsonObject sjson(msg);
+    if (true != sjson.Get("msgType", msg_type) || msg_type.compare("LIFT_CTRL_CMD_INIT") != 0) {
+        return -1;
+    }
+    LOGT(WLONG_INIT_MSG_TAG, "msg %s is handled by wlong book lift msg handler", msg_type.c_str());
     ret = _parse(djson, sjson);
-    
     if (ret == 0) {
-        LOGT(WLONG_INIT_MSG_TAG, "msg %s is handled by wlong book lift msg handler", msg.c_str());
+        WlongInfo :: setInfo(djson);
         std::cout << djson.ToString() <<std::endl;
     } 
     return 0;
@@ -25,10 +30,11 @@ int WlongInitMsgHandler ::handle(string &msg)
 
 int WlongInitMsgHandler :: _parse_home(CJsonObject &djson, CJsonObject &sjson)
 {
+    int id = 0;
     int ivalue;
     string svalue;
     CJsonObject jvalue;
-    if (true != sjson.Get("id", ivalue))
+    if (true != sjson.Get("id", id))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
@@ -59,16 +65,17 @@ int WlongInitMsgHandler :: _parse_home(CJsonObject &djson, CJsonObject &sjson)
     djson.Add("liftHall", svalue);
     return 0;
 L_ERROR:
-    LOGE(WLONG_INIT_MSG_TAG, "parse home failed");
+    LOGE(WLONG_INIT_MSG_TAG, "parse home %d failed", id);
     return -1;
 }
 
 int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
 {
+    int id = 0;
     int ivalue;
     string svalue;
     CJsonObject jvalue;
-    if (true != sjson.Get("id", ivalue))
+    if (true != sjson.Get("id", id))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
@@ -96,7 +103,8 @@ int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
         0 == jvalue.GetArraySize())
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
-        goto L_ERROR;
+        //goto L_ERROR;
+        return 0;
     }
     djson.AddEmptySubArray("homes");
     for (int i = 0; i < jvalue.GetArraySize(); i++)
@@ -110,16 +118,17 @@ int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
     }
     return 0;
 L_ERROR:
-    LOGE(WLONG_INIT_MSG_TAG, "parse unit failed");
+    LOGE(WLONG_INIT_MSG_TAG, "parse unit %d failed", id);
     return -1;
 }
 
 int WlongInitMsgHandler :: _parse_building(CJsonObject &djson, CJsonObject &sjson)
 {
+    int id = 0;
     int ivalue;
     string svalue;
     CJsonObject jvalue;
-    if (true != sjson.Get("id", ivalue))
+    if (true != sjson.Get("id", id))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
@@ -151,7 +160,7 @@ int WlongInitMsgHandler :: _parse_building(CJsonObject &djson, CJsonObject &sjso
     }
     return 0;
 L_ERROR:
-    LOGE(WLONG_INIT_MSG_TAG, "parse building failed");
+    LOGE(WLONG_INIT_MSG_TAG, "parse building %d failed", id);
     return -1;
 }
 

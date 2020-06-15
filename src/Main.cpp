@@ -7,6 +7,7 @@
 #include "RiliHttpService.hpp"
 #include "WlongHttpService.hpp"
 #include "McBroker.hpp"
+#include "WlongMcSubscriber.hpp"
 
 #define MAIN_TAG "main"
 
@@ -45,6 +46,9 @@ int main() {
         LOGE(MAIN_TAG, "http server init failed");
         return -1;
     }
+    WlongMcSubscriber *wlong_subscriber = new WlongMcSubscriber();
+    wlong_subscriber->registerMsgHandler();
+    
     if(0 != http_server_start()) {
         LOGE(MAIN_TAG, "http server init failed");
         return -1;
@@ -60,6 +64,7 @@ int main() {
         sleep(100); 
     }
     delete http_service;
+    delete wlong_subscriber;
     serial_release();
     return 0;
 }
