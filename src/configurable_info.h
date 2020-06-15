@@ -30,6 +30,8 @@ extern "C" {
 
 #define CLOUD_UC_TS_URL  "http://uc.hivoice.cn/timestamp.jsp"
 
+#define STUB_ENABLE 1
+
 #ifdef __cplusplus
 }
 #endif
