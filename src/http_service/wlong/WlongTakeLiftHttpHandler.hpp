@@ -10,6 +10,7 @@ using namespace neb;
 class WlongTakeLiftHttpHandler :  public IHttpRequestHandler {
     private:
     int checkRqeust(CJsonObject& jrequest, string& err_field);
+    int handleRequest(CJsonObject& jrequest, CJsonObject& jresponse);
     public:
     WlongTakeLiftHttpHandler();
     int handle(string& path, string& request, string&response) ;

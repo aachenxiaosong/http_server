@@ -93,7 +93,7 @@ int WlongCallLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
     WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
     int ret = wlong_lift_ctrl.bookingElevator(cluster_id, from_floor, updown, open_floors, open_time, wl_response);
     if (ret == 0) {
-        LOGT(WLONG_CALL_TAG, "handle request of wlong book lift OK");
+        LOGT(WLONG_CALL_TAG, "handle request of wlong call lift OK");
         jresponse.Add("errCode", 0);
         jresponse.Add("errMsg", wl_response.msg);
         if (wl_response.code == 0) {
@@ -103,7 +103,7 @@ int WlongCallLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
         }
         jresponse.Add("elevatorId", -1);
     } else {
-        LOGT(WLONG_CALL_TAG, "handle request of wlong book lift failed");
+        LOGT(WLONG_CALL_TAG, "handle request of wlong call lift failed");
         jresponse.Add("errCode", 1);
         jresponse.Add("errMsg", "request of 3p interface failed");
         jresponse.Add("ackCode", 0);

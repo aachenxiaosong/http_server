@@ -116,7 +116,6 @@ int WlongBookLiftHttpHandler :: handle(string& path, string& request, string& re
         return -1;
     }
     LOGT(WLONG_BOOK_TAG, "WlongBookLift booked");
-
     /* process request */
     CJsonObject jrequest(request);
     CJsonObject jresponse;
@@ -144,6 +143,6 @@ int WlongBookLiftHttpHandler :: handle(string& path, string& request, string& re
     /* step3, parse request */
     handleRequest(jrequest, jresponse);
     response = jresponse.ToString();
-    LOGT(WLONG_BOOK_TAG, "chen: response is %s", response.c_str());
+    LOGT(WLONG_BOOK_TAG, "got response %s", response.c_str());
     return 0;
 }
