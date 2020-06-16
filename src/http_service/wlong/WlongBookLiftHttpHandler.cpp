@@ -1,4 +1,6 @@
 #include "WlongBookLiftHttpHandler.hpp"
+#include "WlongInfo.hpp"
+#include "WlongLiftCtrl.hpp"
 #include "configurable_info.h"
 #include "uni_log.h"
 #include "uni_iot.h"
@@ -60,14 +62,75 @@ int WlongBookLiftHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_f
     return 0;
 }
 
+int WlongBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
+    int cluster_id;
+    string from_floor;
+    string updown;
+    string open_floors;
+    int open_time;
+    CJsonObject jinfo = WlongInfo :: getInfo();
+    WlongResponse wl_response;
+    int ivalue;
+    string svalue;
+    string book_type;
+    //prepare for wlong lift ctrl params
+    jrequest.Get("bookType", book_type);
+    jrequest.Get("elevatorHallId", cluster_id);
+    jrequest.Get("sfloorId", from_floor);
+    updown = "2";//up
+    if (book_type.compare("interVisit")) {
+        if (jrequest("sfloorId").compare(jrequest("dfloorId").c_str()) > 0) {
+            updown = "1";//down
+        }
+    }
+    open_floors = jrequest("dfloorId");
+    jrequest.Get("unlockTime", open_time);
+    //prepare for wlong lift ctrl params done
+    
+    WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
+    int ret = wlong_lift_ctrl.bookingElevator(cluster_id, from_floor, updown, open_floors, open_time, wl_response);
+    if (ret == 0) {
+        LOGT(WLONG_BOOK_TAG, "handle request of wlong book lift OK");
+        jresponse.Add("errCode", 0);
+        jresponse.Add("errMsg", wl_response.msg);
+        if (wl_response.code == 0) {
+            jresponse.Add("ackCode", 1);
+        } else {
+            jresponse.Add("ackCode", 0);
+        }
+        jresponse.Add("elevatorId", -1);
+    } else {
+        LOGT(WLONG_BOOK_TAG, "handle request of wlong book lift failed");
+        jresponse.Add("errCode", 1);
+        jresponse.Add("errMsg", "request of 3p interface failed");
+        jresponse.Add("ackCode", 0);
+        jresponse.Add("elevatorId", -1);
+    }
+    return ret;
+}
+
+
 int WlongBookLiftHttpHandler :: handle(string& path, string& request, string& response) {
     if (path.compare("/liftCtrl/v2/bookLift") != 0) {
         LOGT(WLONG_BOOK_TAG, "%s is not for WlongBookLift", path.c_str());
         return -1;
     }
     LOGT(WLONG_BOOK_TAG, "WlongBookLift booked");
+
+    /* process request */
     CJsonObject jrequest(request);
     CJsonObject jresponse;
+    /* step 1, check wanglong info */
+    if (WlongInfo :: getInfo().IsEmpty()) {
+        LOGE(WLONG_BOOK_TAG, "reject request for wlong info is not ready (sent from connecting platform)");
+        jresponse.Add("errCode", 1);
+        jresponse.Add("errMsg", "lack of wanglong info");
+        jresponse.Add("ackCode", 0);
+        jresponse.Add("elevatorId", -1);
+        response = jresponse.ToString();
+        return 0;
+    }
+    /* step2, check request */
     string err_field = "";
     if (0 != checkRqeust(jrequest, err_field)) {
         LOGT(WLONG_BOOK_TAG, "check request %s failed", request.c_str());
@@ -78,19 +141,9 @@ int WlongBookLiftHttpHandler :: handle(string& path, string& request, string& re
         response = jresponse.ToString();
         return 0;
     }
-    #if STUB_ENABLE
-    usleep(1000 * 500);
-    jresponse.Add("errCode", 0);
-    jresponse.Add("errMsg", "OK");
-    if (rand() % 2 == 0) {
-        jresponse.Add("ackCode", 1);
-    } else {
-        jresponse.Add("ackCode", 0);
-    }
-    jresponse.Add("elevatorId", -1);
+    /* step3, parse request */
+    handleRequest(jrequest, jresponse);
     response = jresponse.ToString();
-    #else
-    //TODO
-    #endif
+    LOGT(WLONG_BOOK_TAG, "chen: response is %s", response.c_str());
     return 0;
 }

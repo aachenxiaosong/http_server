@@ -59,6 +59,7 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
             src/http_server/src/IHttpRequestHandler.cpp \
             src/http_client/auth/src/uni_auth_http.c \
             src/http_client/resource_prefetch/src/uni_resource_prefetch.c \
+            src/http_client/wlong/WlongLiftCtrl.cpp \
             src/http_service/IHttpService.cpp \
             src/http_service/rili/RiliHttpService.cpp \
             src/http_service/rili/RiliCallLiftHttpHandler.cpp \
@@ -91,6 +92,7 @@ INC := $(hal_inc) $(utils_inc) \
        -Isrc/http_server/inc \
        -Isrc/http_client/auth/inc \
        -Isrc/http_client/resource_prefetch/inc \
+       -Isrc/http_client/wlong \
        -Isrc/http_service \
        -Isrc/http_service/rili \
        -Isrc/http_service/wlong \

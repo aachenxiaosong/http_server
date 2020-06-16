@@ -225,7 +225,7 @@ static void* _httpserver_routine(void *param) {
   }
 
   //设置请求超时时间(s)
-  evhttp_set_timeout(http_server,5);
+  evhttp_set_timeout(http_server, 10);
   //设置事件处理函数，evhttp_set_cb针对每一个事件(请求)注册一个处理函数，
   //区别于 evhttp_set_gencb 函数，是对所有请求设置一个统一的处理函数
   //evhttp_set_cb(http_server,"/liftCtrl/v1/callLift", http_handler_post_msg, NULL);
