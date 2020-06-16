@@ -34,11 +34,12 @@ int WlongInitMsgHandler :: _parse_home(CJsonObject &djson, CJsonObject &sjson)
     int ivalue;
     string svalue;
     CJsonObject jvalue;
-    if (true != sjson.Get("id", id))
+    if (true != sjson.Get("id", ivalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
     }
+    id = ivalue;
     djson.Add("id", ivalue);
     if (true != sjson.Get("extension", jvalue))
     {
@@ -75,11 +76,12 @@ int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
     int ivalue;
     string svalue;
     CJsonObject jvalue;
-    if (true != sjson.Get("id", id))
+    if (true != sjson.Get("id", ivalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
     }
+    id = ivalue;
     djson.Add("id", ivalue);
     if (true != sjson.Get("extension", jvalue))
     {
@@ -99,11 +101,10 @@ int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
     }
     djson.Add("floorMap", CJsonObject(svalue));
     if (true != sjson.Get("spaceEntityList", jvalue) ||
-        false == jvalue.IsArray() ||
-        0 == jvalue.GetArraySize())
+        false == jvalue.IsArray())
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
-        //goto L_ERROR;
+        goto L_ERROR;
         return 0;
     }
     djson.AddEmptySubArray("homes");
@@ -128,11 +129,12 @@ int WlongInitMsgHandler :: _parse_building(CJsonObject &djson, CJsonObject &sjso
     int ivalue;
     string svalue;
     CJsonObject jvalue;
-    if (true != sjson.Get("id", id))
+    if (true != sjson.Get("id", ivalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
     }
+    id = ivalue;
     djson.Add("id", ivalue);
     if (true != sjson.Get("extension", jvalue) ||
         true != sjson["extension"].Get("buildingNo", svalue))
@@ -142,8 +144,7 @@ int WlongInitMsgHandler :: _parse_building(CJsonObject &djson, CJsonObject &sjso
     }
     djson.Add("number", svalue);
     if (true != sjson.Get("spaceEntityList", jvalue) ||
-        false == jvalue.IsArray() ||
-        0 == jvalue.GetArraySize())
+        false == jvalue.IsArray())
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
@@ -191,8 +192,7 @@ int WlongInitMsgHandler :: _parse(CJsonObject &djson, CJsonObject &sjson)
 
     if (true != sjson.Get("spaceFramework", jvalue) ||
         true != sjson["spaceFramework"].Get("spaceEntityList", jvalue) ||
-        false == jvalue.IsArray() ||
-        0 == jvalue.GetArraySize())
+        false == jvalue.IsArray())
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
         goto L_ERROR;
