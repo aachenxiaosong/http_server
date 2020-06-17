@@ -79,7 +79,9 @@ src_file := $(hal_src_file) $(utils_src_file) src/Main.cpp \
             src/msg_center/src/McBroker.cpp \
             src/msg_center_subscriber/IMcSubscriber.cpp \
             src/msg_center_subscriber/wlong/WlongInfo.cpp \
+            src/msg_center_subscriber/wlong/WlongCallLiftMsgHandler.cpp \
             src/msg_center_subscriber/wlong/WlongBookLiftMsgHandler.cpp \
+            src/msg_center_subscriber/wlong/WlongTakeLiftMsgHandler.cpp \
             src/msg_center_subscriber/wlong/WlongInitMsgHandler.cpp \
             src/msg_center_subscriber/wlong/WlongMcSubscriber.cpp \
             src/msg_center_subscriber/rili/RiliBookLiftMsgHandler.cpp \

@@ -78,7 +78,7 @@ void McBrokerDisconnect(void) {
   McDisconnect(g_mc_service.cp_mc);
 }
 
-Result McBrokerSend(string &data) {
+Result McBrokerSend(const string &data) {
   Result rc;
   rc = McSend(g_mc_service.cp_mc, data.c_str(), data.size());
   if (rc != E_OK) {

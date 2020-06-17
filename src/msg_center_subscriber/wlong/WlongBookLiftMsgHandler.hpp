@@ -8,6 +8,9 @@ using namespace neb;
 
 
 class WlongBookLiftMsgHandler : public IMcMsgHandler {
+    private:
+    int _checkBookLift(CJsonObject& msg, string& err_field) ;
+    int _handleBookLift(CJsonObject& msg, CJsonObject& jresponse) ;
     public:
     WlongBookLiftMsgHandler();
     int handle(string& msg);

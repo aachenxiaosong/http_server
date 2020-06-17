@@ -6,7 +6,8 @@
 
 #define CALL_ELEVATOR_BY_FLOOR_PATH "/eiserver/client/systemDockingDeviceInfo/callElevatorByFoor"
 #define BOOKING_ELEVATOR_PATH            "/eiserver/client/systemDockingDeviceInfo/BookingElevator"
-
+#define WLONG_UP                                   "2"
+#define WLONG_DN                                   "1"
 using namespace neb;
 using namespace std;
 
