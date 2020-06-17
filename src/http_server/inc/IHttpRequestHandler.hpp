@@ -9,6 +9,7 @@ class IHttpRequestHandler {
     string mName;
     public:
     IHttpRequestHandler(const char* name) ;
+    virtual ~IHttpRequestHandler();
     string getName(); 
     virtual int handle(string& path, string& request, string&response) = 0;
 };

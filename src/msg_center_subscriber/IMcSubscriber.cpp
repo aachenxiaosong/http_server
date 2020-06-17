@@ -4,3 +4,6 @@
 IMcSubscriber :: IMcSubscriber(const char *name) {
     this->name = name;
 }
+
+IMcSubscriber :: ~IMcSubscriber() {
+}

@@ -4,3 +4,7 @@
 IHttpService :: IHttpService(const char *name) {
     this->name = name;
 }
+
+IHttpService :: ~IHttpService() {
+    
+}

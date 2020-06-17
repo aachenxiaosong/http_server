@@ -8,6 +8,7 @@ class IMcSubscriber{
     string name;
     public:
     IMcSubscriber(const char* name) ;
+    virtual ~IMcSubscriber() ;
     virtual int registerMsgHandler() = 0;
 };
 

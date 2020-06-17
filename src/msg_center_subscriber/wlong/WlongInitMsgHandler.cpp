@@ -19,7 +19,7 @@ int WlongInitMsgHandler ::handle(string &msg)
     if (true != sjson.Get("msgType", msg_type) || msg_type.compare("LIFT_CTRL_CMD_INIT") != 0) {
         return -1;
     }
-    LOGT(WLONG_INIT_MSG_TAG, "msg %s is handled by wlong book lift msg handler", msg_type.c_str());
+    LOGT(WLONG_INIT_MSG_TAG, "msg %s is handled by wlong book init msg handler", msg_type.c_str());
     ret = _parse(djson, sjson);
     if (ret == 0) {
         WlongInfo :: setInfo(djson);

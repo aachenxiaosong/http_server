@@ -9,6 +9,7 @@ class IMcMsgHandler {
     string mName;
     public:
     IMcMsgHandler(const char* name) ;
+    virtual ~IMcMsgHandler() ;
     string getName(); 
     virtual int handle(string& msg) = 0;
 };

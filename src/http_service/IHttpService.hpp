@@ -8,6 +8,7 @@ class IHttpService{
     string name;
     public:
     IHttpService(const char* name) ;
+    virtual ~IHttpService() ;
     virtual int registerHttpHandler() = 0;
 };
 
