@@ -54,6 +54,7 @@ int WlongBookLiftMsgHandler :: _handleBookLift(CJsonObject& jmsg, CJsonObject& j
     jresponse.Add("timestamp", timestamp);
     jresponse.Add("msgType", "LIFT_CTRL_STATE_RES");
     if (0 != _checkBookLift(jmsg, err_field)) {
+        LOGE(WLONG_BOOK_MSG_TAG, "check book lift msg field %s error", err_field.c_str());
         jresponse.Add("code", 1);
         jresponse.Add("message", "wrong param " + err_field);
         return 0;
@@ -67,11 +68,11 @@ int WlongBookLiftMsgHandler :: _handleBookLift(CJsonObject& jmsg, CJsonObject& j
     WlongResponse wl_response;
     CJsonObject jinfo = WlongInfo :: getInfo();
     WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
-    jmsg.Get("elevatorHallId", cluster_id);
+    jmsg["bookLift"].Get("elevatorHallId", cluster_id);
     from_floor = "1";
     updown = WLONG_UP;
-    jmsg.Get("ufloorId", open_floors);
-    jmsg.Get("unlockTime", open_time);
+    jmsg["bookLift"].Get("ufloorId", open_floors);
+    jmsg["bookLift"].Get("unlockTime", open_time);
     int ret = wlong_lift_ctrl.bookingElevator(cluster_id, from_floor, updown, open_floors, open_time, wl_response);
     if (ret == 0) {
         LOGT(WLONG_BOOK_MSG_TAG, "handle msg of wlong book lift OK");

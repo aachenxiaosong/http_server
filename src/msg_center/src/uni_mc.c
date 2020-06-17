@@ -16,7 +16,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  **************************************************************************
  *
- * Description : uni_msg_center.c
+ * Description : uni_mc.c
  * Author      : chenxiaosong@unisound.com
  * Date        : 2020.03.31
  *

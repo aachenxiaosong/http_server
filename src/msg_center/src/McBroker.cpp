@@ -46,10 +46,11 @@ static McBroker g_mc_service;
 static void _mc_recv_routine(char *data, int len) {
   int i;
   IMcMsgHandler* handler;
-  printf("chen: recv data %s\n", data);
   if (data == NULL || len <= 0) {
     return;
   }
+  data[len] = '\0';
+  printf("chen: recv data %s len %d\n", data, len);
   string sdata = data;
   for (vector<IMcMsgHandler *>::iterator it = g_mc_service.handlers.begin();
         it != g_mc_service.handlers.end(); it++) {
