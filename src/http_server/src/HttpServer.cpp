@@ -204,6 +204,7 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
     LOGE(HTTP_SERVER_TAG, "not a post request");
     return;
   }
+  LOGE(HTTP_SERVER_TAG, "post request handled by thread %ld", pthread_self());
   find_http_path(req, path);
   ret = get_post_request(request, req);//获取请求数据，一般是json格式的数据
   if(ret != 0) {
