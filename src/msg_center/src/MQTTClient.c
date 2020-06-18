@@ -118,6 +118,7 @@ static int readPacket(MQTTClient* c, Timer* timer)
     int len = 0;
     int rem_len = 0;
 
+    memset(c->readbuf, 0, c->readbuf_size);
     /* 1. read the header byte.  This has the packet type in it */
     int rc = c->ipstack->mqttread(c->ipstack, c->readbuf, 1, TimerLeftMS(timer));
     if (rc != 1)
@@ -128,7 +129,7 @@ static int readPacket(MQTTClient* c, Timer* timer)
     decodePacket(c, &rem_len, TimerLeftMS(timer));
     len += MQTTPacket_encode(c->readbuf + 1, rem_len); /* put the original remaining length back into the buffer */
 
-    if (rem_len > (c->readbuf_size - len))
+    if (rem_len > (c->readbuf_size - len - 1))
     {
         rc = BUFFER_OVERFLOW;
         goto exit;

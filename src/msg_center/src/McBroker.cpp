@@ -49,7 +49,6 @@ static void _mc_recv_routine(char *data, int len) {
   if (data == NULL || len <= 0) {
     return;
   }
-  data[len] = '\0';
   printf("chen: recv data %s len %d\n", data, len);
   string sdata = data;
   for (vector<IMcMsgHandler *>::iterator it = g_mc_service.handlers.begin();

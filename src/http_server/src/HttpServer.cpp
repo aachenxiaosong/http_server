@@ -20,13 +20,23 @@
 // #include "get_home.h"
 // #include "lift_status.h"
 #include "uni_log.h"
+#include "uni_iot.h"
 #include <vector>
 
 #include "IHttpRequestHandler.hpp"
 #include "HttpServer.hpp"
 
-#define BUF_MAX (1024 * 16)
-#define HTTP_SERVER_TAG "http_server"
+#define BUF_MAX              (1024 * 16)
+#define HTTP_SERVER_TAG      "http_server"
+#define HTTP_SERVER_PORT     8080
+#define HTTP_SERVER_NTHREADS 5
+
+typedef struct httpd_info {
+  struct event_base *base;
+  struct evhttp *httpd;
+} httpd_info;
+pthread_t g_threads[HTTP_SERVER_NTHREADS];
+httpd_info g_info_arr[HTTP_SERVER_NTHREADS];
 
 vector<IHttpRequestHandler *> g_http_handlers;
 
@@ -190,6 +200,10 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
     LOGE(HTTP_SERVER_TAG, "req is null");
     return;
   }
+  if (req->type != EVHTTP_REQ_POST) {
+    LOGE(HTTP_SERVER_TAG, "not a post request");
+    return;
+  }
   find_http_path(req, path);
   ret = get_post_request(request, req);//获取请求数据，一般是json格式的数据
   if(ret != 0) {
@@ -210,7 +224,7 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
   evbuffer_free(retbuff);
 }
 
-static void* _httpserver_routine(void *param) {
+/*static void* _httpserver_routine(void *param) {
   //start http server here
   struct evhttp *http_server = NULL;
   short http_port = 8080;
@@ -237,15 +251,74 @@ static void* _httpserver_routine(void *param) {
   evhttp_free(http_server);
   
   return NULL;
+}*/
+
+void *dispatch(void *args){
+  struct httpd_info *info = (struct httpd_info *)args;
+  LOGT(HTTP_SERVER_TAG, "http_server thread %ld start\n", pthread_self());
+  event_base_dispatch(info->base);
+  LOGT(HTTP_SERVER_TAG, "http_server thread %ld done\n", pthread_self());
+  event_base_free(info->base);
+  evhttp_free(info->httpd);
+  return NULL;
+}
+
+int bind_socket() {
+  int ret, server_socket, opt=1;
+  server_socket = socket(AF_INET,SOCK_STREAM|SOCK_NONBLOCK,0);//NOTE 多线程evhttp必须非阻塞
+  if (server_socket<0) {
+    LOGE(HTTP_SERVER_TAG, "get socket failed");
+    return -1;
+  }
+  setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+  struct sockaddr_in addr;
+  memset(&addr,0,sizeof(addr));
+  addr.sin_family = AF_INET;
+  addr.sin_addr.s_addr = INADDR_ANY;
+  addr.sin_port = htons(HTTP_SERVER_PORT);
+  ret = bind(server_socket, (struct sockaddr*)&addr, sizeof(struct sockaddr));
+  if(ret<0) {
+    LOGE(HTTP_SERVER_TAG, "bind failed");
+    close(server_socket);
+    return -1;
+  }
+  listen(server_socket, 1024);
+  return server_socket;
 }
 
 int http_server_start() {
-  pthread_t pid;
-  if (0 != pthread_create(&pid, NULL, _httpserver_routine, NULL)) {
-    LOGE(HTTP_SERVER_TAG, "craete http server routine failed"); 
+  httpd_info *pinfo;
+  int i;
+  int ret;
+  int server_socket;
+  server_socket = bind_socket();
+  if (-1 == server_socket) {
+    LOGE(HTTP_SERVER_TAG, "bind socket failed");
     return -1;
   }
-  pthread_detach(pid);
+  for(i = 0; i< HTTP_SERVER_NTHREADS; i++) {
+    pinfo = &g_info_arr[i];
+    pinfo->base = event_base_new();
+    if (pinfo->base == NULL) {
+      LOGE(HTTP_SERVER_TAG, "new event_base failed");
+      return -1;
+    }
+    pinfo->httpd = evhttp_new(pinfo->base);
+    if (pinfo->httpd == NULL) {
+      LOGE(HTTP_SERVER_TAG, "new evhttp failed");
+      return -1;
+    }
+    ret = evhttp_accept_socket(pinfo->httpd, server_socket);
+    if (ret != 0) {
+      LOGE(HTTP_SERVER_TAG, "evhttp_accept_socket failed");
+      return -1;
+    }
+    //设置请求超时时间(s)
+    evhttp_set_timeout(pinfo->httpd, 10);
+    evhttp_set_gencb(pinfo->httpd, http_handler_post_msg, NULL);
+    pthread_create(&g_threads[i], NULL, dispatch, pinfo);
+    pthread_detach(g_threads[i]);
+  }
   return 0;
 }
 
