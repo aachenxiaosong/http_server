@@ -32,7 +32,6 @@
 #include "uni_json.h"
 #include "uni_log.h"
 #include "uni_device.h"
-#include "uni_uuid.h"
 #include "uni_iot.h"
 
 #define MSG_CENTER_TAG "msg_center"
@@ -364,50 +363,6 @@ Result _register_internal(MsgCenter *mc) {
   return E_FAILED;
 }
 
-/*
-{
-    "reqId":"734a6a0bfb564df8a34108e3288024e8",
-    "timestamp":"1585194053162",
-    "entityCode":"SZ19011304S41600118",
-    "typeCode":"F1",
-    "msgType":"up",
-    "attributesEntities":[
-        {
-            "attributeCode":"intranetNetAddr",
-            "value":"http://177.28.12.32"
-        }]
-}
- */
-static int _publish_device_info(MsgCenter *mc) {
-    char sdata[1024] = {0};
-    char timestamp[16];
-    char uuid[UUID_LEN + 1] = {0};
-    GetUuid(uuid);
-    time_t timeval;
-    time(&timeval);
-    snprintf(timestamp, sizeof(timestamp), "%d000", (unsigned int)timeval);
-    snprintf(sdata, sizeof(sdata),
-                "{"
-                    "\"reqId\":\"%s\","
-                    "\"timestamp\":\"%s\","
-                    "\"entityCode\":\"%s\","
-                    "\"typeCode\":\"%s\","
-                    "\"msgType\":\"up\","
-                    "\"attributesEntities\":["
-                        "{"
-                              "\"attributeCode\":\"intranetNetAddr\","
-                              "\"value\":\"%s\""
-                        "}"
-                    "]"
-                 "}", uuid, timestamp, DeviceGetUdid(), DeviceGetType(), DeviceGetServerUrl());
-    LOGT(MSG_CENTER_TAG, "publish of device info: %s", sdata);
-    if (E_OK != McSend(mc, sdata, strlen(sdata) + 1)) {
-        LOGT(MSG_CENTER_TAG, "publish of device info failed");
-        return -1;
-    }
-    return 0;
-}
-
 static Result _connect_internal(MsgCenter *mc) {
   int ret = 0;
   char *subscribe = NULL;
@@ -454,12 +409,6 @@ static Result _connect_internal(MsgCenter *mc) {
     LOGT(MSG_CENTER_TAG, "mqtt subscribe %s succeed", subscribe);
   }
   mc->connected = TRUE;
-  ret = _publish_device_info(mc);
-  if (ret != 0) {
-    LOGE(MSG_CENTER_TAG, "publish device info failed");
-    mc->connected = FALSE;
-    goto L_ERROR1;
-  }
   return E_OK;
 
 L_ERROR1:

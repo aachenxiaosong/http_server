@@ -28,6 +28,8 @@
 #include "uni_json.h"
 #include "uni_log.h"
 #include "configurable_info.h"
+#include "uni_device.h"
+#include "uni_uuid.h"
 #include <vector>
 
 #define MC_SERVICE_TAG "mc_service"
@@ -38,10 +40,24 @@ using namespace std;
 
 typedef struct {
   McHandle cp_mc;
+  int device_info_synced;
+  char device_info_req_id[64];
+  uni_pthread_t  device_info_sync_thread;
   vector<IMcMsgHandler *> handlers;
 } McBroker;
 
 static McBroker g_mc_service;
+
+static int _check_device_info_synced(char *msg) {
+  if (NULL == msg || g_mc_service.device_info_synced == 1) {
+    return -1;
+  }
+  if (strstr(msg, "LIFT_CTRL_STATE_RES") && strstr(msg, g_mc_service.device_info_req_id) ) {
+    g_mc_service.device_info_synced = 1;
+    LOGT(MC_SERVICE_TAG, "device info sync ack recved");
+  }
+  return 0;
+}
 
 static void _mc_recv_routine(char *data, int len) {
   int i;
@@ -50,6 +66,7 @@ static void _mc_recv_routine(char *data, int len) {
     return;
   }
   printf("chen: recv data %s len %d\n", data, len);
+  _check_device_info_synced(data);
   string sdata = data;
   for (vector<IMcMsgHandler *>::iterator it = g_mc_service.handlers.begin();
         it != g_mc_service.handlers.end(); it++) {
@@ -87,11 +104,95 @@ Result McBrokerSend(const string &data) {
   return rc;
 }
 
+/*
+{
+    "reqId":"734a6a0bfb564df8a34108e3288024e8",
+    "timestamp":"1585194053162",
+    "entityCode":"SZ19011304S41600118",
+    "typeCode":"F1",
+    "msgType":"up",
+    "attributesEntities":[
+        {
+            "attributeCode":"intranetNetAddr",
+            "value":"http://177.28.12.32"
+        }]
+}
+ */
+static int _publish_device_info(McHandle mc) {
+    char sdata[1024] = {0};
+    char timestamp[16];
+    char uuid[UUID_LEN + 1] = {0};
+    GetUuid(uuid);
+    snprintf(g_mc_service.device_info_req_id, sizeof(g_mc_service.device_info_req_id), "%s", uuid);
+    time_t timeval;
+    time(&timeval);
+    snprintf(timestamp, sizeof(timestamp), "%d000", (unsigned int)timeval);
+    snprintf(sdata, sizeof(sdata),
+                "{"
+                    "\"reqId\":\"%s\","
+                    "\"timestamp\":\"%s\","
+                    "\"entityCode\":\"%s\","
+                    "\"typeCode\":\"%s\","
+                    "\"msgType\":\"up\","
+                    "\"attributesEntities\":["
+                        "{"
+                              "\"attributeCode\":\"intranetNetAddr\","
+                              "\"value\":\"%s\""
+                        "}"
+                    "]"
+                 "}", uuid, timestamp, DeviceGetUdid(), DeviceGetType(), DeviceGetServerUrl());
+    LOGT(MC_SERVICE_TAG, "publish of device info: %s", sdata);
+    if (E_OK != McSend(mc, sdata, strlen(sdata) + 1)) {
+        LOGE(MC_SERVICE_TAG, "publish of device info failed");
+        return -1;
+    }
+    return 0;
+}
+
+static void* _device_info_sync_task(void *param) {
+  McHandle mc = (McHandle)param;
+  g_mc_service.device_info_synced = 0;
+  int retry_time = 0;
+  //wait first connecting done
+  sleep(5);
+  while (1) {
+    if (g_mc_service.device_info_synced == 0) {
+      LOGT(MC_SERVICE_TAG, "syncing device info, retry time = %d", retry_time);      
+      if (0 != _publish_device_info(mc)) {
+        //wait for retry
+        sleep(1);
+      } else {
+        //wait for return
+        sleep(10);
+      }
+      retry_time++;
+    } else {
+      sleep(100);
+    }
+  }
+  return NULL;
+}
+static Result _create_device_info_sync_task(McHandle mc) {
+  struct thread_param param;
+  uni_memset(&param, 0, sizeof(param));
+  param.stack_size = STACK_DEFAULT_SIZE;
+  param.th_priority = OS_PRIORITY_NORMAL;
+  uni_strncpy(param.task_name, "mc_long_conn", sizeof(param.task_name) - 1);
+  if (0 != uni_pthread_create(&g_mc_service.device_info_sync_thread, &param,
+                                          _device_info_sync_task, mc)) {
+    LOGE(MC_SERVICE_TAG, "create mqtt recv task failed");
+    return E_FAILED;
+  }
+  uni_pthread_detach(g_mc_service.device_info_sync_thread);
+  return E_OK;
+}
+
 Result McBrokerInit(void) {
   /* step 1: init g_mc_service */
   memset(&g_mc_service, 0, sizeof(McBroker));
   /* step 3: create connect platform mc */
   g_mc_service.cp_mc = McCreate("cp_mc", MC_REGISTER_URL_CP);
+  _create_device_info_sync_task(g_mc_service.cp_mc);
   return E_OK;
 }
 
