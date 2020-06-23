@@ -58,12 +58,9 @@ int main() {
         return -1;
     }
     
-    IHttpService *http_service = new WlongHttpService();
-    http_service->registerHttpHandler();
     while(1) {
         sleep(100); 
     }
-    delete http_service;
     delete wlong_subscriber;
     serial_release();
     return 0;

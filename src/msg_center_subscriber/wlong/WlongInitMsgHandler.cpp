@@ -1,5 +1,6 @@
 #include "WlongInitMsgHandler.hpp"
 #include "WlongInfo.hpp"
+#include "WlongHttpService.hpp"
 #include <iostream>
 #include "uni_log.h"
 
@@ -7,6 +8,7 @@
 
 WlongInitMsgHandler ::WlongInitMsgHandler() : IMcMsgHandler("wlong_init_msg")
 {
+    mHttpService = NULL;
     LOGT(WLONG_INIT_MSG_TAG, "WlongInitMsgHandler is created");
 }
 
@@ -16,7 +18,12 @@ int WlongInitMsgHandler ::handle(string &msg)
     string msg_type;
     CJsonObject djson;
     CJsonObject sjson(msg);
+    string work_mode = "";
     if (true != sjson.Get("msgType", msg_type) || msg_type.compare("LIFT_CTRL_CMD_INIT") != 0) {
+        return -1;
+    }
+    if (true != sjson.Get("workMode", work_mode)  || 0 != work_mode.compare("1")) {
+        LOGT(WLONG_INIT_MSG_TAG, "work mode %s is not for wlong", work_mode.c_str());
         return -1;
     }
     LOGT(WLONG_INIT_MSG_TAG, "msg %s is handled by wlong book init msg handler", msg_type.c_str());
@@ -24,6 +31,11 @@ int WlongInitMsgHandler ::handle(string &msg)
     if (ret == 0) {
         WlongInfo :: setInfo(djson);
         std::cout << djson.ToString() <<std::endl;
+        if (mHttpService == NULL) {
+            mHttpService = new WlongHttpService();
+            mHttpService->registerHttpHandler();
+            LOGT(WLONG_INIT_MSG_TAG, "work mode 1 is for wlong, http service registered");
+        }
     } 
     return 0;
 }
@@ -175,7 +187,12 @@ int WlongInitMsgHandler :: _parse(CJsonObject &djson, CJsonObject &sjson)
         goto L_ERROR;
     }
     djson.Add("reqId", svalue);
-
+    if (true != sjson.Get("workMode", svalue))
+    {
+        LOGE(WLONG_INIT_MSG_TAG, "parse failed");
+        goto L_ERROR;
+    }
+    djson.Add("workMode", svalue);
     if (true != sjson.Get("entityCode", svalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");

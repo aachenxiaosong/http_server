@@ -186,6 +186,9 @@ int process_post_request(char *path, char *request, char *response) {
       break;
     }
   }
+  if (strlen(response) == 0) {
+    sprintf(response, "%s", "{\"errCode\":1, \"errMsg\":\"server not ready or request not supported\"}");
+  }
   return 0;
 }
 
