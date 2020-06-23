@@ -17,6 +17,7 @@ int WlongLiftCtrl :: _parse_result(char *result, WlongResponse& response) {
     CJsonObject ojson(result);
     int ivalue;
     string svalue;
+    LOGT(WLONG_3P_CTRL, "parsing result: %s", result);
     if (true != ojson.Get("code", ivalue)) {
         LOGT(WLONG_3P_CTRL, "parse code failed for call_elevator_by_floor: %s", result);
         return -1;
@@ -37,20 +38,14 @@ int WlongLiftCtrl :: _parse_result(char *result, WlongResponse& response) {
 }
 
 int WlongLiftCtrl :: callElevatorByFoor(int lift_id, string& open_floors, string& unlock_floors, WlongResponse& response) {
-    CJsonObject ojson;
     char request_url[128] = {0};
-    const char *headers[1][2] = {{"Content-Type", "application/json;charset=UTF-8"}};
-    const char *request;
+    char request[1024] = {0};
+    const char *headers[1][2] = {{"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}};
     char *result = NULL;
     int ret;
-    ojson.Add("appId", appid);
-    ojson.Add("appSecret", appsecret);
-    ojson.Add("licence", licence);
-    ojson.Add("deviceId", lift_id);
-    ojson.Add("openFloor", open_floors);
-    ojson.Add("unlockFloor", unlock_floors);
     snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), CALL_ELEVATOR_BY_FLOOR_PATH);
-    request = ojson.ToString().c_str();
+    snprintf(request, sizeof(request), "appId=%s&appSecret=%s&licence=%s&deviceId=%d&openFloor=%s&unlockFloor=%s",
+             appid.c_str(), appsecret.c_str(), licence.c_str(), lift_id, open_floors.c_str(), unlock_floors.c_str());
     LOGT(WLONG_3P_CTRL, "call_elevator_by_floor url:%s, request:%s", request_url, request);
     #if !STUB_ENABLE
     ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
@@ -74,22 +69,15 @@ int WlongLiftCtrl :: callElevatorByFoor(int lift_id, string& open_floors, string
 }
 
 int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string& updown, string& open_floors, int open_time, WlongResponse& response) {
-    CJsonObject ojson;
     char request_url[128] = {0};
-    const char *headers[1][2] = {{"Content-Type", "application/json;charset=UTF-8"}};
-    const char *request;
+    char request[1024] = {0};
+    const char *headers[1][2] = {{"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}};
     char *result = NULL;
     int ret;
-    ojson.Add("appId", appid);
-    ojson.Add("appSecret", appsecret);
-    ojson.Add("licence", licence);
-    ojson.Add("deviceId", cluster_id);
-    ojson.Add("fromFloor", from_floor);
-    ojson.Add("upDown", updown);
-    ojson.Add("openFloor", open_floors);
-    ojson.Add("openTime", open_time);
     snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), BOOKING_ELEVATOR_PATH);
-    request = ojson.ToString().c_str();
+    snprintf(request, sizeof(request), 
+             "appId=%s&appSecret=%s&licence=%s&deviceId=%d&fromFloor=%s&upDown=%s&openFloor=%s&openTime=%d",
+             appid.c_str(), appsecret.c_str(), licence.c_str(), cluster_id, from_floor.c_str(), updown.c_str(), open_floors.c_str(), open_time);
     LOGT(WLONG_3P_CTRL, "booking_elevator url:%s, request:%s", request_url, request);
     #if !STUB_ENABLE
     ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
