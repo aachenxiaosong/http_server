@@ -17,6 +17,7 @@ class RiliHttpService :  public IHttpService {
     public:
     RiliHttpService();
     int registerHttpHandler();
+    int unRegisterHttpHandler();
 };
 
 #endif  //  HTTP_SERVICE_RILI_RILI_HTTP_SERVICE_H_

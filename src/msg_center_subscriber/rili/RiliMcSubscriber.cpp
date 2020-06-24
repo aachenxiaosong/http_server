@@ -14,5 +14,7 @@ int RiliMcSubscriber :: registerMsgHandler() {
     IMcMsgHandler *handler;
     handler = &mBookLiftHandler;
     McBrokerAddHandler(handler);
+    handler = &mInitHandler;
+    McBrokerAddHandler(handler);
     return 0;
 }

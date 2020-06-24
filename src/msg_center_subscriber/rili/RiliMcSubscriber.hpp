@@ -3,10 +3,12 @@
 
 #include "IMcSubscriber.hpp"
 #include "RiliBookLiftMsgHandler.hpp"
+#include "RiliInitMsgHandler.hpp"
 
 class RiliMcSubscriber : public IMcSubscriber {
     private:
     RiliBookLiftMsgHandler mBookLiftHandler;
+    RiliInitMsgHandler mInitHandler;
     public:
     RiliMcSubscriber();
     int registerMsgHandler();

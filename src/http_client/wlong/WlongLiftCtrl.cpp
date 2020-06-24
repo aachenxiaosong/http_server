@@ -91,7 +91,7 @@ int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string&
         LOGT(WLONG_3P_CTRL, "wlong booking_elevator calling succeeded");
         ret = 0;
     } else {
-        LOGE(WLONG_3P_CTRL, "wlong booking_elevator calling failed");
+        LOGE(WLONG_3P_CTRL, "wlong booking_elevator calling failed, ret = %d", ret);
         ret = -1;
     }
     if (NULL != result) {

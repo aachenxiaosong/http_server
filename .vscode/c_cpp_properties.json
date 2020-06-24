@@ -14,6 +14,7 @@
                 "${workspaceFolder}/src/utils/timer/inc",
                 "${workspaceFolder}/src/utils/json/inc",
                 "${workspaceFolder}/src/utils/uuid/inc",
+                "${workspaceFolder}/src/msg_center_subscriber/rili",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/x86_64-redhat-linux",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/backward",

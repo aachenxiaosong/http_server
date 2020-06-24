@@ -51,6 +51,7 @@ int WlongInitMsgHandler ::handle(string &msg)
 }
 
 int WlongInitMsgHandler :: _import_init_info(string &info) {
+    LOGT(WLONG_INIT_MSG_TAG, "importing init info ... ");
     ifstream ifs(INIT_INFO_CONFIG_FILE);
     ostringstream oss;
     oss << ifs.rdbuf();
@@ -60,6 +61,7 @@ int WlongInitMsgHandler :: _import_init_info(string &info) {
 }
 
 int WlongInitMsgHandler :: _save_init_info(string &info) {
+    LOGT(WLONG_INIT_MSG_TAG, "saving init info ... ");
     ofstream ofs(INIT_INFO_CONFIG_FILE);
     ofs << info;
     ofs.close();

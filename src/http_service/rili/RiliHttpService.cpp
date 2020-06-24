@@ -19,3 +19,7 @@ int RiliHttpService :: registerHttpHandler() {
     http_server_add_handler(handler);
     return 0;
 }
+
+ int RiliHttpService :: unRegisterHttpHandler() {
+     http_server_clear_handler();
+ }
