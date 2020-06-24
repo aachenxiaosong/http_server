@@ -21,6 +21,7 @@ class WlongHttpService :  public IHttpService {
     public:
     WlongHttpService();
     int registerHttpHandler();
+    int unRegisterHttpHandler();
 };
 
 #endif  //  HTTP_SERVICE_WLONG_WLONG_HTTP_SERVICE_H_

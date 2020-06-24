@@ -23,3 +23,7 @@ int WlongHttpService :: registerHttpHandler() {
     http_server_add_handler(handler);
     return 0;
 }
+
+ int WlongHttpService :: unRegisterHttpHandler() {
+     http_server_clear_handler();
+ }

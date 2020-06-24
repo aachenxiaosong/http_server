@@ -330,15 +330,6 @@ int http_server_add_handler(IHttpRequestHandler *handler) {
   g_http_handlers.push_back(handler);
 }
 
-int http_server_remove_handler(string handler_name) {
-  IHttpRequestHandler *handler;
-  for (vector<IHttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
-    handler = *it;
-    if (handler->getName().compare(handler_name) == 0) {
-      g_http_handlers.erase(it);
-      delete handler;
-      return 0;
-    }
-  }
-  return -1;
+int http_server_clear_handler() {
+  g_http_handlers.clear();
 }

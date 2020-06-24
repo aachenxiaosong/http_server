@@ -33,9 +33,10 @@ int WlongInitMsgHandler ::handle(string &msg)
         std::cout << djson.ToString() <<std::endl;
         if (mHttpService == NULL) {
             mHttpService = new WlongHttpService();
-            mHttpService->registerHttpHandler();
-            LOGT(WLONG_INIT_MSG_TAG, "work mode 1 is for wlong, http service registered");
         }
+        mHttpService->unRegisterHttpHandler();
+        mHttpService->registerHttpHandler();
+        LOGT(WLONG_INIT_MSG_TAG, "work mode 1 is for wlong, http service registered");
     } 
     return 0;
 }

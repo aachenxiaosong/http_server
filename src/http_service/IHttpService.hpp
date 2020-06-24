@@ -10,6 +10,7 @@ class IHttpService{
     IHttpService(const char* name) ;
     virtual ~IHttpService() ;
     virtual int registerHttpHandler() = 0;
+    virtual int unRegisterHttpHandler() = 0;
 };
 
 #endif  //  HTTP_SERVICE_I_HTTP_SERVICE_H_
