@@ -2,14 +2,22 @@
 #include "WlongInfo.hpp"
 #include "WlongHttpService.hpp"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include "uni_log.h"
+#include "configurable_info.h"
 
 #define WLONG_INIT_MSG_TAG "wlong_init_msg"
 
 WlongInitMsgHandler ::WlongInitMsgHandler() : IMcMsgHandler("wlong_init_msg")
 {
+    string init_info;
     mHttpService = NULL;
     LOGT(WLONG_INIT_MSG_TAG, "WlongInitMsgHandler is created");
+    _import_init_info(init_info);
+    if (init_info.size() > 0) {
+        handle(init_info);
+    }
 }
 
 int WlongInitMsgHandler ::handle(string &msg)
@@ -38,6 +46,23 @@ int WlongInitMsgHandler ::handle(string &msg)
         mHttpService->registerHttpHandler();
         LOGT(WLONG_INIT_MSG_TAG, "work mode 1 is for wlong, http service registered");
     } 
+    _save_init_info(msg);
+    return 0;
+}
+
+int WlongInitMsgHandler :: _import_init_info(string &info) {
+    ifstream ifs(INIT_INFO_CONFIG_FILE);
+    ostringstream oss;
+    oss << ifs.rdbuf();
+    info = oss.str();
+    ifs.close();
+    return 0;
+}
+
+int WlongInitMsgHandler :: _save_init_info(string &info) {
+    ofstream ofs(INIT_INFO_CONFIG_FILE);
+    ofs << info;
+    ofs.close();
     return 0;
 }
 

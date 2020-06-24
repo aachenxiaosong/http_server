@@ -18,6 +18,9 @@ extern "C" {
 #define MY_SECKEY "bc5300620e7bc0b8b063464f7e97e04c"
 #endif
 
+/*********************** config file info**********************/
+#define INIT_INFO_CONFIG_FILE "init_info.txt"
+
 /************************* http info************************/
 //#define MY_SERVER_URL "http://192.168.6.10:8080"
 #define MY_SERVER_URL "http://101.231.106.182:8081"
