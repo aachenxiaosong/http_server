@@ -7,8 +7,14 @@ systemctl disable firewalld.service 
 》配置开机自动联网（假设网卡是ens32,根据实际修改）
 sudo vi /etc/sysconfig/network-scripts/ifcfg-ens32
 修改为ONBOOT=yes
+》配置静态ip和dns
+BOOTPROTO=static
+IPADDR=192.168.6.10
+DNS1=114.114.114.114
+DNS2=8.8.8.8
+#见config/ifcfg-enp2s0_example
 》查看ip
-Ifconfig
+ifconfig
 
 第二步 安装supervisor
 $ yum install epel-release -y 
