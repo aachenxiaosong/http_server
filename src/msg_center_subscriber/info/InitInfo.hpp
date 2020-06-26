@@ -17,7 +17,9 @@ class InitInfo {
     static int getInfo(CJsonObject&jinfo);
     static int getBuilding(int building_id, CJsonObject& jbuilding);
     static int getUnit(int unit_id, CJsonObject& junit);
+    static int getUnit(int unit_id, CJsonObject& jbuilding, CJsonObject& junit);
     static int getHome(int home_id, CJsonObject&jhome);
+    static int getHome(int home_id, CJsonObject& jbuiding, CJsonObject&jhome);
     static int setInfo(const CJsonObject& info);
 };
 

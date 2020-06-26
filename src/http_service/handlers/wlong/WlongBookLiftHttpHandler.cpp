@@ -28,7 +28,7 @@ int WlongBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
     jrequest.Get("elevatorHallId", cluster_id);
     jrequest.Get("sfloorId", from_floor);
     updown = WLONG_UP;//up
-    if (book_type.compare("interVisit")) {
+    if (0 == book_type.compare("interVisit")) {
         if (jrequest("sfloorId").compare(jrequest("dfloorId").c_str()) > 0) {
             updown = WLONG_DN;//down
         }

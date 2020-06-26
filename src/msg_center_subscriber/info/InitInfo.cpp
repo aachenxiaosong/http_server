@@ -61,6 +61,28 @@ int InitInfo :: getUnit(int unit_id, CJsonObject&junit) {
     return -1;
 }
 
+int InitInfo :: getUnit(int unit_id, CJsonObject& jbuilding, CJsonObject& junit) {
+    int j;
+    int id = 0;
+    pthread_mutex_lock(&mMutex);
+    if (false == jbuilding.IsEmpty()) {
+        for (j = 0; j < jbuilding["units"].GetArraySize(); j++)
+        {
+            jbuilding["units"][j].Get("id", id);
+            if (id == unit_id)
+            {
+                junit = jbuilding["units"][j];
+                pthread_mutex_unlock(&mMutex);
+                LOGT(INIT_INFO_TAG, "unit found for id %d", unit_id);
+                return 0;
+            }
+        }
+    } 
+    pthread_mutex_unlock(&mMutex);
+    LOGE(INIT_INFO_TAG, "unit not found for id %d", unit_id);
+    return -1;
+}
+
 int InitInfo :: getHome(int home_id, CJsonObject&jhome) {
     int i, j, k;
     int id = 0;
@@ -80,6 +102,33 @@ int InitInfo :: getHome(int home_id, CJsonObject&jhome) {
                         LOGT(INIT_INFO_TAG, "home found for id %d: %s", home_id, jhome.ToString().c_str());
                         return 0;
                     }
+                }
+            }
+        }
+    }
+    LOGE(INIT_INFO_TAG, "home not found for id %d", home_id);
+    pthread_mutex_unlock(&mMutex);
+    return -1;
+}
+
+int InitInfo :: getHome(int home_id, CJsonObject& jbuilding, CJsonObject&jhome) {
+    int j, k;
+    int id = 0;
+    CJsonObject junit;
+    pthread_mutex_lock(&mMutex);
+    if (false == jbuilding.IsEmpty()) {
+        for (j = 0; j < jbuilding["units"].GetArraySize(); j++)
+        {
+            junit = jbuilding["units"][j];
+            for (k = 0; k < junit["homes"].GetArraySize(); k++)
+            {
+                junit["homes"][k].Get("id", id);
+                if (id == home_id)
+                {
+                    jhome = junit["homes"][k];
+                    pthread_mutex_unlock(&mMutex);
+                    LOGT(INIT_INFO_TAG, "home found for id %d: %s", home_id, jhome.ToString().c_str());
+                    return 0;
                 }
             }
         }

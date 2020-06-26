@@ -27,7 +27,7 @@ int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObjec
     //prepare for wlong lift ctrl params
     jrequest.Get("dhomeId", ivalue);
     if (0 != InitInfo :: getHome(ivalue, jhome) ) {
-        LOGE(WLONG_BOOK1_TAG, "reject request for homeid not found in wlong info");
+        LOGE(WLONG_BOOK1_TAG, "reject request for homeid not found in init info");
         jresponse.Add("errCode", 1);
         jresponse.Add("errMsg", "home id not found");
         jresponse.Add("ackCode", 0);
