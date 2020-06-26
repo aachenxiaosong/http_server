@@ -17,10 +17,11 @@ int WlongTakeLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
     int unlock_floor_num;
     string open_floors;
     string unlock_floors;
-    CJsonObject jinfo = InitInfo :: getInfo();
+    CJsonObject jinfo;
     WlongResponse wl_response;
     int ivalue;
     string svalue;
+    InitInfo :: getInfo(jinfo);
     //prepare for wlong lift ctrl params
     jrequest.Get("elevatorId", lift_id);
     jrequest.Get("lightupFloor", open_floors);
@@ -51,5 +52,5 @@ int WlongTakeLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
         jresponse.Add("errMsg", "request of 3p interface failed");
         jresponse.Add("ackCode", 0);
     }
-    return ret;
+    return 0;
 }

@@ -66,7 +66,14 @@ int WlongBookLiftMsgHandler :: _handleBookLift(CJsonObject& jmsg, CJsonObject& j
     string open_floors;
     int open_time;
     WlongResponse wl_response;
-    CJsonObject jinfo = InitInfo :: getInfo();
+    CJsonObject jinfo;
+    if (0 != InitInfo :: getInfo(jinfo)) {
+        LOGE(WLONG_BOOK_MSG_TAG, "reject request for init info is not ready (sent from connecting platform)");
+        LOGE(WLONG_BOOK_MSG_TAG, "");
+        jresponse.Add("code", 1);
+        jresponse.Add("message", "lack of init info");
+        return 0;
+    }
     WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
     jmsg["bookLift"].Get("elevatorHallId", cluster_id);
     from_floor = "1";

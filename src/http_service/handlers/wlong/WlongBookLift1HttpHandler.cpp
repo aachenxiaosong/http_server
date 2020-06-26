@@ -11,44 +11,22 @@ WlongBookLift1HttpHandler :: WlongBookLift1HttpHandler() : IBookLift1HttpHandler
     LOGT(WLONG_BOOK1_TAG, "WlongBookLift1 object created");
 }
 
-int WlongBookLift1HttpHandler :: _get_home_info_from_id(CJsonObject& jinfo, int home_id, CJsonObject& jhome) {
-    int i, j, k;
-    int ivalue;
-    string svalue;
-    CJsonObject jbuilding;
-    CJsonObject junit;
-    for (i = 0; i < jinfo["buildings"].GetArraySize(); i++) {
-        jbuilding = jinfo["buildings"][i];
-        for (j = 0; j < jbuilding["units"].GetArraySize(); j++) {
-            junit = jbuilding["units"][j];
-            for (k = 0; k < junit["homes"].GetArraySize(); k++) {
-                junit["homes"][k].Get("id", ivalue);
-                if (ivalue == home_id) {
-                    jhome = junit["homes"][k];
-                    LOGT(WLONG_BOOK1_TAG, "find home %s for id %d", jhome.ToString().c_str(), home_id);
-                    return 0;
-                }
-            }
-        }
-    }
-    return -1;
-}
-
 int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
     int cluster_id;
     string from_floor;
     string updown;
     string open_floors;
     int open_time;
-    CJsonObject jinfo = InitInfo :: getInfo();
+    CJsonObject jinfo;
     CJsonObject jhome;
     WlongResponse wl_response;
     int ivalue;
     string svalue;
     string book_type;
+    InitInfo :: getInfo(jinfo);
     //prepare for wlong lift ctrl params
     jrequest.Get("dhomeId", ivalue);
-    if (0 != _get_home_info_from_id(jinfo, ivalue, jhome) ) {
+    if (0 != InitInfo :: getHome(ivalue, jhome) ) {
         LOGE(WLONG_BOOK1_TAG, "reject request for homeid not found in wlong info");
         jresponse.Add("errCode", 1);
         jresponse.Add("errMsg", "home id not found");
@@ -84,5 +62,5 @@ int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObjec
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
     }
-    return ret;
+    return 0;
 }

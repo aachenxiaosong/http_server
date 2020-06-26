@@ -17,10 +17,11 @@ int WlongCallLiftOutHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObj
     string updown;
     string open_floors;
     int open_time;
-    CJsonObject jinfo = InitInfo :: getInfo();
+    CJsonObject jinfo;
     WlongResponse wl_response;
     int ivalue;
     string svalue;
+    InitInfo :: getInfo(jinfo);
     //prepare for wlong lift ctrl params
     jrequest.Get("elevatorHallId", cluster_id);
     jrequest.Get("sfloorId", from_floor);
@@ -53,5 +54,5 @@ int WlongCallLiftOutHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObj
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
     }
-    return ret;
+    return 0;
 }

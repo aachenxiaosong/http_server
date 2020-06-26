@@ -9,7 +9,6 @@ using namespace neb;
 
 class WlongBookLift1HttpHandler :  public IBookLift1HttpHandler {
     private:
-    int _get_home_info_from_id(CJsonObject& jinfo, int home_id, CJsonObject& jhome) ;
     int handleRequest(CJsonObject& jrequest, CJsonObject& jresponse);
     public:
     WlongBookLift1HttpHandler();

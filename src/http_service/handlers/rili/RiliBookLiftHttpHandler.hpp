@@ -9,6 +9,9 @@ using namespace neb;
 
 class RiliBookLiftHttpHandler :  public IBookLiftHttpHandler {
     private:
+    int handleInterVisitRequest(CJsonObject& jrequest, CJsonObject& jresponse);
+    int handleExterVisitRequest(CJsonObject& jrequest, CJsonObject& jresponse);
+    int handleGetHomeRequest(CJsonObject& jrequest, CJsonObject& jresponse);
     int handleRequest(CJsonObject& jrequest, CJsonObject& jresponse);
     public:
     RiliBookLiftHttpHandler();

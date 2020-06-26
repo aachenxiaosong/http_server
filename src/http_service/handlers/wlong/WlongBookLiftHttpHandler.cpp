@@ -17,11 +17,12 @@ int WlongBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
     string updown;
     string open_floors;
     int open_time;
-    CJsonObject jinfo = InitInfo :: getInfo();
+    CJsonObject jinfo;
     WlongResponse wl_response;
     int ivalue;
     string svalue;
     string book_type;
+    InitInfo :: getInfo(jinfo);
     //prepare for wlong lift ctrl params
     jrequest.Get("bookType", book_type);
     jrequest.Get("elevatorHallId", cluster_id);
@@ -55,5 +56,5 @@ int WlongBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
     }
-    return ret;
+    return 0;
 }

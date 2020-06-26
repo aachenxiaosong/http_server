@@ -9,7 +9,6 @@ using namespace neb;
 
 class WlongCallLiftHttpHandler :  public ICallLiftHttpHandler {
     private:
-    int _get_home_info_from_id(CJsonObject& jinfo, int home_id, CJsonObject& jhome) ;
     int handleRequest(CJsonObject& jrequest, CJsonObject& jresponse);
     public:
     WlongCallLiftHttpHandler();

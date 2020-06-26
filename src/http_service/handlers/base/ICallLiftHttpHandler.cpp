@@ -42,8 +42,9 @@ int ICallLiftHttpHandler :: handle(string& path, string& request, string& respon
     /* process request */
     CJsonObject jrequest(request);
     CJsonObject jresponse;
+    CJsonObject jinfo;
     /* step 1, check init info */
-    if (InitInfo :: getInfo().IsEmpty()) {
+    if (0 != InitInfo :: getInfo(jinfo)) {
         LOGE(I_CALL_TAG, "reject request for init info is not ready (sent from connecting platform)");
         jresponse.Add("errCode", 1);
         jresponse.Add("errMsg", "lack of init info");

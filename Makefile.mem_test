@@ -48,13 +48,15 @@ SRC := $(hal_src) $(utils_src) \
        src/http_client/auth/src \
        src/http_client/resource_prefetch/src \
        src/http_client/wlong \
-       src/http_service \
-       src/http_service/rili \
-       src/http_service/wlong \
+       src/http_service/services \
+       src/http_service/handlers/base \
+       src/http_service/handlers/rili \
+       src/http_service/handlers/wlong \
        src/msg_center/src \
-       src/msg_center_subscriber \
-       src/msg_center_subscriber/wlong \
-       src/msg_center_subscriber/rili
+       src/msg_center_subscriber/subscribers \
+       src/msg_center_subscriber/info \
+       src/msg_center_subscriber/handlers/wlong \
+       src/msg_center_subscriber/handlers/rili
             
 INC := $(hal_inc) $(utils_inc) \
        src \
@@ -62,14 +64,16 @@ INC := $(hal_inc) $(utils_inc) \
        src/http_client/auth/inc \
        src/http_client/resource_prefetch/inc \
        src/http_client/wlong \
-       src/http_service \
-       src/http_service/rili \
-       src/http_service/wlong \
+       src/http_service/services \
+       src/http_service/handlers/base \
+       src/http_service/handlers/rili \
+       src/http_service/handlers/wlong \
        src/msg_center/inc \
        src/msg_center/inc/mqtt \
-       src/msg_center_subscriber \
-       src/msg_center_subscriber/wlong \
-       src/msg_center_subscriber/rili
+       src/msg_center_subscriber/subscribers \
+       src/msg_center_subscriber/info \
+       src/msg_center_subscriber/handlers/wlong \
+       src/msg_center_subscriber/handlers/rili
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))
