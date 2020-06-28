@@ -16,7 +16,7 @@ int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObjec
     string from_floor;
     string updown;
     string open_floors;
-    int open_time;
+    int open_time = 0;
     CJsonObject jinfo;
     CJsonObject jhome;
     WlongResponse wl_response;
@@ -39,8 +39,13 @@ int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObjec
     jrequest.Get("bookType", book_type);
     from_floor = "1";
     updown = WLONG_UP;//up
-    jhome.Get("floor", open_floors);
     jrequest.Get("unlockTime", open_time);
+    if (open_time < 0) {
+        open_floors="";
+        open_time = 0;
+    } else {
+        jhome.Get("floor", open_floors);
+    }
     //prepare for wlong lift ctrl params done
     
     WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
