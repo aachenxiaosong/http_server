@@ -5,6 +5,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
 #define WAIT_ACK_TIMEOUT   2000
 #define REQUEST_FRAME_LEN  20
@@ -38,6 +41,36 @@ static void _printf_frame(unsigned char *frame, int len) {
   printf("\n");
 }
 
+static int _tcp_send(unsigned char *request, int request_len, unsigned char *response, int *response_len) {
+  int sockfd;
+  struct sockaddr_in server_addr;
+
+  if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1)
+  {
+    LOGE(RILI_UART_PROT, "get socket failed");
+    return -1;
+  }
+  server_addr.sin_family = PF_INET;
+  server_addr.sin_port = htons(8234);
+  server_addr.sin_addr.s_addr = inet_addr("192.168.1.200");
+  if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr))  == -1)
+  {
+    LOGE(RILI_UART_PROT, "connect failed");
+    return -1;
+  }
+  struct timeval timeout = {3, 0}; //3s
+  setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+  setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
+  send(sockfd, request, request_len, 0);
+  if ((*response_len = recv(sockfd, response, *response_len, 0)) == -1)
+  {
+    LOGE(RILI_UART_PROT, "recv failed");
+    return -1;
+  }
+  close(sockfd);
+  return 0;
+}
+
 int _assemble_frame_for_call_lift(void *request, unsigned char frame[REQUEST_FRAME_LEN],
                                   unsigned char request_id) {
   RiliRequestCallLift *request_call_lift = (RiliRequestCallLift *)request;
@@ -54,6 +87,7 @@ int _assemble_frame_for_call_lift(void *request, unsigned char frame[REQUEST_FRA
   frame[17] = request_call_lift->room[3];
   frame[18] = _calculate_sum(frame, REQUEST_FRAME_LEN);
   frame[19] = 0x03;
+  _printf_frame(frame, REQUEST_FRAME_LEN);
   return 0;
 }
 
@@ -97,6 +131,7 @@ int _assemble_frame_for_exter_visit(void *request, unsigned char frame[REQUEST_F
   frame[17] = request_exter_visit->room[3];
   frame[18] = _calculate_sum(frame, REQUEST_FRAME_LEN);
   frame[19] = 0x03;
+  _printf_frame(frame, REQUEST_FRAME_LEN);
   return 0;
 }
 
@@ -142,6 +177,7 @@ int _assemble_frame_for_inter_visit(void *request, unsigned char frame[REQUEST_F
   frame[17] = request_inter_visit->host_room[3];
   frame[18] = _calculate_sum(frame, REQUEST_FRAME_LEN);
   frame[19] = 0x03;
+  _printf_frame(frame, REQUEST_FRAME_LEN);
   return 0;
 }
 
@@ -185,6 +221,7 @@ int _assemble_frame_for_get_home(void *request, unsigned char frame[REQUEST_FRAM
   frame[17] = request_get_home->room[3];
   frame[18] = _calculate_sum(frame, REQUEST_FRAME_LEN);
   frame[19] = 0x03;
+  _printf_frame(frame, REQUEST_FRAME_LEN);
   return 0;
 }
 
@@ -223,6 +260,7 @@ int _assemble_frame_for_lift_status(void *request, unsigned char frame[REQUEST_F
   frame[6] = request_lift_status->lift_num;
   frame[18] = _calculate_sum(frame, REQUEST_FRAME_LEN);
   frame[19] = 0x03;
+  _printf_frame(frame, REQUEST_FRAME_LEN);
   return 0;
 }
 
@@ -255,8 +293,7 @@ int rili_protocol_send(int event_type, void *request, void *response) {
   int (* response_parse) (void *, unsigned char [RESPONSE_FRAME_LEN], unsigned char);
   unsigned char request_frame[REQUEST_FRAME_LEN] = {0};
   unsigned char response_frame[REQUEST_FRAME_LEN] = {0};
-  int try_count = WAIT_ACK_TIMEOUT / 50;
-  int recv_len;
+  int recv_len = REQUEST_FRAME_LEN;
   unsigned char request_id;
   switch (event_type) {
     case RILI_EVENT_CALL_LIFT:
@@ -288,6 +325,8 @@ int rili_protocol_send(int event_type, void *request, void *response) {
     LOGE(RILI_UART_PROT, "failed at step1: assemble request");
     return -1;
   }
+  #if 0
+  int try_count = WAIT_ACK_TIMEOUT / 50;
   if (0 != serial_send(request_frame, REQUEST_FRAME_LEN)) {
     LOGE(RILI_UART_PROT, "failed at step2: serial send request");
     return -1;
@@ -300,6 +339,12 @@ int rili_protocol_send(int event_type, void *request, void *response) {
     LOGE(RILI_UART_PROT, "failed at step3: serial recv response");
     return -1;
   }
+  #else
+  if (0 != _tcp_send(request_frame, REQUEST_FRAME_LEN, response_frame, &recv_len)) {
+    LOGE(RILI_UART_PROT, "failed at step3: tcp send failed");
+    return -1;
+  }
+  #endif
   if (0 != response_parse(response, response_frame, request_id)) {
     LOGE(RILI_UART_PROT, "failed at step4: parse response");
     return -1;

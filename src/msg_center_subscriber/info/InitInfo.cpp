@@ -27,7 +27,7 @@ int InitInfo :: getBuilding(int building_id, CJsonObject&jbuilding) {
             if (id == building_id) {
                 jbuilding = mInfo["buildings"][i];
                 pthread_mutex_unlock(&mMutex);
-                LOGE(INIT_INFO_TAG, "building found for id %d", building_id);
+                LOGT(INIT_INFO_TAG, "building found for id %d", building_id);
                 return 0;
             }
         }
