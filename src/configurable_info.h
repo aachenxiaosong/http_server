@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 
-#define CLOUD_TYPE 0
+#define CLOUD_TYPE 2
 /******************* common info of device *******************/
 #define NET_NAME  "enp2s0"
 #define MY_TYPE     "ELEVATOR_IPC"
