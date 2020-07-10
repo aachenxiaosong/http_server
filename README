@@ -1,38 +1,27 @@
-install gcc and it, clone http_server repo into /home/centos/workspace
+1，配置修改
+修改src/configurable_info.h中的内容
+（1）修改线上环境
+CLOUD_TYPE：0代表测试环境，1代表uat环境，2代表生产环境
+（2）修改appkey和secretkey
+MY_APPKEY/MY_SECKEY：根基项目实际使用的appkey和secretkey填写
+（3）修改工控机http server的ip和端口（终端调用）
+MY_SERVER_URL：工控机url
+（4）云端接口url
+CLOUD_AUTH_URL：ig云认证url
+MC_REGISTER_URL_CP：连接平台注册url
+CLOUD_UC_TS_URL：时间戳获取url
 
-第一步 准备
-》关闭防火墙 - 关闭和禁止开机启动
-systemctl stop firewalld.service
-systemctl disable firewalld.service 
-》配置开机自动联网（假设网卡是ens32,根据实际修改）
-sudo vi /etc/sysconfig/network-scripts/ifcfg-ens32
-修改为ONBOOT=yes
-》配置静态ip和dns
-BOOTPROTO=static
-IPADDR=192.168.6.10
-DNS1=114.114.114.114
-DNS2=8.8.8.8
-#见config/ifcfg-enp2s0_example
-》查看ip
-ifconfig
+2，编译
+./build.sh
 
-第二步 安装supervisor
-$ yum install epel-release -y 
-##安装supervisor服务
-$ yum install -y supervisor
-##加入开机启动
-$ systemctl enable supervisord
-##启动服务
-$ systemctl start supervisord
+3，云端配置
+提供mac地址，即udid给到连接平台的同事进行空间和授权配置
 
-
-第二步 配置supervisor
-1，修改配置文件/etc/supervisord.conf
-2，sudo cp config/http.ini /etc/supervisord.d/
-3, mkdir /home/centos/log/
-4, touch /var/run/supervisor/supervisor.sock 
-5，配置supervisor服务开机启动：systemctrl enable supervisord.service
-6，启动/关闭/重启supervisor服务：systemctrl start/stop/restart supervisord.service
-7，supervisorctrl进入命令行
-开启或关闭某个进程：start/stop xxx
-查看状态：status
+4，启动
+已安装了supervisor，默认开机启动，可以通过如下命令查看：
+ps aux | grep http_server
+手动启动的方法为：
+（1）关闭supervisor
+sudo systemctl stop supervisord.service
+（2）执行
+./run.sh
