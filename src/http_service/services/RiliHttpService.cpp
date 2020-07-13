@@ -15,8 +15,8 @@ int RiliHttpService :: registerHttpHandler() {
     http_server_add_handler(handler);
     handler = &mBookLiftHandler;
     http_server_add_handler(handler);
-    handler = &mTakeLiftHandler;
-    http_server_add_handler(handler);
+    //handler = &mTakeLiftHandler;
+    //http_server_add_handler(handler);
     return 0;
 }
 
