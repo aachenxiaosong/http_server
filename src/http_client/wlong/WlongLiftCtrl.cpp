@@ -1,4 +1,6 @@
 #include "WlongLiftCtrl.hpp"
+#include "InitInfo.hpp"
+#include "WlongLiftCtrl.hpp"
 #include "uni_http.h"
 #include "uni_log.h"
 #include "configurable_info.h"
@@ -92,6 +94,45 @@ int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string&
         ret = 0;
     } else {
         LOGE(WLONG_3P_CTRL, "wlong booking_elevator calling failed, ret = %d", ret);
+        ret = -1;
+    }
+    if (NULL != result) {
+        uni_free(result);
+    }
+    return ret;
+}
+
+ int WlongLiftCtrl :: aliveTest(string &message) {
+    char request_url[128] = {0};
+    char request[1024] = {0};
+    WlongResponse response;
+    const char *headers[1][2] = {{"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}};
+    char *result = NULL;
+    int ret;
+    snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), CONTROLLER_INFO_PATH);
+    snprintf(request, sizeof(request), 
+             "appId=%s&appSecret=%s&licence=%s&deviceId=1",
+             appid.c_str(), appsecret.c_str(), licence.c_str());
+    LOGT(WLONG_3P_CTRL, "alive test url:%s, request:%s", request_url, request);
+    #if !STUB_ENABLE
+    ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
+    #else
+    ret = 0;
+    result = (char *)uni_malloc(1024);
+    sprintf(result, "%s", "{\"code\": 0, \"message\": \"OK\", \"data\":\"no data\"}");
+    #endif
+    if (0 == ret &&NULL != result &&
+        0 == _parse_result(result, response)) {
+        LOGT(WLONG_3P_CTRL, "wlong alive_test calling succeeded");
+        if (response.code == 0) {
+            ret = 0;
+        } else {
+            ret = -1;
+        }
+        message = response.msg;
+    } else {
+        LOGE(WLONG_3P_CTRL, "wlong alive test calling failed, ret = %d", ret);
+        message = "calling wlong api failed";
         ret = -1;
     }
     if (NULL != result) {

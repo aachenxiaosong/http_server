@@ -24,6 +24,8 @@
 
 #include "McBroker.hpp"
 
+#include "InitInfo.hpp"
+#include "WlongLiftCtrl.hpp"
 #include "uni_mc.h"
 #include "uni_json.h"
 #include "uni_log.h"
@@ -122,11 +124,24 @@ static int _publish_device_info(McHandle mc) {
     char sdata[1024] = {0};
     char timestamp[16];
     char uuid[UUID_LEN + 1] = {0};
+    CJsonObject jinfo;
+    string work_mode = "0";
+    int hb_status;
+    string hb_msg;
+
     GetUuid(uuid);
     snprintf(g_mc_service.device_info_req_id, sizeof(g_mc_service.device_info_req_id), "%s", uuid);
     time_t timeval;
     time(&timeval);
     snprintf(timestamp, sizeof(timestamp), "%d000", (unsigned int)timeval);
+    if (0 == InitInfo::getInfo(jinfo)) {
+      jinfo.Get("workMode", work_mode);
+      WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
+      hb_status = wlong_lift_ctrl.aliveTest(hb_msg);
+    } else {
+      hb_status = 1;
+      hb_msg = "init info not recved";
+    }
     snprintf(sdata, sizeof(sdata),
                 "{"
                     "\"reqId\":\"%s\","
@@ -138,9 +153,18 @@ static int _publish_device_info(McHandle mc) {
                         "{"
                               "\"attributeCode\":\"intranetNetAddr\","
                               "\"value\":\"%s\""
+                        "},"
+                        "{"
+                              "\"attributeCode\":\"%s\","
+                              "\"value\":\"%s\""
                         "}"
-                    "]"
-                 "}", uuid, timestamp, DeviceGetUdid(), DeviceGetType(), DeviceGetServerUrl());
+                    "],"
+                    "\"status\":{"
+                            "\"health\":%d,"
+                            "\"description\":\"%s\""
+                     "} "
+                 "}",  uuid, timestamp, DeviceGetUdid(), DeviceGetType(), DeviceGetServerUrl(),
+                 work_mode.c_str(), hb_status, hb_msg.c_str());
     LOGT(MC_SERVICE_TAG, "publish of device info: %s", sdata);
     if (E_OK != McSend(mc, sdata, strlen(sdata) + 1)) {
         LOGE(MC_SERVICE_TAG, "publish of device info failed");
@@ -167,7 +191,9 @@ static void* _device_info_sync_task(void *param) {
       }
       retry_time++;
     } else {
-      sleep(100);
+      //heart beat
+      _publish_device_info(mc);
+      sleep(60);
     }
   }
   return NULL;
