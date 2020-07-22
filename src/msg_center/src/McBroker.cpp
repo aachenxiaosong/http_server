@@ -26,6 +26,7 @@
 
 #include "InitInfo.hpp"
 #include "WlongLiftCtrl.hpp"
+#include "rili_uart_protocol.h"
 #include "uni_mc.h"
 #include "uni_json.h"
 #include "uni_log.h"
@@ -126,8 +127,8 @@ static int _publish_device_info(McHandle mc) {
     char uuid[UUID_LEN + 1] = {0};
     CJsonObject jinfo;
     string work_mode = "0";
-    int hb_status;
-    string hb_msg;
+    int hb_status = 1;
+    string hb_msg = "null";
 
     GetUuid(uuid);
     snprintf(g_mc_service.device_info_req_id, sizeof(g_mc_service.device_info_req_id), "%s", uuid);
@@ -136,11 +137,28 @@ static int _publish_device_info(McHandle mc) {
     snprintf(timestamp, sizeof(timestamp), "%d000", (unsigned int)timeval);
     if (0 == InitInfo::getInfo(jinfo)) {
       jinfo.Get("workMode", work_mode);
-      WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
-      hb_status = wlong_lift_ctrl.aliveTest(hb_msg);
+      if (work_mode.compare("1") == 0) {
+        WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
+        hb_status = wlong_lift_ctrl.aliveTest(hb_msg);
+      } else if (work_mode.compare("2") == 0) {
+        RiliRequestLiftStatus lift_status_request = {0};
+        RiliResponseLiftStatus lift_status_response = {0};
+        lift_status_request.building_num = 1;
+        lift_status_request.lift_num = 1;
+        hb_status = rili_protocol_send(RILI_EVENT_LIFT_STATUS, &lift_status_request, &lift_status_response);
+        if (hb_status == 0) {
+          hb_msg = "OK";
+        } else {
+          hb_status = 1;
+          hb_msg = "Lost Connect";
+        }
+      } else {
+        hb_status = 1;
+        hb_msg = "Unknown Work Mode";
+      }
     } else {
       hb_status = 1;
-      hb_msg = "init info not recved";
+      hb_msg = "In Preparing: init info not recved";
     }
     snprintf(sdata, sizeof(sdata),
                 "{"
@@ -155,7 +173,7 @@ static int _publish_device_info(McHandle mc) {
                               "\"value\":\"%s\""
                         "},"
                         "{"
-                              "\"attributeCode\":\"%s\","
+                              "\"attributeCode\":\"workMode\","
                               "\"value\":\"%s\""
                         "}"
                     "],"
