@@ -44,9 +44,9 @@ int WlongInitMsgHandler ::handle(string &msg)
         }
         mHttpService->unRegisterHttpHandler();
         mHttpService->registerHttpHandler();
+        _save_init_info(msg);
         LOGT(WLONG_INIT_MSG_TAG, "work mode 1 is for wlong, http service registered");
     } 
-    _save_init_info(msg);
     return 0;
 }
 

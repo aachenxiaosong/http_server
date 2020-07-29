@@ -44,9 +44,9 @@ int RiliInitMsgHandler ::handle(string &msg)
         }
         mHttpService->unRegisterHttpHandler();
         mHttpService->registerHttpHandler();
+        _save_init_info(msg);
         LOGT(RILI_INIT_MSG_TAG, "work mode 1 is for rili, http service registered");
     } 
-    _save_init_info(msg);
     return 0;
 }
 
