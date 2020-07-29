@@ -116,6 +116,7 @@ int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
     int ivalue;
     string svalue;
     CJsonObject jvalue;
+    int j = 0;
     if (true != sjson.Get("id", ivalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
@@ -148,14 +149,20 @@ int WlongInitMsgHandler :: _parse_unit(CJsonObject &djson, CJsonObject &sjson)
         return 0;
     }
     djson.AddEmptySubArray("homes");
+    j = 0;
     for (int i = 0; i < jvalue.GetArraySize(); i++)
     {
+        if (jvalue[i].Get("typeCode", svalue) == false || svalue.compare("house_home") != 0) {
+            LOGT(WLONG_INIT_MSG_TAG, "skip type code %s house_home list", svalue.c_str());
+            continue;
+        }
         djson["homes"].Add(CJsonObject("{}"));
-        if (0 != _parse_home(djson["homes"][i], jvalue[i]))
+        if (0 != _parse_home(djson["homes"][j], jvalue[i]))
         {
             LOGE(WLONG_INIT_MSG_TAG, "parse failed");
             goto L_ERROR;
         }
+        j++;
     }
     return 0;
 L_ERROR:
@@ -169,6 +176,7 @@ int WlongInitMsgHandler :: _parse_building(CJsonObject &djson, CJsonObject &sjso
     int ivalue;
     string svalue;
     CJsonObject jvalue;
+    int j = 0;
     if (true != sjson.Get("id", ivalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
@@ -190,14 +198,20 @@ int WlongInitMsgHandler :: _parse_building(CJsonObject &djson, CJsonObject &sjso
         goto L_ERROR;
     }
     djson.AddEmptySubArray("units");
+    j = 0;
     for (int i = 0; i < jvalue.GetArraySize(); i++)
     {
+        if (jvalue[i].Get("typeCode", svalue) == false || svalue.compare("unit") != 0) {
+            LOGT(WLONG_INIT_MSG_TAG, "skip type code %s unit list", svalue.c_str());
+            continue;
+        }
         djson["units"].Add(CJsonObject("{}"));
-        if (0 != _parse_unit(djson["units"][i], jvalue[i]))
+        if (0 != _parse_unit(djson["units"][j], jvalue[i]))
         {
             LOGE(WLONG_INIT_MSG_TAG, "parse failed");
             goto L_ERROR;
         }
+        j++;
     }
     return 0;
 L_ERROR:
@@ -209,6 +223,7 @@ int WlongInitMsgHandler :: _parse(CJsonObject &djson, CJsonObject &sjson)
 {
     string svalue;
     CJsonObject jvalue;
+    int j = 0;
     if (true != sjson.Get("reqId", svalue))
     {
         LOGE(WLONG_INIT_MSG_TAG, "parse failed");
@@ -243,14 +258,20 @@ int WlongInitMsgHandler :: _parse(CJsonObject &djson, CJsonObject &sjson)
         goto L_ERROR;
     }
     djson.AddEmptySubArray("buildings");
+    j = 0;
     for (int i = 0; i < jvalue.GetArraySize(); i++)
     {
+        if (jvalue[i].Get("typeCode", svalue) == false || svalue.compare("building") != 0) {
+            LOGT(WLONG_INIT_MSG_TAG, "skip type code %s building list", svalue.c_str());
+            continue;
+        }
         djson["buildings"].Add(CJsonObject("{}"));
-        if (0 != _parse_building(djson["buildings"][i], jvalue[i]))
+        if (0 != _parse_building(djson["buildings"][j], jvalue[i]))
         {
             LOGE(WLONG_INIT_MSG_TAG, "parse failed");
             goto L_ERROR;
         }
+        j++;
     }
     return 0;
 L_ERROR:
