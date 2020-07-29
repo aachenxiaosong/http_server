@@ -25,15 +25,18 @@
 #include "uni_log.h"
 #include "uni_timer.h"
 #include "uni_auth_http.h"
+#include "uni_hb_http.h"
 
 #define RES_PREFETCH_TAG "resource_prefetch"
 
 
 #define REFRESH_PERIOD_SEC           (10)
 #define REFRESH_PERIOD_MSEC          (REFRESH_PERIOD_SEC * 1000)
+#define HB_PERIOD_MSEC                    (60 * 1000)
 
 static struct {
   TimerHandle token_timer;
+  TimerHandle hb_timer;
 } g_res_prefetch = {0};
 
 static int _token_refresh(void * arg) {
@@ -53,6 +56,11 @@ static int _token_refresh(void * arg) {
   return 0;
 }
 
+static int _hb_report(void *arg) {
+  HttpHbReport();
+  return 0;
+}
+
 Result ResPrefetchInit(void) {
   #if (IGAICLOUD_TYPE == 0)
   LOGT(RES_PREFETCH_TAG, "in test server!!!!!!!");
@@ -67,9 +75,14 @@ Result ResPrefetchInit(void) {
                                           TIMER_TYPE_PERIODICAL,
                                           _token_refresh,
                                           NULL);
-    return E_OK;
+  g_res_prefetch.hb_timer = TimerStart(HB_PERIOD_MSEC,
+                                          TIMER_TYPE_PERIODICAL,
+                                          _hb_report,
+                                          NULL);
+  return E_OK;
 }
 
 void ResPrefetchFinal(void) {
   TimerStop(g_res_prefetch.token_timer);
+  TimerStop(g_res_prefetch.hb_timer);
 }

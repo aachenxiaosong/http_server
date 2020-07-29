@@ -46,6 +46,7 @@ SRC := $(hal_src) $(utils_src) \
        src \
        src/http_server/src \
        src/http_client/auth/src \
+       src/http_client/hb/src \
        src/http_client/resource_prefetch/src \
        src/http_client/wlong \
        src/serial_client/rili \
@@ -63,6 +64,7 @@ INC := $(hal_inc) $(utils_inc) \
        src \
        src/http_server/inc \
        src/http_client/auth/inc \
+       src/http_client/hb/inc \
        src/http_client/resource_prefetch/inc \
        src/http_client/wlong \
        src/serial_client/rili \

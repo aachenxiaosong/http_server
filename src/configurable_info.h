@@ -8,6 +8,7 @@ extern "C" {
 
 #define CLOUD_TYPE 2
 /******************* common info of device *******************/
+#define MY_VERSION "v1.0.0"
 #define NET_NAME  "enp2s0"
 #define MY_TYPE     "ELEVATOR_IPC"
 #if (CLOUD_TYPE == 0) //test
@@ -28,14 +29,17 @@ extern "C" {
 /************************* urls info************************/
 #if (CLOUD_TYPE == 0) //test
 #define CLOUD_AUTH_URL   "http://test-route.igaicloud.cn:8088/auth/token"
+#define CLOUD_HB_REPORT_URL "http://test-route.igaicloud.cn:8088/monitor/hb/up"
 #define MC_REGISTER_URL_FEATURE "http://test-route.igaicloud.cn:8088/msg-center/rest/v1/client/register"
 #define MC_REGISTER_URL_CP "http://test-route.igaicloud.cn:8088/ym-connect-device/api/auth/deviceClientInfo"
 #elif (CLOUD_TYPE == 1) //uat
 #define CLOUD_AUTH_URL   "http://uat-route.igaicloud.cn:8088/auth/token"
+#define CLOUD_HB_REPORT_URL "http://uat-route.igaicloud.cn:8088/monitor/hb/up"
 #define MC_REGISTER_URL_FEATURE "http://uat-route.igaicloud.cn:8088/msg-center/rest/v1/client/register"
 #define MC_REGISTER_URL_CP "http://uat-route.igaicloud.cn:8088/ym-connect-device/api/auth/deviceClientInfo"
 #elif (CLOUD_TYPE == 2) //product
 #define CLOUD_AUTH_URL   "http://route.igaicloud.cn:8088/auth/token"
+#define CLOUD_HB_REPORT_URL "http://route.igaicloud.cn:8088/monitor/hb/up"
 #define MC_REGISTER_URL_FEATURE "http://route.igaicloud.cn:8088/msg-center/rest/v1/client/register"
 #define MC_REGISTER_URL_CP "http://route.igaicloud.cn:8088/ym-connect-device/api/auth/deviceClientInfo"
 #endif
