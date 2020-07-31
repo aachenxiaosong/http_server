@@ -41,7 +41,9 @@ int HttpHbReport(void) {
   const char *http_headers[2][2] = {{"Content-Type",
                                "application/json;charset=UTF-8"},
                               {NULL, NULL}};
+  LOGT(HB_HTTP_TAG, "elevator IPC heart beat BEGIN ------------------------------------");
   if (0 != _get_token(token)) {
+    LOGT(HB_HTTP_TAG, "elevator IPC heart beat END ------------------------------------\n");
     return ret;
   }
 
@@ -70,6 +72,7 @@ int HttpHbReport(void) {
                                       sizeof(http_headers[0]),
                                       5, &result)) {
     LOGE(HB_HTTP_TAG, "post failed");
+    LOGT(HB_HTTP_TAG, "elevator IPC heart beat END ------------------------------------\n");
     return ret;
   }
   LOGT(HB_HTTP_TAG, "parsing result:%s", result);
@@ -83,5 +86,6 @@ int HttpHbReport(void) {
   }
   
   uni_free(result);
+  LOGT(HB_HTTP_TAG, "elevator IPC heart beat END ------------------------------------\n");
   return ret;
 }

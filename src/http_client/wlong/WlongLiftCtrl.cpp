@@ -19,6 +19,7 @@ int WlongLiftCtrl :: _parse_result(char *result, WlongResponse& response) {
     CJsonObject ojson(result);
     int ivalue;
     string svalue;
+    CJsonObject jvalue;
     LOGT(WLONG_3P_CTRL, "parsing result: %s", result);
     if (true != ojson.Get("code", ivalue)) {
         LOGT(WLONG_3P_CTRL, "parse code failed for call_elevator_by_floor: %s", result);
@@ -31,9 +32,13 @@ int WlongLiftCtrl :: _parse_result(char *result, WlongResponse& response) {
     }
     response.msg = svalue;
     if (true != ojson.Get("data", svalue)) {
-        LOGT(WLONG_3P_CTRL, "parse data failed for call_elevator_by_floor: %s", result);
-        response.data = "";
-        //return -1;
+        if (true == ojson.Get("data", jvalue)) {
+            response.data = jvalue.ToString();
+        } else {
+            LOGT(WLONG_3P_CTRL, "parse data failed for call_elevator_by_floor: %s", result);
+            response.data = "";
+            //return -1;
+        }
     }
     response.data = svalue;
     return 0;

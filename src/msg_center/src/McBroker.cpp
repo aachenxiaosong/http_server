@@ -129,7 +129,7 @@ static int _publish_device_info(McHandle mc) {
     string work_mode = "0";
     int hb_status = 1;
     string hb_msg = "null";
-
+    LOGT(MC_SERVICE_TAG, "3P elevator control system heart beat BEGIN ------------------------------------");
     GetUuid(uuid);
     snprintf(g_mc_service.device_info_req_id, sizeof(g_mc_service.device_info_req_id), "%s", uuid);
     time_t timeval;
@@ -139,7 +139,11 @@ static int _publish_device_info(McHandle mc) {
       jinfo.Get("workMode", work_mode);
       if (work_mode.compare("1") == 0) {
         WlongLiftCtrl wlong_lift_ctrl(jinfo["wlong"]("intranetUrl"), jinfo["wlong"]("appId"), jinfo["wlong"]("appSecret"), jinfo["wlong"]("licence"));
-        hb_status = wlong_lift_ctrl.aliveTest(hb_msg);
+        if (0 != wlong_lift_ctrl.aliveTest(hb_msg)) {
+          hb_status = 1;
+        } else {
+          hb_status = 0;
+        }
       } else if (work_mode.compare("2") == 0) {
         RiliRequestLiftStatus lift_status_request = {0};
         RiliResponseLiftStatus lift_status_response = {0};
@@ -186,8 +190,10 @@ static int _publish_device_info(McHandle mc) {
     LOGT(MC_SERVICE_TAG, "publish of device info: %s", sdata);
     if (E_OK != McSend(mc, sdata, strlen(sdata) + 1)) {
         LOGE(MC_SERVICE_TAG, "publish of device info failed");
+        LOGT(MC_SERVICE_TAG, "3P elevator control system heart beat END ------------------------------------\n");
         return -1;
     }
+    LOGT(MC_SERVICE_TAG, "3P elevator control system heart beat END ------------------------------------\n");
     return 0;
 }
 
