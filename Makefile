@@ -22,7 +22,6 @@ utils_src := src/utils/bitmap/src \
              src/utils/md5sum/src \
              src/utils/memcheck/src \
              src/utils/timer/src
-
 utils_inc := src/utils/bitmap/inc \
              src/utils/json/inc \
              src/utils/data_buf/inc \
@@ -42,36 +41,47 @@ utils_inc := src/utils/bitmap/inc \
              src/utils/memcheck/inc \
              src/utils/timer/inc
 
-SRC := $(hal_src) $(utils_src) \
-       src \
-       src/http_server/src \
+sdk_src := src/sdk/http_server \
+           src/sdk/http_client
+sdk_inc := src/sdk/http_server/inc \
+           src/sdk/http_server \
+           src/sdk/http_client
+
+app_src := src/app \
+           src/app/server/lift_control/base \
+           src/app/server/lift_control/rili \
+           src/app/server/lift_control/wlong \
+           src/app/client/common/auth \
+           src/app/client/common/hb \
+           src/app/client/common/resource_prefetch
+
+app_inc := src/app \
+           src/app/server/lift_control/base \
+           src/app/server/lift_control/rili \
+           src/app/server/lift_control/wlong \
+           src/app/client/common/auth \
+           src/app/client/common/hb \
+           src/app/client/common/resource_prefetch
+
+SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src) \
        src/http_client/auth/src \
        src/http_client/hb/src \
        src/http_client/resource_prefetch/src \
        src/http_client/wlong \
        src/serial_client/rili \
-       src/http_service/services \
-       src/http_service/handlers/base \
-       src/http_service/handlers/rili \
-       src/http_service/handlers/wlong \
        src/msg_center/src \
        src/msg_center_subscriber/subscribers \
        src/msg_center_subscriber/info \
        src/msg_center_subscriber/handlers/wlong \
        src/msg_center_subscriber/handlers/rili
             
-INC := $(hal_inc) $(utils_inc) \
-       src \
-       src/http_server/inc \
+INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) \
+       src/app/config \
        src/http_client/auth/inc \
        src/http_client/hb/inc \
        src/http_client/resource_prefetch/inc \
        src/http_client/wlong \
        src/serial_client/rili \
-       src/http_service/services \
-       src/http_service/handlers/base \
-       src/http_service/handlers/rili \
-       src/http_service/handlers/wlong \
        src/msg_center/inc \
        src/msg_center/inc/mqtt \
        src/msg_center_subscriber/subscribers \
@@ -105,14 +115,15 @@ ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)
 endif
 
+CFLAGS := -g -std=c++11
 $(C_OBJ_FILES):$(BUILD_DIR)/%.o: %.c
-	g++ -g $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
+	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
 
 $(CPP_OBJ_FILES):$(BUILD_DIR)/%.o: %.cpp
-	g++ -g $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
+	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
   
 $(target): prepare $(C_OBJ_FILES) $(CPP_OBJ_FILES)
-	g++ -g $(C_OBJ_FILES) $(CPP_OBJ_FILES) $(INC_FLAGS) $(LIB) -o $@
+	g++ $(CFLAGS) $(C_OBJ_FILES) $(CPP_OBJ_FILES) $(INC_FLAGS) $(LIB) -o $@
 
 prepare:
 	@[ -d $(BUILD_DIR) ] || mkdir -p $(BUILD_DIR)
