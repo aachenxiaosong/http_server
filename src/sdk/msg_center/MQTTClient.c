@@ -200,7 +200,7 @@ int deliverMessage(MQTTClient* c, MQTTString* topicName, MQTTMessage* message)
             {
                 MessageData md;
                 NewMessageData(&md, topicName, message);
-                c->messageHandlers[i].fp((char*)md.message->payload, (int)md.message->payloadlen);
+                c->messageHandlers[i].fp(c->messageHandlers[i].topicFilter, (char*)md.message->payload, (int)md.message->payloadlen);
                 rc = SUCCESS;
             }
         }

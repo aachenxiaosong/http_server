@@ -13,7 +13,7 @@ class WlongBookLiftMsgHandler : public IMcMsgHandler {
     int _handleBookLift(CJsonObject& msg, CJsonObject& jresponse) ;
     public:
     WlongBookLiftMsgHandler();
-    int handle(string& msg);
+    int handle(string& topic, string& msg);
 };
 
 #endif  //  SERVER_LIFT_CONTROL_WLONG_MQTT_WLONG_BOOK_LIFT_MSG_HANDLER_H_

@@ -20,7 +20,7 @@ class RiliInitMsgHandler : public IMcMsgHandler {
     int _parse(CJsonObject& djson, CJsonObject& sjson);
     public:
     RiliInitMsgHandler();
-    int handle(string& msg);
+    int handle(string& topic, string& msg);
 };
 
 #endif  //  SERVER_LIFT_CONTROL_RILI_MQTT_RILI_INIT_MSG_HANDLER_H_

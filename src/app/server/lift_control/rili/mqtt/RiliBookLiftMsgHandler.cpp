@@ -8,7 +8,7 @@ RiliBookLiftMsgHandler :: RiliBookLiftMsgHandler() : IMcMsgHandler("rili_book_ms
     LOGT(RILI_BOOK_MSG_TAG, "RiliBookLiftMsgHandler is created");
 }
 
-int RiliBookLiftMsgHandler :: handle(string& msg) {
+int RiliBookLiftMsgHandler :: handle(string& topic, string& msg) {
     LOGT(RILI_BOOK_MSG_TAG, "msg %s is handled by rili book lift msg handler", msg.c_str());
     return 0;
 }

@@ -60,7 +60,7 @@ int WlongCallLiftMsgHandler :: _handleCallLift(CJsonObject& jmsg, CJsonObject& j
     return 0;
 }
 
-int WlongCallLiftMsgHandler :: handle(string& msg) {
+int WlongCallLiftMsgHandler :: handle(string& topic, string& msg) {
     string svalue;
     CJsonObject jvalue;
     CJsonObject jmsg(msg);

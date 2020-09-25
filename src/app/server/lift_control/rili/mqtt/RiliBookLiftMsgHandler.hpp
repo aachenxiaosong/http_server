@@ -6,7 +6,7 @@
 class RiliBookLiftMsgHandler : public IMcMsgHandler {
     public:
     RiliBookLiftMsgHandler();
-    int handle(string& msg);
+    int handle(string& topic, string& msg);
 };
 
 #endif  //  SERVER_LIFT_CONTROL_RILI_MQTT_RILI_BOOK_LIFT_MSG_HANDLER_H_

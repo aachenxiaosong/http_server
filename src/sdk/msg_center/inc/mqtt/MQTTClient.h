@@ -101,7 +101,7 @@ typedef struct MQTTSubackData
     enum QoS grantedQoS;
 } MQTTSubackData;
 
-typedef void (*messageHandler)(char *data, int len);
+typedef void (*messageHandler)(char *topic, char *data, int len);
 typedef void (*MQTTDisconHandler) (void);
 
 typedef struct MQTTClient

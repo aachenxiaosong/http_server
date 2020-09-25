@@ -16,11 +16,12 @@ WlongInitMsgHandler ::WlongInitMsgHandler() : IMcMsgHandler("wlong_init_msg")
     LOGT(WLONG_INIT_MSG_TAG, "WlongInitMsgHandler is created");
     _import_init_info(init_info);
     if (init_info.size() > 0) {
-        handle(init_info);
+        string topic = "";
+        handle(topic, init_info);
     }
 }
 
-int WlongInitMsgHandler ::handle(string &msg)
+int WlongInitMsgHandler ::handle(string& topic, string &msg)
 {
     int ret;
     string msg_type;

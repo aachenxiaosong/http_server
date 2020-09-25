@@ -13,7 +13,7 @@ class WlongCallLiftMsgHandler : public IMcMsgHandler {
     int _handleCallLift(CJsonObject& msg, CJsonObject& jresponse) ;
     public:
     WlongCallLiftMsgHandler();
-    int handle(string& msg);
+    int handle(string& topic, string& msg);
 };
 
 #endif  //  SERVER_LIFT_CONTROL_WLONG_MQTT_WLONG_CALL_LIFT_MSG_HANDLER_H_

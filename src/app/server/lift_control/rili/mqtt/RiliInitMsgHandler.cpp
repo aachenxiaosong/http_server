@@ -16,11 +16,13 @@ RiliInitMsgHandler ::RiliInitMsgHandler() : IMcMsgHandler("rili_init_msg")
     LOGT(RILI_INIT_MSG_TAG, "RiliInitMsgHandler is created");
     _import_init_info(init_info);
     if (init_info.size() > 0) {
-        handle(init_info);
+        //TODO: change to init topic
+        string topic = "";
+        handle(topic, init_info);
     }
 }
 
-int RiliInitMsgHandler ::handle(string &msg)
+int RiliInitMsgHandler ::handle(string& topic, string &msg)
 {
     int ret;
     string msg_type;

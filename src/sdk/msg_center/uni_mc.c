@@ -60,6 +60,12 @@ enum {
 };
 
 typedef struct {
+  char *topic;
+  char *data;
+  int len;
+} PublishEventContent;
+
+typedef struct {
   char client_id[CLIENT_ID_LEN + 1];
   char username[USERNAME_LEN + 1];
   char password[PASSWORD_LEN + 1];
@@ -398,7 +404,7 @@ static Result _disconnect_internal(MsgCenter *mc) {
   return E_OK;
 }
 
-static Result _send_internal(MsgCenter *mc, char *data, uni_s32 len) {
+static Result _send_internal(MsgCenter *mc, char *topic, char *data, uni_s32 len) {
   int ret = 0;
   MQTTMessage msg;
   MqttParam *param = &mc->mqtt_param;
@@ -411,12 +417,25 @@ static Result _send_internal(MsgCenter *mc, char *data, uni_s32 len) {
   msg.qos = QOS0;
   msg.payload = data;
   msg.payloadlen = len;
-  ret = MQTTPublish(&mc->mqtt_client, param->publish, &msg);
-  //try again
-  if (ret != 0) {
+  if (topic == NULL || strlen(topic) == 0)
+  {
+    //TODO: will change for new protocol
     ret = MQTTPublish(&mc->mqtt_client, param->publish, &msg);
+    //try again
+    if (ret != 0)
+    {
+      ret = MQTTPublish(&mc->mqtt_client, param->publish, &msg);
+    }
   }
-  uni_free(data);
+  else
+  {
+    ret = MQTTPublish(&mc->mqtt_client, topic, &msg);
+    //try again
+    if (ret != 0)
+    {
+      ret = MQTTPublish(&mc->mqtt_client, topic, &msg);
+    }
+  }
   if (ret != 0) {
     LOGE(MSG_CENTER_TAG, "mqtt send failed");
     return E_FAILED;
@@ -494,9 +513,23 @@ static uni_s32 _cloud_comm_event_handler(Event *event) {
   switch (event->type) {
     case MC_EVENT_SEND:
     {
-      FixLengthData *fdata = (FixLengthData *)event->content.info;
-      _send_internal(mc, (char *)fdata->data, fdata->length);
-      uni_free(fdata);
+      PublishEventContent *fdata = (PublishEventContent *)event->content.info;
+      if (fdata != NULL)
+      {
+        if (fdata->topic != NULL && fdata->data != NULL)
+        {
+          _send_internal(mc, fdata->topic, fdata->data, fdata->len);
+        }
+        if (fdata->topic != NULL)
+        {
+          uni_free(fdata->topic);
+        }
+        if (fdata->data != NULL)
+        {
+          uni_free(fdata->data);
+        }
+        uni_free(fdata);
+      }
       break;
     }
     case MC_EVENT_CONNECT:
@@ -522,20 +555,21 @@ static uni_s32 _cloud_comm_event_handler(Event *event) {
   return 0;
 }
 
-Result McSend(McHandle handle, const char *data, uni_s32 len) {
+Result McSend(McHandle handle, const char *topic, const char *data, uni_s32 len) {
   MsgCenter *mc = (MsgCenter *)handle;
   Event *event;
   EventContent event_content;
-  FixLengthData *fdata;
+  PublishEventContent *fdata;
   if (NULL == data || len <= 0) {
     LOGE(MSG_CENTER_TAG, "data cannot be empty");
     return E_FAILED;
   }
-  fdata = (FixLengthData *)uni_malloc(sizeof(FixLengthData));
+  fdata = (PublishEventContent *)uni_malloc(sizeof(PublishEventContent));
+  fdata->topic = (char *)uni_malloc(strlen(topic) + 1);
   fdata->data = (char *)uni_malloc(len + 1);
   uni_memset(fdata->data, 0, len + 1);
   uni_memcpy(fdata->data, data, len);
-  fdata->length = len;
+  fdata->len = len;
   uni_memset(&event_content, 0, sizeof(EventContent));
   event_content.info = (void *)fdata;
   event_content.extend_info = (void *)mc;

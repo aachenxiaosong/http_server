@@ -62,7 +62,7 @@ static int _check_device_info_synced(char *msg) {
   return 0;
 }
 
-static void _mc_recv_routine(char *data, int len) {
+static void _mc_recv_routine(char *topic, char *data, int len) {
   int i;
   IMcMsgHandler* handler;
   if (data == NULL || len <= 0) {
@@ -71,10 +71,11 @@ static void _mc_recv_routine(char *data, int len) {
   printf("chen: recv data %s len %d\n", data, len);
   _check_device_info_synced(data);
   string sdata = data;
+  string stopic = topic;
   for (vector<IMcMsgHandler *>::iterator it = g_mc_service.handlers.begin();
         it != g_mc_service.handlers.end(); it++) {
     handler = *it;
-    if (handler->handle(sdata) == 0) {
+    if (handler->handle(stopic, sdata) == 0) {
       /* one msg can only be consumed once */
       break;
     }
@@ -100,7 +101,7 @@ void McBrokerDisconnect(void) {
 
 Result McBrokerSend(const string &data) {
   Result rc;
-  rc = McSend(g_mc_service.cp_mc, data.c_str(), data.size());
+  rc = McSend(g_mc_service.cp_mc, "", data.c_str(), data.size());
   if (rc != E_OK) {
     LOGE(MC_SERVICE_TAG, "connect platform mc connect failed");
   }
@@ -188,7 +189,7 @@ static int _publish_device_info(McHandle mc) {
                  "}",  uuid, timestamp, DeviceGetUdid(), DeviceGetType(), DeviceGetServerUrl(),
                  work_mode.c_str(), hb_status, hb_msg.c_str());
     LOGT(MC_SERVICE_TAG, "publish of device info: %s", sdata);
-    if (E_OK != McSend(mc, sdata, strlen(sdata) + 1)) {
+    if (E_OK != McSend(mc, "", sdata, strlen(sdata) + 1)) {
         LOGE(MC_SERVICE_TAG, "publish of device info failed");
         LOGT(MC_SERVICE_TAG, "3P elevator control system heart beat END ------------------------------------\n");
         return -1;

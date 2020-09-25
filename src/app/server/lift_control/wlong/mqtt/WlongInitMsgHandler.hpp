@@ -20,7 +20,7 @@ class WlongInitMsgHandler : public IMcMsgHandler {
     int _parse(CJsonObject& djson, CJsonObject& sjson);
     public:
     WlongInitMsgHandler();
-    int handle(string& msg);
+    int handle(string& topic, string& msg);
 };
 
 #endif  //  SERVER_LIFT_CONTROL_WLONG_MQTT_WLONG_INIT_MSG_HANDLER_H_

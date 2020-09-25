@@ -97,7 +97,7 @@ int WlongBookLiftMsgHandler :: _handleBookLift(CJsonObject& jmsg, CJsonObject& j
     return 0;
 }
 
-int WlongBookLiftMsgHandler :: handle(string& msg) {
+int WlongBookLiftMsgHandler :: handle(string& topic, string& msg) {
     string svalue;
     CJsonObject jvalue;
     CJsonObject jmsg(msg);

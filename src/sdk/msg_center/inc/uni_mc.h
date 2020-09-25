@@ -40,10 +40,10 @@ extern "C" {
 
 typedef void* McHandle;
 
-typedef void (*McRecvHandler) (char *data, int len);
+typedef void (*McRecvHandler) (char *topic, char *data, int len);
 typedef void (*McDiscHandler) (void);
 
-Result   McSend(McHandle handle, const char *data, uni_s32 len);
+Result   McSend(McHandle handle, const char *topic, const char *data, uni_s32 len);
 Result   McConnect(McHandle handle, McRecvHandler recv_handler,
                    McDiscHandler disc_handler);
 void     McDisconnect(McHandle handle);
