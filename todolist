@@ -17,3 +17,6 @@ ae8142f81dc1abc5cc639f262450eb54
 jnilinu245equw5xy3iyid2qklz5e2266qe3zja4
 bc5300620e7bc0b8b063464f7e97e04c
 注意：appkey要在健全中心配置
+
+1, 在wlong liftcontrol和rili liftctrl这两个client里加一层适配层,server端调用的接口不变
+2, mqtt的sender要单独定义出来,加上topic;心跳这块要拎出来放到app层

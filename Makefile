@@ -42,52 +42,45 @@ utils_inc := src/utils/bitmap/inc \
              src/utils/timer/inc
 
 sdk_src := src/sdk/http_server \
-           src/sdk/http_client
+           src/sdk/http_client \
+           src/sdk/msg_center
+
 sdk_inc := src/sdk/http_server/inc \
            src/sdk/http_server \
-           src/sdk/http_client
+           src/sdk/http_client \
+           src/sdk/msg_center/inc \
+           src/sdk/msg_center/inc/mqtt \
+           src/sdk/msg_center
 
 app_src := src/app \
-           src/app/server/lift_control/base \
-           src/app/server/lift_control/rili \
-           src/app/server/lift_control/wlong \
+           src/app/server/lift_control/base/http \
+           src/app/server/lift_control/rili/http \
+           src/app/server/lift_control/wlong/http \
+           src/app/server/lift_control/base/mqtt \
+           src/app/server/lift_control/rili/mqtt \
+           src/app/server/lift_control/wlong/mqtt \
            src/app/client/common/auth \
            src/app/client/common/hb \
-           src/app/client/common
+           src/app/client/common \
+           src/app/client/lift_control/rili \
+           src/app/client/lift_control/wlong
 
 app_inc := src/app \
-           src/app/server/lift_control/base \
-           src/app/server/lift_control/rili \
-           src/app/server/lift_control/wlong \
+           src/app/config \
+           src/app/server/lift_control/base/http \
+           src/app/server/lift_control/rili/http \
+           src/app/server/lift_control/wlong/http \
+           src/app/server/lift_control/base/mqtt \
+           src/app/server/lift_control/rili/mqtt \
+           src/app/server/lift_control/wlong/mqtt \
            src/app/client/common/auth \
            src/app/client/common/hb \
-           src/app/client/common
+           src/app/client/common \
+           src/app/client/lift_control/rili \
+           src/app/client/lift_control/wlong
 
-SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src) \
-       src/http_client/auth/src \
-       src/http_client/hb/src \
-       src/http_client/resource_prefetch/src \
-       src/http_client/wlong \
-       src/serial_client/rili \
-       src/msg_center/src \
-       src/msg_center_subscriber/subscribers \
-       src/msg_center_subscriber/info \
-       src/msg_center_subscriber/handlers/wlong \
-       src/msg_center_subscriber/handlers/rili
-            
-INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) \
-       src/app/config \
-       src/http_client/auth/inc \
-       src/http_client/hb/inc \
-       src/http_client/resource_prefetch/inc \
-       src/http_client/wlong \
-       src/serial_client/rili \
-       src/msg_center/inc \
-       src/msg_center/inc/mqtt \
-       src/msg_center_subscriber/subscribers \
-       src/msg_center_subscriber/info \
-       src/msg_center_subscriber/handlers/wlong \
-       src/msg_center_subscriber/handlers/rili
+SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src)
+INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc)
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))
