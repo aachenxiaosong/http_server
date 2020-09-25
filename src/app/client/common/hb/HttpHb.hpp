@@ -4,6 +4,9 @@
 #include "HttpClient.hpp"
 #include <thread>
 
+
+#define HB_PERIOD_SEC               (60)
+
 class HttpHb
 {
 private:

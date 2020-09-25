@@ -19,7 +19,7 @@ void HttpAuth::tokenUpdateTask() {
                 continue;
             }
         }
-        sleep(10);
+        sleep(TOKEN_REFRESH_PERIOD_SEC);
     }
 }
 

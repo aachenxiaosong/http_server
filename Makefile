@@ -53,7 +53,7 @@ app_src := src/app \
            src/app/server/lift_control/wlong \
            src/app/client/common/auth \
            src/app/client/common/hb \
-           src/app/client/common/resource_prefetch
+           src/app/client/common
 
 app_inc := src/app \
            src/app/server/lift_control/base \
@@ -61,7 +61,7 @@ app_inc := src/app \
            src/app/server/lift_control/wlong \
            src/app/client/common/auth \
            src/app/client/common/hb \
-           src/app/client/common/resource_prefetch
+           src/app/client/common
 
 SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src) \
        src/http_client/auth/src \

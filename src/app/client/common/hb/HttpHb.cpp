@@ -8,7 +8,7 @@ thread* HttpHb::mThread = NULL;
 void HttpHb::hbReportTask() {
     while (1) {
         HttpHbReport();
-        sleep(60);
+        sleep(HB_PERIOD_SEC);
     }
 }
 

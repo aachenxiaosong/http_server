@@ -1,8 +1,8 @@
 #include "uni_log.h"
 #include "serial.h"
 #include "uni_timer.h"
+#include "ClientCommon.hpp"
 #include "HttpServer.hpp"
-#include "uni_resource_prefetch.hpp"
 #include "IHttpService.hpp"
 #include "RiliHttpService.hpp"
 #include "WlongHttpService.hpp"
@@ -12,13 +12,13 @@
 
 #define MAIN_TAG "main"
 
-static int _http_client_init() {
+static int _common_init() {
     if (E_OK != TimerInitialize()) {
         LOGE(MAIN_TAG, "timer init failed");
         return -1;
     }
-    if (E_OK != ResPrefetchInit()) {
-        LOGE(MAIN_TAG, "resource prefetch init failed");
+    if (0 != ClientCommon::init()) {
+        LOGE(MAIN_TAG, "client common init failed");
         return -1;
     }
     return 0;
@@ -56,8 +56,8 @@ int main() {
         LOGE(MAIN_TAG, "http server init failed");
         return -1;
     }
-    if (0 != _http_client_init()) {
-        LOGE(MAIN_TAG, "http client init failed");
+    if (0 != _common_init()) {
+        LOGE(MAIN_TAG, "common init failed");
         return -1;
     }
     

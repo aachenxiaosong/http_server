@@ -4,6 +4,8 @@
 #include "HttpClient.hpp"
 #include <thread>
 
+#define TOKEN_REFRESH_PERIOD_SEC         (10)
+
 class HttpAuth
 {
 private:
