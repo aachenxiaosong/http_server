@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "configurable_info.h": "c",
-        "uni_device.h": "c"
+        "uni_device.h": "c",
+        "thread": "cpp"
     }
 }

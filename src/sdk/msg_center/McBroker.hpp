@@ -21,7 +21,7 @@
  * Date        : 2020.04.01
  *
  **************************************************************************/
-#ifndef SDK_MSG_CENTER_MC_BROKER_H_
+#ifndef SDK_MSG_CENTER_MC_BROKER_H_                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 #define SDK_MSG_CENTER_MC_BROKER_H_
 
 #include "IMcMsgHandler.hpp"

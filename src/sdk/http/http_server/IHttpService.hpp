@@ -1,5 +1,5 @@
-#ifndef  SDK_HTTP_SERVER_I_HTTP_SERVICE_H_
-#define  SDK_HTTP_SERVER_I_HTTP_SERVICE_H_
+#ifndef  SDK_HTTP_HTTP_SERVER_I_HTTP_SERVICE_HPP_
+#define  SDK_HTTP_HTTP_SERVER_I_HTTP_SERVICE_HPP_
 
 #include "IHttpRequestHandler.hpp"
 
@@ -13,4 +13,4 @@ class IHttpService{
     virtual int unRegisterHttpHandler() = 0;
 };
 
-#endif  //   SDK_HTTP_SERVER_I_HTTP_SERVICE_H_
+#endif  //   SDK_HTTP_HTTP_SERVER_I_HTTP_SERVICE_HPP_

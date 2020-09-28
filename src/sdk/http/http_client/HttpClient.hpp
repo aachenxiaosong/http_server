@@ -1,5 +1,5 @@
-#ifndef  SDK_HTTP_CLIENT_HTTP_CLIENT_H_
-#define  SDK_HTTP_CLIENT_HTTP_CLIENT_H_
+#ifndef  SDK_HTTP_HTTP_CLIENT_HTTP_CLIENT_HPP_
+#define  SDK_HTTP_HTTP_CLIENT_HTTP_CLIENT_HPP_
 
 #include <string>
 #include <map>
@@ -16,4 +16,4 @@ public:
                    map<string, string> headers = map<string, string>(), int timeout = 5);
 };
 
-#endif  //   SDK_HTTP_CLIENT_HTTP_CLIENT_H_
+#endif  //   SDK_HTTP_HTTP_CLIENT_HTTP_CLIENT_HPP_

@@ -1,5 +1,5 @@
-#ifndef  SDK_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_H_
-#define  SDK_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_H_
+#ifndef  SDK_HTTP_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_HPP_
+#define  SDK_HTTP_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_HPP_
 
 #include <string>
 using namespace std;
@@ -14,4 +14,4 @@ class IHttpRequestHandler {
     virtual int handle(string& path, string& request, string&response) = 0;
 };
 
-#endif  //   SDK_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_H_
+#endif  //   SDK_HTTP_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_HPP_

@@ -41,16 +41,22 @@ utils_inc := src/utils/bitmap/inc \
              src/utils/memcheck/inc \
              src/utils/timer/inc
 
-sdk_src := src/sdk/http_server \
-           src/sdk/http_client \
-           src/sdk/msg_center
+sdk_src := src/sdk/http/http_server \
+           src/sdk/http/http_client \
+           src/sdk/tcp_server \
+           src/sdk/tcp_client \
+           src/sdk/msg_center \
+           src/sdk/protocol_packer
 
-sdk_inc := src/sdk/http_server/inc \
-           src/sdk/http_server \
-           src/sdk/http_client \
+sdk_inc := src/sdk/http/http_server/inc \
+           src/sdk/http/http_server \
+           src/sdk/http/http_client \
+           src/sdk/tcp_server \
+           src/sdk/tcp_client \
            src/sdk/msg_center/inc \
            src/sdk/msg_center/inc/mqtt \
-           src/sdk/msg_center
+           src/sdk/msg_center \
+           src/sdk/protocol_packer
 
 app_src := src/app \
            src/app/server/lift_control/base/http \
