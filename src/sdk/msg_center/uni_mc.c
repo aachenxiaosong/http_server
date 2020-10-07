@@ -409,7 +409,6 @@ static Result _send_internal(MsgCenter *mc, char *topic, char *data, uni_s32 len
   MQTTMessage msg;
   MqttParam *param = &mc->mqtt_param;
   if (!mc->connected) {
-    uni_free(data);
     LOGE(MSG_CENTER_TAG, "mqtt send failed for not connected");
     return E_FAILED;
   }

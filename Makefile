@@ -43,16 +43,14 @@ utils_inc := src/utils/bitmap/inc \
 
 sdk_src := src/sdk/http/http_server \
            src/sdk/http/http_client \
-           src/sdk/tcp_server \
-           src/sdk/tcp_client \
+           src/sdk/tcp/tcp_server \
            src/sdk/msg_center \
            src/sdk/protocol_packer
 
 sdk_inc := src/sdk/http/http_server/inc \
            src/sdk/http/http_server \
            src/sdk/http/http_client \
-           src/sdk/tcp_server \
-           src/sdk/tcp_client \
+           src/sdk/tcp/tcp_server \
            src/sdk/msg_center/inc \
            src/sdk/msg_center/inc/mqtt \
            src/sdk/msg_center \
@@ -85,8 +83,11 @@ app_inc := src/app \
            src/app/client/lift_control/rili \
            src/app/client/lift_control/wlong
 
-SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src)
-INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc)
+test_src := src/sdk/tcp/tcp_server/test
+test_inc := src/sdk/tcp/tcp_server/test
+
+SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src) $(test_src)
+INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) $(test_inc)
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))

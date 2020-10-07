@@ -60,7 +60,8 @@ int main() {
         LOGE(MAIN_TAG, "common init failed");
         return -1;
     }
-    
+    extern void AppTest();
+    AppTest();
     while(1) {
         sleep(100); 
     }
