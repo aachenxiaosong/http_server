@@ -108,12 +108,14 @@ void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
              inet_ntoa(tcp_cb_param->client->sin_addr));
         //client什么时候释放的?注意这里会不会有泄漏
         delete tcp_cb_param;
+        server->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
     else if (events & BEV_EVENT_ERROR)
     {
         LOGE(server->mName.c_str(), "some other error !");
         delete tcp_cb_param;
+        server->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
 }
@@ -122,7 +124,6 @@ void TcpServer :: listenerCb(struct evconnlistener *listener, evutil_socket_t fd
 {
     struct sockaddr_in *client = (sockaddr_in *)addr;
     TcpServer *server = (TcpServer *)ptr;
-    LOGT(server->mName.c_str(), "connect new client %s:%d", inet_ntoa(client->sin_addr), ntohs(client->sin_port));
     struct event_base *base = server->mEventBase;
     TcpServer::CbParam *tcp_cb_param = new TcpServer::CbParam(server, client);
     //添加新事件
@@ -133,6 +134,10 @@ void TcpServer :: listenerCb(struct evconnlistener *listener, evutil_socket_t fd
         LOGE(server->mName.c_str(), "create bufferevent failed");
         return;
     }
+    char *ip = inet_ntoa(client->sin_addr);
+    uint16_t port = ntohs(client->sin_port);
+    server->mConnMgr.add(ip, port, bev);
+    LOGT(server->mName.c_str(), "connect new client %s:%d", ip, port);
     //给bufferevent缓冲区设置回调
     //bufferevent_setcb(bev, readCb, writeCb, eventCb, inet_ntoa(client->sin_addr));
     bufferevent_setcb(bev, readCb, NULL, eventCb, tcp_cb_param);

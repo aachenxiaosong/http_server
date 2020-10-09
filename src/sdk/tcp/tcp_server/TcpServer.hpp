@@ -1,6 +1,7 @@
 #ifndef  SDK_TCP_TCP_SERVER_TCP_SERVER_HPP_
 #define  SDK_TCP_TCP_SERVER_TCP_SERVER_HPP_
 
+#include "TcpConnMgr.hpp"
 #include <string>
 #include <vector>
 #include "IProtocolPacker.hpp"
@@ -31,6 +32,8 @@ private:
     string mName;
     string mIp;
     int mPort;
+    TcpConnMgr mConnMgr;
+
     vector <ITcpDataHandler *> mHandlers;
     IProtocolPacker *mPacker;
     struct event_base *mEventBase;
