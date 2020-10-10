@@ -14,7 +14,7 @@
 
 #define TCP_CLIENT_TAG mName.c_str()
 
-TcpClient :: TcpClient(const char *name, string ip, int port)
+TcpClient :: TcpClient(const char *name, string server_ip, int server_port)
 {
 #ifdef WIN32
     WORD wVersionRequested;
@@ -23,10 +23,9 @@ TcpClient :: TcpClient(const char *name, string ip, int port)
     (void)WSAStartup(wVersionRequested, &wsaData);
 #endif
     mName = name;
-    mServerIp = ip;
-    mServerPort = port;
+    mServerIp = server_ip;
+    mServerPort = server_port;
     mEventBase = NULL;
-    mEvent = NULL;
     mThread = NULL;
 }
 
@@ -36,9 +35,6 @@ TcpClient :: ~TcpClient()
     {
         mThread->join();
         delete mThread;
-    }
-    if (mEvent != NULL) {
-        event_free(mEvent);
     }
     if (mEventBase != NULL)
     {
@@ -59,21 +55,29 @@ void TcpClient :: readCb(struct bufferevent *bev, void *arg)
 void TcpClient :: eventCb(struct bufferevent *bev, short events, void *arg)
 {
     TcpClient *client = (TcpClient *)arg;
+    STcpConn *conn = client->mConnMgr.get(bev);
     LOGT(client->mName.c_str(), "tcp event %d received", events);
     if (events & BEV_EVENT_EOF)
     {
-        LOGT(client->mName.c_str(), "connection closed: %s",
-             client->mServerIp);
+        LOGT(client->mName.c_str(), "connection closed: %s:%d",
+             conn->ip, conn->port);
         //client什么时候释放的?注意这里会不会有泄漏
         client->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
     else if (events & BEV_EVENT_ERROR)
     {
-        LOGE(client->mName.c_str(), "some other error !");
+        LOGE(client->mName.c_str(), "some other error of connection: %s:%d",
+             conn->ip, conn->port);
         client->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
+}
+
+void TcpClient :: dispathTask(void *arg)
+{
+    struct event_base *base = (struct event_base *)arg;
+    event_base_dispatch(base);
 }
 
 int TcpClient ::connect()
@@ -102,7 +106,22 @@ int TcpClient ::connect()
         return -1;
     }
     mConnMgr.add(mServerIp.c_str(), mServerPort, bev);
+    LOGT(TCP_CLIENT_TAG, "connect to server %s:%d",
+         mServerIp.c_str(), mServerPort);
     //设置回调
     bufferevent_setcb(bev, readCb, NULL, eventCb, this);
+    bufferevent_enable(bev, EV_READ);
+    mThread = new thread(dispathTask, mEventBase);
+
     return 0;
+}
+
+TcpHandle* TcpClient :: getHandle()
+{
+    return &mHandle;
+}
+
+TcpConnMgr* TcpClient :: getConnMgr()
+{
+    return &mConnMgr;
 }

@@ -3,12 +3,9 @@
 #include "uni_log.h"
 #include <string.h>
 
-#define TCP_REQ_HANDLER_TAG getName().c_str()
+#define TCP_SERVER_TEST_TAG getName().c_str()
 
-//static TcpServer *server = new TcpServer("test_tcp_server", 8888);
-//static TcpHandle *handle;
-
-class TcpTest
+class ServerTest
 {
 private:
     TcpHandle *handle;
@@ -16,17 +13,18 @@ private:
     class TcpReceiver1 : public ITcpReceiver
     {
     private:
-        TcpTest *parent;
+        ServerTest *parent;
     public:
-        TcpReceiver1(TcpTest *parent) : ITcpReceiver("test_tcp_receiver1") {
+        TcpReceiver1(ServerTest *parent) : ITcpReceiver("tcp_server_receiver1") {
             this->parent = parent;
         }
         ~TcpReceiver1() {}
         int onRecv(STcpConn *conn, char *data, int len)
         {
-            LOGT(TCP_REQ_HANDLER_TAG, "tcp data: %s, len %d", data, len);
+            LOGT(TCP_SERVER_TEST_TAG, "tcp data: %s, len %d from connection %s:%d",
+                 data, len, conn->ip, conn->port);
             if (strstr(data, "123")) {
-                parent->handle->send(conn, (const char *)"response from test receiver1", strlen("response from test receiver1") + 1);
+                parent->handle->send(conn, (const char *)"response of 123 from server receiver1", strlen("response of 123 from server receiver1") + 1);
                 return 0;
             }
             return -1;
@@ -35,17 +33,18 @@ private:
     class TcpReceiver2 : public ITcpReceiver
     {
     private:
-        TcpTest *parent;
+        ServerTest *parent;
     public:
-        TcpReceiver2(TcpTest *parent) : ITcpReceiver("test_tcp_receiver2") {
+        TcpReceiver2(ServerTest *parent) : ITcpReceiver("tcp_server_receiver2") {
             this->parent = parent;
         }
         ~TcpReceiver2() {}
         int onRecv(STcpConn *conn, char *data, int len)
         {
-            LOGT(TCP_REQ_HANDLER_TAG, "tcp data: %s, len %d", data, len);
+            LOGT(TCP_SERVER_TEST_TAG, "tcp data: %s, len %d from connection %s:%d",
+                 data, len, conn->ip, conn->port);
             if (strstr(data, "abc")) {
-                parent->handle->send(conn, (const char *)"response from test receiver2", strlen("response from test receiver2") + 1);
+                parent->handle->send(conn, (const char *)"response of abc from server receiver2", strlen("response of abc from server receiver2") + 1);
                 return 0;
             }
             return -1;
@@ -54,7 +53,7 @@ private:
     
     
 public:
-    TcpTest() {
+    ServerTest() {
         server = new TcpServer("test_tcp_server", 8888);
         handle = server->getHandle();
         receiver1 = new TcpReceiver1(this);
@@ -69,8 +68,8 @@ public:
     }
 };
 
+static ServerTest test;
 void TcpServerTest() {
-    TcpTest test;
     test.test();
 }
 

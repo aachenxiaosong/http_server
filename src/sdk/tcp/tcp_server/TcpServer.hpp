@@ -4,9 +4,6 @@
 #include "TcpConnMgr.hpp"
 #include "TcpHandle.hpp"
 #include <string>
-#include <vector>
-#include "IProtocolPacker.hpp"
-#include "ITcpReceiver.hpp"
 #include "event2/event.h"
 #include "event2/bufferevent.h"
 #include "event2/listener.h"
@@ -18,16 +15,6 @@ using namespace std;
 
 class TcpServer {
 private:
-    struct CbParam
-    {
-        TcpServer *server;
-        struct sockaddr_in *client;
-        CbParam(TcpServer *server, struct sockaddr_in *client)
-        {
-            this->server = server;
-            this->client = client;
-        }
-    };
     string mName;
     string mIp;
     int mPort;
@@ -44,11 +31,12 @@ public:
     ~TcpServer();
     int listen();
     TcpHandle *getHandle();
+    TcpConnMgr *getConnMgr();
 
 private:
     static void readCb(struct bufferevent *bev, void *arg);
     static void eventCb(struct bufferevent *bev, short events, void *arg);
     static void listenerCb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *addr, int len, void *ptr);
-    static void listenerTask(void *arg);
+    static void dispathTask(void *arg);
 };
 #endif  //  SDK_TCP_TCP_SERVER_TCP_SERVER_HPP_

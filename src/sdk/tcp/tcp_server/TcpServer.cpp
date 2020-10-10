@@ -57,32 +57,29 @@ void TcpServer :: readCb(struct bufferevent *bev, void *arg)
 {
     char read_buf[MAX_TCP_RECV_LEN] = {0};
     int read_len;
-    TcpServer::CbParam *tcp_cb_param = (TcpServer::CbParam *)arg;
-    TcpServer *server = tcp_cb_param->server;
-    char *ip = inet_ntoa(tcp_cb_param->client->sin_addr);
+    TcpServer *server = (TcpServer *)arg;
+    STcpConn *conn = server->mConnMgr.get(bev);
     read_len = bufferevent_read(bev, read_buf, sizeof(read_buf));
-    LOGT(server->mName.c_str(), "get data %s in readCb, len is %d", read_buf, read_len);//
-    server->mHandle.onRecv(server->mConnMgr.get(bev), (const char *)read_buf, read_len);
+    server->mHandle.onRecv(conn, (const char *)read_buf, read_len);
 }
 
 void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
 {
-    TcpServer::CbParam *tcp_cb_param = (TcpServer::CbParam *)arg;
-    TcpServer *server = tcp_cb_param->server;
+    TcpServer *server = (TcpServer *)arg;
+    STcpConn *conn = server->mConnMgr.get(bev);
     LOGT(server->mName.c_str(), "tcp event %d received", events);
     if (events & BEV_EVENT_EOF)
     {
-        LOGT(server->mName.c_str(), "connection closed: %s",
-             inet_ntoa(tcp_cb_param->client->sin_addr));
+        LOGT(server->mName.c_str(), "connection closed: %s:%d",
+             conn->ip, conn->port);
         //client什么时候释放的?注意这里会不会有泄漏
-        delete tcp_cb_param;
         server->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
     else if (events & BEV_EVENT_ERROR)
     {
-        LOGE(server->mName.c_str(), "some other error !");
-        delete tcp_cb_param;
+        LOGT(server->mName.c_str(), "some other error of connection: %s:%d",
+             conn->ip, conn->port);
         server->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
@@ -93,7 +90,6 @@ void TcpServer :: listenerCb(struct evconnlistener *listener, evutil_socket_t fd
     struct sockaddr_in *client = (sockaddr_in *)addr;
     TcpServer *server = (TcpServer *)ptr;
     struct event_base *base = server->mEventBase;
-    TcpServer::CbParam *tcp_cb_param = new TcpServer::CbParam(server, client);
     //添加新事件
     struct bufferevent *bev;
     bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);
@@ -108,18 +104,18 @@ void TcpServer :: listenerCb(struct evconnlistener *listener, evutil_socket_t fd
     LOGT(server->mName.c_str(), "connect new client %s:%d", ip, port);
     //给bufferevent缓冲区设置回调
     //bufferevent_setcb(bev, readCb, writeCb, eventCb, inet_ntoa(client->sin_addr));
-    bufferevent_setcb(bev, readCb, NULL, eventCb, tcp_cb_param);
+    bufferevent_setcb(bev, readCb, NULL, eventCb, server);
     //启动 bufferevent的 读缓冲区。默认是disable的
     bufferevent_enable(bev, EV_READ);
 }
 
-void TcpServer :: listenerTask(void *arg)
+void TcpServer :: dispathTask(void *arg)
 {
     struct event_base *base = (struct event_base *)arg;
     event_base_dispatch(base);
 }
 
-int TcpServer ::listen()
+int TcpServer :: listen()
 {
     //init server
     struct sockaddr_in serv;
@@ -144,11 +140,16 @@ int TcpServer ::listen()
     }
     //start blocking listening
     //event_base_dispatch(mEventBase);
-    mThread = new thread(listenerTask, mEventBase);
+    mThread = new thread(dispathTask, mEventBase);
     return 0;
 }
 
-TcpHandle *TcpServer ::getHandle()
+TcpHandle *TcpServer :: getHandle()
 {
     return &mHandle;
+}
+
+TcpConnMgr* TcpServer :: getConnMgr()
+{
+    return &mConnMgr;
 }

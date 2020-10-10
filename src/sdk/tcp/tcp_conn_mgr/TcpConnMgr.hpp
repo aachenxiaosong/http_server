@@ -12,6 +12,8 @@ private:
     vector<STcpConn *> mConns;
     mutex mLock;
 public:
+    TcpConnMgr() = default;
+    ~TcpConnMgr();
     void add(const char *ip, uint16_t port, void *socket);
     void del(const char *ip);
     void del(const char *ip, uint16_t port);

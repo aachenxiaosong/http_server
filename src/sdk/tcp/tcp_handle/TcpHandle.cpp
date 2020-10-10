@@ -2,14 +2,19 @@
 #include "event2/bufferevent.h"
 #include <string.h>
 
+TcpHandle :: ~TcpHandle() {
+    mReceiverLock.writeLock();
+    mReceivers.clear();
+    mReceiverLock.writeUnlock();
+}
 
-int TcpHandle ::setPacker(IProtocolPacker *packer)
+int TcpHandle :: setPacker(IProtocolPacker *packer)
 {
     mPacker = packer;
     return 0;
 }
 
-int TcpHandle ::addReceiver(ITcpReceiver *receiver)
+int TcpHandle :: addReceiver(ITcpReceiver *receiver)
 {
     mReceiverLock.writeLock();
     mReceivers.push_back(receiver);
@@ -17,7 +22,7 @@ int TcpHandle ::addReceiver(ITcpReceiver *receiver)
     return 0;
 }
 
-void TcpHandle ::delReceiver(ITcpReceiver *receiver)
+void TcpHandle :: delReceiver(ITcpReceiver *receiver)
 {
     vector<ITcpReceiver *>::iterator it;
     ITcpReceiver *i_receiver = NULL;
@@ -33,7 +38,7 @@ void TcpHandle ::delReceiver(ITcpReceiver *receiver)
     mReceiverLock.writeUnlock();
 }
 
-int TcpHandle ::onRecv(STcpConn *conn, const char *data, int len)
+int TcpHandle :: onRecv(STcpConn *conn, const char *data, int len)
 {
     int data_received_ok = -1;
     char pack_buf[MAX_TCP_PACK_LEN] = {0};
@@ -61,7 +66,7 @@ int TcpHandle ::onRecv(STcpConn *conn, const char *data, int len)
     return data_received_ok;
 }
 
-int TcpHandle ::send(STcpConn *conn, const char *data, int len)
+int TcpHandle :: send(STcpConn *conn, const char *data, int len)
 {
     return bufferevent_write((struct bufferevent *)conn->socket, data, len);
 }

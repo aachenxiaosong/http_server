@@ -1,7 +1,13 @@
 #include "TcpConnMgr.hpp"
 #include <string.h>
 
-void TcpConnMgr ::add(const char *ip, uint16_t port, void *socket)
+TcpConnMgr :: ~TcpConnMgr() {
+    mLock.lock();
+    mConns.clear();
+    mLock.unlock();
+}
+
+void TcpConnMgr :: add(const char *ip, uint16_t port, void *socket)
 {
     mLock.lock();
     STcpConn *conn = new STcpConn();
@@ -12,7 +18,7 @@ void TcpConnMgr ::add(const char *ip, uint16_t port, void *socket)
     mLock.unlock();
 }
 
-void TcpConnMgr ::del(const char *ip)
+void TcpConnMgr :: del(const char *ip)
 {
     mLock.lock();
     vector<STcpConn *>::iterator iter;
@@ -29,7 +35,7 @@ void TcpConnMgr ::del(const char *ip)
     mLock.unlock();
 }
 
-void TcpConnMgr ::del(const char *ip, uint16_t port)
+void TcpConnMgr :: del(const char *ip, uint16_t port)
 {
     mLock.lock();
     vector<STcpConn *>::iterator iter;
@@ -46,7 +52,7 @@ void TcpConnMgr ::del(const char *ip, uint16_t port)
     mLock.unlock();
 }
 
-void TcpConnMgr ::del(void *socket)
+void TcpConnMgr :: del(void *socket)
 {
     mLock.lock();
     vector<STcpConn *>::iterator iter;
@@ -63,7 +69,7 @@ void TcpConnMgr ::del(void *socket)
     mLock.unlock();
 }
 
-STcpConn *TcpConnMgr ::get(const char *ip, uint16_t port)
+STcpConn *TcpConnMgr :: get(const char *ip, uint16_t port)
 {
     mLock.lock();
     vector<STcpConn *>::iterator iter;
@@ -79,7 +85,7 @@ STcpConn *TcpConnMgr ::get(const char *ip, uint16_t port)
     return conn;
 }
 
-STcpConn *TcpConnMgr ::get(const char *ip)
+STcpConn *TcpConnMgr :: get(const char *ip)
 {
     mLock.lock();
     vector<STcpConn *>::iterator iter;
@@ -95,7 +101,7 @@ STcpConn *TcpConnMgr ::get(const char *ip)
     return conn;
 }
 
-STcpConn *TcpConnMgr ::get(void *socket)
+STcpConn *TcpConnMgr :: get(void *socket)
 {
     mLock.lock();
     vector<STcpConn *>::iterator iter;

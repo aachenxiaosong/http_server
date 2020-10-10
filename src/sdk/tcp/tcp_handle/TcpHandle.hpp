@@ -19,8 +19,8 @@ private:
     IProtocolPacker *mPacker;
     RwLock mReceiverLock;
 public:
-    TcpHandle() {}
-    virtual ~TcpHandle() {}
+    TcpHandle() = default;
+    virtual ~TcpHandle();
     //recv related
     int setPacker(IProtocolPacker *packer);
     int addReceiver(ITcpReceiver *receiver);
