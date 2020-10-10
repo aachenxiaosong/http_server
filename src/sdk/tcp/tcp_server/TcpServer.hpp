@@ -2,18 +2,17 @@
 #define  SDK_TCP_TCP_SERVER_TCP_SERVER_HPP_
 
 #include "TcpConnMgr.hpp"
+#include "TcpHandle.hpp"
 #include <string>
 #include <vector>
 #include "IProtocolPacker.hpp"
-#include "ITcpDataHandler.hpp"
+#include "ITcpReceiver.hpp"
 #include "event2/event.h"
 #include "event2/bufferevent.h"
 #include "event2/listener.h"
 #include <thread>
 
 #define MAX_TCP_RECV_LEN 1024
-#define MAX_TCP_PACK_LEN 4096
-#define MAX_TCP_RESP_LEN 4096
 
 using namespace std;
 
@@ -33,9 +32,8 @@ private:
     string mIp;
     int mPort;
     TcpConnMgr mConnMgr;
+    TcpHandle mHandle;
 
-    vector <ITcpDataHandler *> mHandlers;
-    IProtocolPacker *mPacker;
     struct event_base *mEventBase;
     struct evconnlistener *mListener;
     thread *mThread;
@@ -45,11 +43,9 @@ public:
     TcpServer(const char *name, string ip, int port);
     ~TcpServer();
     int listen();
-    int setPacker(IProtocolPacker *packer);
-    int addDataHandler(ITcpDataHandler *handler);
+    TcpHandle *getHandle();
 
 private:
-    static int processTcpData(TcpServer *server, char *request, int req_len, char *response, int *resp_len);
     static void readCb(struct bufferevent *bev, void *arg);
     static void eventCb(struct bufferevent *bev, short events, void *arg);
     static void listenerCb(struct evconnlistener *listener, evutil_socket_t fd, struct sockaddr *addr, int len, void *ptr);

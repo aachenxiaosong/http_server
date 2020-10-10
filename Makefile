@@ -21,7 +21,8 @@ utils_src := src/utils/bitmap/src \
              src/utils/uart/src \
              src/utils/md5sum/src \
              src/utils/memcheck/src \
-             src/utils/timer/src
+             src/utils/timer/src \
+             src/utils/rwlock
 utils_inc := src/utils/bitmap/inc \
              src/utils/json/inc \
              src/utils/data_buf/inc \
@@ -39,13 +40,15 @@ utils_inc := src/utils/bitmap/inc \
              src/utils/uart/inc \
              src/utils/md5sum/inc \
              src/utils/memcheck/inc \
-             src/utils/timer/inc
+             src/utils/timer/inc \
+             src/utils/rwlock
 
 sdk_src := src/sdk/http/http_server \
            src/sdk/http/http_client \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
+           src/sdk/tcp/tcp_handle \
            src/sdk/msg_center \
            src/sdk/protocol_packer
 
@@ -55,6 +58,7 @@ sdk_inc := src/sdk/http/http_server/inc \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
+           src/sdk/tcp/tcp_handle \
            src/sdk/msg_center/inc \
            src/sdk/msg_center/inc/mqtt \
            src/sdk/msg_center \

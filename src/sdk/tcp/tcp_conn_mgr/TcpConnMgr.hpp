@@ -12,12 +12,13 @@ private:
     vector<STcpConn *> mConns;
     mutex mLock;
 public:
-    void add(char *ip, uint16_t port, void *socket);
-    void del(char *ip);
-    void del(char *ip, uint16_t port);
+    void add(const char *ip, uint16_t port, void *socket);
+    void del(const char *ip);
+    void del(const char *ip, uint16_t port);
     void del(void *socket);
-    void *get(char *ip, uint16_t port);
-    void *get(char *ip);
+    STcpConn *get(const char *ip, uint16_t port);
+    STcpConn *get(const char *ip);
+    STcpConn *get(void *socket);
 };
 
 #endif  //  SDK_TCP_TCP_CONN_MGR_TCP_CONN_MGR_HPP_

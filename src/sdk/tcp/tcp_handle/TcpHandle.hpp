@@ -1,0 +1,33 @@
+#ifndef  SDK_TCP_TCP_HANDLE_TCP_HANDLE_HPP_
+#define  SDK_TCP_TCP_HANDLE_TCP_HANDLE_HPP_
+
+#include <vector>
+#include "IProtocolPacker.hpp"
+#include "ITcpReceiver.hpp"
+#include "RwLock.hpp"
+#include <string>
+#include <mutex>
+using namespace std;
+
+#define MAX_TCP_PACK_LEN 4096
+#define MAX_TCP_RESP_LEN 4096
+
+class TcpHandle
+{
+private:
+    vector <ITcpReceiver *> mReceivers;
+    IProtocolPacker *mPacker;
+    RwLock mReceiverLock;
+public:
+    TcpHandle() {}
+    virtual ~TcpHandle() {}
+    //recv related
+    int setPacker(IProtocolPacker *packer);
+    int addReceiver(ITcpReceiver *receiver);
+    void delReceiver(ITcpReceiver *receiver);
+    int onRecv(STcpConn *conn, const char *data, int len);
+    //send related
+    int send(STcpConn *conn, const char *data, int len);
+};
+
+#endif  //   SDK_TCP_TCP_HANDLE_TCP_HANDLE_HPP_

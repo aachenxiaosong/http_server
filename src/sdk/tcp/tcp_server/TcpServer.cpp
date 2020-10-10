@@ -32,7 +32,6 @@ TcpServer :: TcpServer(const char *name, string ip, int port)
     mPort = port;
     mEventBase = NULL;
     mListener = NULL;
-    mPacker = NULL;
     mThread = NULL;
 }
 
@@ -54,48 +53,17 @@ TcpServer :: ~TcpServer()
     }
 }
 
-int TcpServer :: processTcpData(TcpServer *server, char *request, int req_len, char *response, int *resp_len) {
-  ITcpDataHandler *handler;
-  for (vector<ITcpDataHandler *>::iterator it = server->mHandlers.begin(); it != server->mHandlers.end(); it++) {
-    handler = *it;
-    if (0 == handler->handle(request, req_len, response, resp_len)) {
-      LOGT(server->mName.c_str(), "request is handled by %s", handler->getName().c_str());
-      break;
-    }
-  }
-  return 0;
-}
-
 void TcpServer :: readCb(struct bufferevent *bev, void *arg)
 {
     char read_buf[MAX_TCP_RECV_LEN] = {0};
     int read_len;
-    char pack_buf[MAX_TCP_PACK_LEN] = {0};
-    int pack_len = 0;
-    char resp_buf[MAX_TCP_RESP_LEN] = {0};
-    int resp_len = 0;
     TcpServer::CbParam *tcp_cb_param = (TcpServer::CbParam *)arg;
     TcpServer *server = tcp_cb_param->server;
     char *ip = inet_ntoa(tcp_cb_param->client->sin_addr);
     read_len = bufferevent_read(bev, read_buf, sizeof(read_buf));
-    if (server->mPacker) {
-        if (server->mPacker->pack(read_buf, read_len, pack_buf, &pack_len) == 0) {
-            processTcpData(server, pack_buf, pack_len, resp_buf, &resp_len);
-        }
-    } else {
-        //no packer,直接处理原始数据
-        processTcpData(server, read_buf, read_len, resp_buf, &resp_len);
-    }
-    cout << "client " << ip << " say:" << read_buf << endl;
-    if (resp_len > 0) {
-        bufferevent_write(bev, resp_buf, resp_len);
-    }
+    LOGT(server->mName.c_str(), "get data %s in readCb, len is %d", read_buf, read_len);//
+    server->mHandle.onRecv(server->mConnMgr.get(bev), (const char *)read_buf, read_len);
 }
-
-// void writeCb(struct bufferevent *bev, void *arg)
-// {
-//   cout << "I'm 服务器，成功写数据给客户端，写缓冲回调函数被调用..." << endl;
-// }
 
 void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
 {
@@ -180,14 +148,7 @@ int TcpServer ::listen()
     return 0;
 }
 
-int TcpServer ::setPacker(IProtocolPacker *packer)
+TcpHandle *TcpServer ::getHandle()
 {
-    mPacker = packer;
-    return 0;
-}
-
-int TcpServer ::addDataHandler(ITcpDataHandler *handler)
-{
-    mHandlers.push_back(handler);
-    return 0;
+    return &mHandle;
 }

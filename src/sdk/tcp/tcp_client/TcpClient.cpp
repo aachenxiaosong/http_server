@@ -27,7 +27,6 @@ TcpClient :: TcpClient(const char *name, string ip, int port)
     mServerPort = port;
     mEventBase = NULL;
     mEvent = NULL;
-    mPacker = NULL;
     mThread = NULL;
 }
 
@@ -48,46 +47,14 @@ TcpClient :: ~TcpClient()
     }
 }
 
-int TcpClient :: processTcpData(TcpClient *client, char *request, int req_len, char *response, int *resp_len) {
-  ITcpDataHandler *handler;
-  for (vector<ITcpDataHandler *>::iterator it = client->mHandlers.begin(); it != client->mHandlers.end(); it++) {
-    handler = *it;
-    if (0 == handler->handle(request, req_len, response, resp_len)) {
-      LOGT(client->mName.c_str(), "request is handled by %s", handler->getName().c_str());
-      break;
-    }
-  }
-  return 0;
-}
-
 void TcpClient :: readCb(struct bufferevent *bev, void *arg)
 {
     char read_buf[MAX_TCP_RECV_LEN] = {0};
     int read_len;
-    char pack_buf[MAX_TCP_PACK_LEN] = {0};
-    int pack_len = 0;
-    char resp_buf[MAX_TCP_RESP_LEN] = {0};
-    int resp_len = 0;
     TcpClient *client = (TcpClient *)arg;
     read_len = bufferevent_read(bev, read_buf, sizeof(read_buf));
-    if (client->mPacker) {
-        if (client->mPacker->pack(read_buf, read_len, pack_buf, &pack_len) == 0) {
-            processTcpData(client, pack_buf, pack_len, resp_buf, &resp_len);
-        }
-    } else {
-        //no packer,直接处理原始数据
-        processTcpData(client, read_buf, read_len, resp_buf, &resp_len);
-    }
-    cout << "server " << client->mServerIp << " say:" << read_buf << endl;
-    if (resp_len > 0) {
-        bufferevent_write(bev, resp_buf, resp_len);
-    }
+    client->mHandle.onRecv(client->mConnMgr.get(bev), (const char *)read_buf, read_len);
 }
-
-// void writeCb(struct bufferevent *bev, void *arg)
-// {
-//   cout << "I'm 服务器，成功写数据给客户端，写缓冲回调函数被调用..." << endl;
-// }
 
 void TcpClient :: eventCb(struct bufferevent *bev, short events, void *arg)
 {
@@ -98,11 +65,13 @@ void TcpClient :: eventCb(struct bufferevent *bev, short events, void *arg)
         LOGT(client->mName.c_str(), "connection closed: %s",
              client->mServerIp);
         //client什么时候释放的?注意这里会不会有泄漏
+        client->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
     else if (events & BEV_EVENT_ERROR)
     {
         LOGE(client->mName.c_str(), "some other error !");
+        client->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
 }
@@ -132,19 +101,8 @@ int TcpClient ::connect()
         LOGE(TCP_CLIENT_TAG, "connect server failed");
         return -1;
     }
+    mConnMgr.add(mServerIp.c_str(), mServerPort, bev);
     //设置回调
     bufferevent_setcb(bev, readCb, NULL, eventCb, this);
-    return 0;
-}
-
-int TcpClient ::setPacker(IProtocolPacker *packer)
-{
-    mPacker = packer;
-    return 0;
-}
-
-int TcpClient ::addDataHandler(ITcpDataHandler *handler)
-{
-    mHandlers.push_back(handler);
     return 0;
 }

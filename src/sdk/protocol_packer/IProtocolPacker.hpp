@@ -15,9 +15,9 @@ public:
     string getName();
     virtual ~IProtocolPacker();
     //0=pack ok, -1=pack failed
-    virtual int pack(char *raw_data, int raw_data_len, char *packed_data, int* packed_data_len) = 0;
+    virtual int pack(const char *raw_data, int raw_data_len, char *packed_data, int* packed_data_len) = 0;
     //0=unpack ok, -1=unpack failed
-    virtual int unpack(char *packed_data, int packed_data_len, char *raw_data, int* raw_data_len) = 0;
+    virtual int unpack(const char *packed_data, int packed_data_len, char *raw_data, int* raw_data_len) = 0;
 };  
 
 #endif  //  SDK_PROTOCOL_PACKER_IPROTOCOL_PACKER_HPP_
