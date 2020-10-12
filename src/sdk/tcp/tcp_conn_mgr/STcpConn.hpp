@@ -2,9 +2,13 @@
 #define SDK_TCP_TCP_CONN_MGR_S_TCP_CONN_HPP_
 
 #include <stdint.h>
+#include <string>
+
+using namespace std;
 
 struct STcpConn {
-    char ip[16];
+    string tag;//给上层app用于标识conn
+    string ip;
     uint16_t port;
     void *socket;
 };

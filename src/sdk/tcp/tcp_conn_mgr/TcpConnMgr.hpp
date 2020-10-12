@@ -14,13 +14,16 @@ private:
 public:
     TcpConnMgr() = default;
     ~TcpConnMgr();
-    void add(const char *ip, uint16_t port, void *socket);
-    void del(const char *ip);
-    void del(const char *ip, uint16_t port);
+    void add(string ip, uint16_t port, void *socket);
+    void del(string ip);
+    void del(string ip, uint16_t port);
     void del(void *socket);
-    STcpConn *get(const char *ip, uint16_t port);
-    STcpConn *get(const char *ip);
+    STcpConn *get(string ip, uint16_t port);
+    STcpConn *get(string ip);
     STcpConn *get(void *socket);
+    int setTag(STcpConn *conn, string tag);
+    STcpConn *getByTag(string tag);
+
 };
 
 #endif  //  SDK_TCP_TCP_CONN_MGR_TCP_CONN_MGR_HPP_

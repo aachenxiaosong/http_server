@@ -23,7 +23,7 @@ private:
         int onRecv(STcpConn *conn, char *data, int len)
         {
             LOGT(TCP_CLIENT_TEST_TAG, "tcp data: %s, len %d from connection %s:%d",
-                 data, len, conn->ip, conn->port);
+                 data, len, conn->ip.c_str(), conn->port);
             if (strstr(data, "123")) {
                 parent->handle->send(conn, (const char *)"response of ack from client receiver1", strlen("response of 123 from client receiver1") + 1);
                 return 0;
@@ -43,7 +43,7 @@ private:
         int onRecv(STcpConn *conn, char *data, int len)
         {
             LOGT(TCP_CLIENT_TEST_TAG, "tcp data: %s, len %d from connection %s:%d",
-                 data, len, conn->ip, conn->port);
+                 data, len, conn->ip.c_str(), conn->port);
             if (strstr(data, "abc")) {
                 parent->handle->send(conn, (const char *)"response of ack from client receiver2", strlen("response of abc from client receiver2") + 1);
                 return 0;
@@ -74,11 +74,9 @@ public:
         LOGT("ClientTest", "conn is %p, socket is %p", conn, conn->socket);
         while (1) {
             sleep(2);
-            int ret = handle->send(conn, "123", strlen("123") + 1);
-            LOGT("ClientTest", "send ret %d", ret);
+            handle->send(conn, "123", strlen("123") + 1);
             sleep(2);
             handle->send(conn, "abc", strlen("abc") + 1);
-            LOGT("ClientTest", "send ret %d", ret);
         }
     }
 };

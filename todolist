@@ -20,4 +20,3 @@ bc5300620e7bc0b8b063464f7e97e04c
 
 1, 在wlong liftcontrol和rili liftctrl这两个client里加一层适配层,server端调用的接口不变
 2, mqtt的sender要单独定义出来,加上topic;sender要加回调事件等待,心跳这块要拎出来放到app层
-3, ConnMgr要暴露出来,跟设备有个绑定关心,这样物联云给某个设备发信息,就能对应到conn,从而顺利下发下去:可能要预留一个字段用来方上层的tag

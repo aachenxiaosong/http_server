@@ -71,7 +71,7 @@ void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
     if (events & BEV_EVENT_EOF)
     {
         LOGT(server->mName.c_str(), "connection closed: %s:%d",
-             conn->ip, conn->port);
+             conn->ip.c_str(), conn->port);
         //client什么时候释放的?注意这里会不会有泄漏
         server->mConnMgr.del(bev);
         bufferevent_free(bev);
@@ -79,7 +79,7 @@ void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
     else if (events & BEV_EVENT_ERROR)
     {
         LOGT(server->mName.c_str(), "some other error of connection: %s:%d",
-             conn->ip, conn->port);
+             conn->ip.c_str(), conn->port);
         server->mConnMgr.del(bev);
         bufferevent_free(bev);
     }

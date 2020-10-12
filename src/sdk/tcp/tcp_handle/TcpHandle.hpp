@@ -21,12 +21,13 @@ private:
 public:
     TcpHandle() = default;
     virtual ~TcpHandle();
-    //recv related
+    //给app调用
     int setPacker(IProtocolPacker *packer);
     int addReceiver(ITcpReceiver *receiver);
     void delReceiver(ITcpReceiver *receiver);
+    //给tcp server调用
     int onRecv(STcpConn *conn, const char *data, int len);
-    //send related
+    //给app调用
     int send(STcpConn *conn, const char *data, int len);
 };
 
