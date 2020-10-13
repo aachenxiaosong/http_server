@@ -65,31 +65,31 @@ sdk_inc := src/sdk/http/http_server/inc \
            src/sdk/protocol_packer
 
 app_src := src/app \
-           src/app/server/lift_control/base/http \
-           src/app/server/lift_control/rili/http \
-           src/app/server/lift_control/wlong/http \
-           src/app/server/lift_control/base/mqtt \
-           src/app/server/lift_control/rili/mqtt \
-           src/app/server/lift_control/wlong/mqtt \
-           src/app/client/common/auth \
-           src/app/client/common/hb \
-           src/app/client/common \
-           src/app/client/lift_control/rili \
-           src/app/client/lift_control/wlong
+           src/app/left/lift_control/base/http \
+           src/app/left/lift_control/rili/http \
+           src/app/left/lift_control/wlong/http \
+           src/app/left/lift_control/base/mqtt \
+           src/app/left/lift_control/rili/mqtt \
+           src/app/left/lift_control/wlong/mqtt \
+           src/app/right/common/auth \
+           src/app/right/common/hb \
+           src/app/right/common \
+           src/app/right/lift_control/rili \
+           src/app/right/lift_control/wlong
 
 app_inc := src/app \
            src/app/config \
-           src/app/server/lift_control/base/http \
-           src/app/server/lift_control/rili/http \
-           src/app/server/lift_control/wlong/http \
-           src/app/server/lift_control/base/mqtt \
-           src/app/server/lift_control/rili/mqtt \
-           src/app/server/lift_control/wlong/mqtt \
-           src/app/client/common/auth \
-           src/app/client/common/hb \
-           src/app/client/common \
-           src/app/client/lift_control/rili \
-           src/app/client/lift_control/wlong
+           src/app/left/lift_control/base/http \
+           src/app/left/lift_control/rili/http \
+           src/app/left/lift_control/wlong/http \
+           src/app/left/lift_control/base/mqtt \
+           src/app/left/lift_control/rili/mqtt \
+           src/app/left/lift_control/wlong/mqtt \
+           src/app/right/common/auth \
+           src/app/right/common/hb \
+           src/app/right/common \
+           src/app/right/lift_control/rili \
+           src/app/right/lift_control/wlong
 
 test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test

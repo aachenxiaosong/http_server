@@ -9,7 +9,6 @@
 #include <mutex>
 using namespace std;
 
-#define MAX_TCP_PACK_LEN 4096
 #define MAX_TCP_RESP_LEN 4096
 
 class TcpHandle
