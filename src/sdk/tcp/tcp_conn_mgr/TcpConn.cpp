@@ -66,13 +66,13 @@ void* TcpConn :: getSocket() {
 int TcpConn :: onRecv(const char *data, int len) {
     int data_received_ok = -1;
     char pack_buf[MAX_TCP_PACK_LEN] = {0};
-    int pack_len = 0;
+    int pack_len = MAX_TCP_PACK_LEN;
     ITcpReceiver *i_receiver = NULL;
     vector<ITcpReceiver *>::iterator it;
     mReceiverLock.readLock();
     if (mPacker) {
-        mPacker->packin(data, len);
-        while (mPacker->packout(pack_buf, &pack_len) == 0)
+        mPacker->packIn(data, len);
+        while (mPacker->packOut(pack_buf, &pack_len) == 0)
         {
             for (vector<ITcpReceiver *>::iterator it = mReceivers.begin(); it != mReceivers.end(); it++)
             {

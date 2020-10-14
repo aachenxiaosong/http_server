@@ -13,7 +13,6 @@ using namespace std;
 class DechangServer {
 private:
     TcpServer *mTcpServer;
-    TcpHandle *mTcpHandle;
     TcpConnMgr *mTcpConnMgr;
     string mName;
 public:

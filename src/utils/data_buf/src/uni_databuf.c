@@ -101,7 +101,7 @@ static int _read_internal(DataBufHandle handle, char *buf, int size,
   return size;
 }
 
-static int _write_internal(DataBufHandle handle, char *buf, int size,
+static int _write_internal(DataBufHandle handle, const char *buf, int size,
                            DataBufferAttr attr) {
   DataBuf *data_buf = (DataBuf *)handle;
   int pos;
@@ -147,7 +147,7 @@ static int _data_buffer_read(char *dst, int readlen, DataBufHandle handle,
   return _read_internal(handle, dst, readlen, attr);
 }
 
-static int _data_buffer_write(DataBufHandle handle, char *src, int writelen,
+static int _data_buffer_write(DataBufHandle handle, const char *src, int writelen,
                               DataBufferAttr attr) {
   if (_write_length_overflow((DataBuf *)handle, writelen)) {
     return -1;
@@ -175,7 +175,7 @@ int DataBufferPeek(char *dst, int readlen, DataBufHandle handle) {
   return _data_buffer_read(dst, readlen, handle, DATA_BUF_ATTR_READ);
 }
 
-int DataBufferWrite(DataBufHandle handle, char *src, int writelen) {
+int DataBufferWrite(DataBufHandle handle, const char *src, int writelen) {
   return _data_buffer_write(handle, src, writelen,
                             DATA_BUF_ATTR_WRITE | DATA_BUF_ATTR_SYNC);
 }

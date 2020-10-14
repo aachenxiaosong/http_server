@@ -73,7 +73,8 @@ app_src := src/app \
            src/app/right/common/hb \
            src/app/right/common \
            src/app/right/lift_control/rili \
-           src/app/right/lift_control/wlong
+           src/app/right/lift_control/wlong \
+           src/app/down/child_device/dechang
 
 app_inc := src/app \
            src/app/config \
@@ -87,7 +88,8 @@ app_inc := src/app \
            src/app/right/common/hb \
            src/app/right/common \
            src/app/right/lift_control/rili \
-           src/app/right/lift_control/wlong
+           src/app/right/lift_control/wlong \
+           src/app/down/child_device/dechang
 
 test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test

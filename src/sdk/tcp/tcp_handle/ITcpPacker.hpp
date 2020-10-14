@@ -17,8 +17,9 @@ public:
     string getName();
     virtual ~ITcpPacker();
     //0=pack ok, -1=pack failed
-    virtual int packin(const char *raw_data, int raw_data_len) = 0;
-    virtual int packout(char *packed_data, int *packed_data_len) = 0;
+    virtual int packIn(const char *raw_data, int raw_data_len) = 0;
+    //0=pack has output, -1=pack has no output
+    virtual int packOut(char *packed_data, int *packed_data_len) = 0;
     virtual ITcpPacker *copy() = 0;
 };
 

@@ -33,6 +33,7 @@ TcpServer :: TcpServer(const char *name, string ip, int port)
     mEventBase = NULL;
     mListener = NULL;
     mThread = NULL;
+    mPacker = NULL;
 }
 
 TcpServer :: ~TcpServer()

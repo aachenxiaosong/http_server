@@ -36,7 +36,7 @@ int           DataBufferPeek(char *dst, int readlen, DataBufHandle handle);
 int           DataBufferClear(DataBufHandle handle);
 int           DataBufferGetFreeSize(DataBufHandle handle);
 int           DataBufferGetDataSize(DataBufHandle handle);
-int           DataBufferWrite(DataBufHandle handle, char *src, int writelen);
+int           DataBufferWrite(DataBufHandle handle, const char *src, int writelen);
 int           DataBufferRead(char *dst, int readlen, DataBufHandle handle);
 int           DataBufferSkip(int readlen, DataBufHandle handle);
 

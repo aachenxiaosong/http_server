@@ -27,6 +27,7 @@ TcpClient :: TcpClient(const char *name, string server_ip, int server_port)
     mServerPort = server_port;
     mEventBase = NULL;
     mThread = NULL;
+    mPacker = NULL;
 }
 
 TcpClient :: ~TcpClient()
