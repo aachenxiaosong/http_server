@@ -1,5 +1,6 @@
 #include "ITcpReceiver.hpp"
 
+
 ITcpReceiver :: ITcpReceiver(const char* name) {
     this->mName = name;
 }

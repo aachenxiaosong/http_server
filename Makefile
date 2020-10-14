@@ -74,7 +74,9 @@ app_src := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
-           src/app/down/child_device/dechang
+           src/app/down/child_device/dechang \
+           src/app/down/child_device/dechang/packer \
+           src/app/down/child_device/dechang/receivers
 
 app_inc := src/app \
            src/app/config \
@@ -89,7 +91,9 @@ app_inc := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
-           src/app/down/child_device/dechang
+           src/app/down/child_device/dechang \
+           src/app/down/child_device/dechang/packer \
+           src/app/down/child_device/dechang/receivers
 
 test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test

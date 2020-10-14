@@ -2,6 +2,8 @@
 #define APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_SERVER_HPP_
 
 #include "TcpServer.hpp"
+#include "DechangPacker.hpp"
+#include "DechangHbReceiver.hpp"
 #include <string>
 
 //TODO 移到相同的位置
@@ -14,6 +16,8 @@ class DechangServer {
 private:
     TcpServer *mTcpServer;
     TcpConnMgr *mTcpConnMgr;
+    DechangPacker mPacker;
+    DechangHbReceiver mHbReceiver;
     string mName;
 public:
     DechangServer();
