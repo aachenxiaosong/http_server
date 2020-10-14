@@ -3,14 +3,15 @@
 #include <string.h>
 #include "uni_log.h"
 
-#define TCP_CONN_TAG "tcp_conn"
+#define TCP_CONN_TAG mName.c_str()
 
 TcpConn :: TcpConn(string &ip, uint16_t port, void *socket, vector<ITcpReceiver *> &receivers, ITcpPacker *packer) {
     mReceiverLock.writeLock();
     mIp = ip;
     mPort = port;
     mSocket = socket;
-    mTag = "";
+    mTag = ip; //tag inited as ip
+    mName = "tcp_conn_" + mTag;
     if (packer) {
         mPacker = packer->copy();
     } else {
@@ -42,6 +43,7 @@ TcpConn :: ~TcpConn() {
 
 void TcpConn :: setTag(string &tag) {
     mTag = tag;
+    mName = "tcp_conn_" + mTag;
 }
 
 string& TcpConn :: getTag() {

@@ -12,6 +12,7 @@ using namespace std;
 
 class TcpConn {
 private:
+    string mName;
     string mTag;//给上层app用于标识conn
     string mIp;
     uint16_t mPort;
