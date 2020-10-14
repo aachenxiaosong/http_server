@@ -11,3 +11,7 @@ ITcpReceiver :: ~ITcpReceiver() {
 string ITcpReceiver :: getName() {
     return mName;
 }
+
+void ITcpReceiver :: setConn(TcpConn *conn) {
+    mConn = conn;
+}

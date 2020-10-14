@@ -49,8 +49,7 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
            src/sdk/tcp/tcp_handle \
-           src/sdk/msg_center \
-           src/sdk/protocol_packer
+           src/sdk/msg_center
 
 sdk_inc := src/sdk/http/http_server/inc \
            src/sdk/http/http_server \
@@ -61,8 +60,7 @@ sdk_inc := src/sdk/http/http_server/inc \
            src/sdk/tcp/tcp_handle \
            src/sdk/msg_center/inc \
            src/sdk/msg_center/inc/mqtt \
-           src/sdk/msg_center \
-           src/sdk/protocol_packer
+           src/sdk/msg_center
 
 app_src := src/app \
            src/app/left/lift_control/base/http \

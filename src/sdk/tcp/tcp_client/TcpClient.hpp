@@ -2,11 +2,10 @@
 #define  SDK_TCP_TCP_CLIENT_TCP_CLIENT_HPP_
 
 #include "TcpConnMgr.hpp"
-#include "TcpHandle.hpp"
-#include <string>
 #include "event2/event.h"
 #include "event2/bufferevent.h"
 #include "event2/listener.h"
+#include <string>
 #include <thread>
 
 #define MAX_TCP_RECV_LEN 1024
@@ -18,17 +17,22 @@ private:
     string mName;
     string mServerIp;
     int mServerPort;
-    TcpConnMgr mConnMgr;
-    TcpHandle mHandle;
 
     struct event_base *mEventBase;
     thread *mThread;
+    
+    //receivers和packer会为每个conn拷贝一份
+    vector <ITcpReceiver *> mReceivers;
+    ITcpPacker *mPacker;
+
+    TcpConnMgr mConnMgr;
 
 public:
     TcpClient(const char *name, string server_ip, int server_port);
     ~TcpClient();
     int connect();
-    TcpHandle *getHandle();
+    int setPacker(ITcpPacker *packer);
+    int addReceiver(ITcpReceiver *receiver);
     TcpConnMgr *getConnMgr();
 
 

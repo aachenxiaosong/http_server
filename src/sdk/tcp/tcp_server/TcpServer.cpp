@@ -37,6 +37,14 @@ TcpServer :: TcpServer(const char *name, string ip, int port)
 
 TcpServer :: ~TcpServer()
 {
+    if (mPacker) {
+        delete mPacker;
+    }
+    vector<ITcpReceiver *> :: iterator it;
+    for (it = mReceivers.begin(); it != mReceivers.end();) {
+        delete *it;
+        it = mReceivers.erase(it);
+    }
     if (mThread != NULL)
     {
         mThread->join();
@@ -58,20 +66,21 @@ void TcpServer :: readCb(struct bufferevent *bev, void *arg)
     char read_buf[MAX_TCP_RECV_LEN] = {0};
     int read_len;
     TcpServer *server = (TcpServer *)arg;
-    STcpConn *conn = server->mConnMgr.get(bev);
+    TcpConn *conn = server->mConnMgr.get(bev);
     read_len = bufferevent_read(bev, read_buf, sizeof(read_buf));
-    server->mHandle.onRecv(conn, (const char *)read_buf, read_len);
+    //LOGT(server->mName.c_str(), "recv %s in readCb", read_buf);
+    conn->onRecv((const char *)read_buf, read_len);
 }
 
 void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
 {
     TcpServer *server = (TcpServer *)arg;
-    STcpConn *conn = server->mConnMgr.get(bev);
+    TcpConn *conn = server->mConnMgr.get(bev);
     LOGT(server->mName.c_str(), "tcp event %d received", events);
     if (events & BEV_EVENT_EOF)
     {
         LOGT(server->mName.c_str(), "connection closed: %s:%d",
-             conn->ip.c_str(), conn->port);
+             conn->getIp().c_str(), conn->getPort());
         //client什么时候释放的?注意这里会不会有泄漏
         server->mConnMgr.del(bev);
         bufferevent_free(bev);
@@ -79,7 +88,7 @@ void TcpServer :: eventCb(struct bufferevent *bev, short events, void *arg)
     else if (events & BEV_EVENT_ERROR)
     {
         LOGT(server->mName.c_str(), "some other error of connection: %s:%d",
-             conn->ip.c_str(), conn->port);
+             conn->getIp().c_str(), conn->getPort());
         server->mConnMgr.del(bev);
         bufferevent_free(bev);
     }
@@ -100,7 +109,7 @@ void TcpServer :: listenerCb(struct evconnlistener *listener, evutil_socket_t fd
     }
     char *ip = inet_ntoa(client->sin_addr);
     uint16_t port = ntohs(client->sin_port);
-    server->mConnMgr.add(ip, port, bev);
+    server->mConnMgr.add(ip, port, bev, server->mReceivers, server->mPacker);
     LOGT(server->mName.c_str(), "connect new client %s:%d", ip, port);
     //给bufferevent缓冲区设置回调
     //bufferevent_setcb(bev, readCb, writeCb, eventCb, inet_ntoa(client->sin_addr));
@@ -144,9 +153,14 @@ int TcpServer :: listen()
     return 0;
 }
 
-TcpHandle *TcpServer :: getHandle()
-{
-    return &mHandle;
+int TcpServer :: setPacker(ITcpPacker *packer) {
+    mPacker = packer->copy();
+    return 0;
+}
+
+int TcpServer :: addReceiver(ITcpReceiver *receiver) {
+    mReceivers.push_back(receiver->copy());
+    return 0;
 }
 
 TcpConnMgr* TcpServer :: getConnMgr()

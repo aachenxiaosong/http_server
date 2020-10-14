@@ -7,14 +7,10 @@ TcpConnMgr :: ~TcpConnMgr() {
     mLock.unlock();
 }
 
-void TcpConnMgr :: add(string ip, uint16_t port, void *socket)
+void TcpConnMgr :: add(string ip, uint16_t port, void *socket, vector<ITcpReceiver *> &receivers, ITcpPacker *packer)
 {
     mLock.lock();
-    STcpConn *conn = new STcpConn();
-    conn->ip = ip;
-    conn->port = port;
-    conn->socket = socket;
-    conn->tag = "";
+    TcpConn *conn = new TcpConn(ip, port, socket, receivers, packer);
     mConns.push_back(conn);
     mLock.unlock();
 }
@@ -22,12 +18,12 @@ void TcpConnMgr :: add(string ip, uint16_t port, void *socket)
 void TcpConnMgr :: del(string ip)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *conn;
     for(iter = mConns.begin(); iter != mConns.end();)
     {
         conn = *iter;
-        if (conn->ip.compare(ip) == 0) {
+        if (conn->getIp().compare(ip) == 0) {
             iter = mConns.erase(iter);
         } else {
             ++iter;
@@ -39,12 +35,12 @@ void TcpConnMgr :: del(string ip)
 void TcpConnMgr :: del(string ip, uint16_t port)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *conn;
     for(iter = mConns.begin(); iter != mConns.end();)
     {
         conn = *iter;
-        if (conn->ip.compare(ip) == 0 && conn->port == port) {
+        if (conn->getIp().compare(ip) == 0 && conn->getPort() == port) {
             iter = mConns.erase(iter);
         } else {
             ++iter;
@@ -56,12 +52,12 @@ void TcpConnMgr :: del(string ip, uint16_t port)
 void TcpConnMgr :: del(void *socket)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *conn;
     for(iter = mConns.begin(); iter != mConns.end();)
     {
         conn = *iter;
-        if (conn->socket == socket) {
+        if (conn->getSocket() == socket) {
             iter = mConns.erase(iter);
         } else {
             ++iter;
@@ -70,82 +66,74 @@ void TcpConnMgr :: del(void *socket)
     mLock.unlock();
 }
 
-STcpConn *TcpConnMgr :: get(string ip, uint16_t port)
+TcpConn *TcpConnMgr :: get(string ip, uint16_t port)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn = NULL;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *ret = NULL;
+    TcpConn *conn = NULL;
     for(iter = mConns.begin(); iter != mConns.end(); ++iter)
     {
         conn = *iter;
-        if (conn->ip.compare(ip) == 0 && conn->port == port) {
+        if (conn->getIp().compare(ip) == 0 && conn->getPort() == port) {
+            ret = conn;
             break;
         }
     }
     mLock.unlock();
-    return conn;
+    return ret;
 }
 
-STcpConn *TcpConnMgr :: get(string ip)
+TcpConn *TcpConnMgr :: get(string ip)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn = NULL;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *ret = NULL;
+    TcpConn *conn = NULL;
     for(iter = mConns.begin(); iter != mConns.end(); ++iter)
     {
         conn = *iter;
-        if (conn->ip.compare(ip) == 0) {
+        if (conn->getIp().compare(ip) == 0) {
+            ret = conn;
             break;
         }
     }
     mLock.unlock();
-    return conn;
+    return ret;
 }
 
-STcpConn *TcpConnMgr :: getByTag(string tag)
+TcpConn *TcpConnMgr :: getByTag(string tag)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn = NULL;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *ret = NULL;
+    TcpConn *conn = NULL;
     for(iter = mConns.begin(); iter != mConns.end(); ++iter)
     {
         conn = *iter;
-        if (conn->tag.compare(tag) == 0) {
+        if (conn->getTag().compare(tag) == 0) {
+            ret = conn;
             break;
         }
     }
     mLock.unlock();
-    return conn;
+    return ret;
 }
 
-STcpConn *TcpConnMgr :: get(void *socket)
+TcpConn *TcpConnMgr :: get(void *socket)
 {
     mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    STcpConn *conn = NULL;
+    vector<TcpConn *>::iterator iter;
+    TcpConn *ret = NULL;
+    TcpConn *conn = NULL;
     for(iter = mConns.begin(); iter != mConns.end(); ++iter)
     {
         conn = *iter;
-        if (conn->socket == socket) {
+        if (conn->getSocket() == socket) {
+            ret = conn;
             break;
         }
     }
     mLock.unlock();
-    return conn;
-}
-
-int TcpConnMgr :: setTag(STcpConn *conn, string tag) {
-    bool conn_exist = false;
-    mLock.lock();
-    vector<STcpConn *>::iterator iter;
-    for(iter = mConns.begin(); iter != mConns.end(); ++iter)
-    {
-        if (*iter == conn) {
-            conn_exist = true;
-            conn->tag = tag;
-            break;
-        }
-    }
-    mLock.unlock();
-    return (conn_exist == true);
+    return ret;
 }
