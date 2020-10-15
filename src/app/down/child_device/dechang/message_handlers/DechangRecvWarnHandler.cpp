@@ -9,14 +9,6 @@ DechangRecvWarnHandler :: DechangRecvWarnHandler() : ITcpMessageHandler("dechang
 
 DechangRecvWarnHandler :: ~DechangRecvWarnHandler() {}
 
-static void _print_pack(const unsigned char *data, int len) {
-    printf("ack is:");
-    for (int i = 0; i < len; i++) {
-        printf("0x%x ", data[i]);
-    }
-    printf("\n");
-}
-
 void DechangRecvWarnHandler :: sendAck(const DechangMessageWarnAck &message_ack) {
 
     unsigned char ack[10];
@@ -33,7 +25,6 @@ void DechangRecvWarnHandler :: sendAck(const DechangMessageWarnAck &message_ack)
         ack[8] = ack[8] ^ ack[i];
     }
     ack[9] = 0x03;
-    _print_pack(ack, 10);
     mConn->send((const char *)ack, 10);
 }
 

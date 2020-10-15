@@ -26,10 +26,12 @@ class DechangPacker : public ITcpPacker {
 private:
     DataBufHandle mDataBuf;
     unsigned char mPack[MAX_TCP_PACK_LEN];
-    int mPackLen;
+    int mCurLen;//当前mPack中字节数
+    int mPackLen;//当前处理的包的包长
     enum {
         STATE_IDLE = 0,
-        STATE_STX_RECVED
+        STATE_STX_RECVED,
+        STATE_HEAD_RECVED
     } mState;
     int packCheck();
     DechangMessageRecvHb* unpackRecvHb();

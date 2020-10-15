@@ -5,6 +5,14 @@
 
 #define TCP_CONN_TAG mName.c_str()
 
+static void _print_pack(const char *tag, const unsigned char *data, int len) {
+    printf("%s:", tag);
+    for (int i = 0; i < len; i++) {
+        printf("0x%x ", data[i]);
+    }
+    printf("\n");
+}
+
 TcpConn :: TcpConn(const string &ip, uint16_t port, void *socket, vector<ITcpMessageHandler *> &receivers, ITcpPacker *packer) {
     mReceiverLock.writeLock();
     mIp = ip;
@@ -74,6 +82,7 @@ int TcpConn :: onRecv(const char *data, int len) {
     ITcpMessageHandler *i_receiver = NULL;
     vector<ITcpMessageHandler *>::iterator it;
     Message *message;
+    _print_pack("recv:", (const unsigned char *)data, len);
     mReceiverLock.readLock();
     if (mPacker) {
         mPacker->unpackIn(data, len);
@@ -95,8 +104,8 @@ int TcpConn :: onRecv(const char *data, int len) {
     return data_received_ok;
 }
 
-//给app调用
 int TcpConn :: send(const char *data, int len) {
     LOGT(TCP_CONN_TAG, "send data len %d", len);
+    _print_pack("send:", (const unsigned char *)data, len);
     return bufferevent_write((struct bufferevent *)mSocket, data, len);
 }

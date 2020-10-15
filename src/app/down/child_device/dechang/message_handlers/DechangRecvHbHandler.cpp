@@ -9,14 +9,6 @@ DechangRecvHbHandler :: DechangRecvHbHandler() : ITcpMessageHandler("dechang_rec
 
 DechangRecvHbHandler :: ~DechangRecvHbHandler() {}
 
-static void _print_pack(const unsigned char *data, int len) {
-    printf("ack is:");
-    for (int i = 0; i < len; i++) {
-        printf("0x%x ", data[i]);
-    }
-    printf("\n");
-}
-
 void DechangRecvHbHandler :: sendAck(const DechangMessageHbAck &message_ack) {
 
     unsigned char ack[11];
@@ -34,7 +26,6 @@ void DechangRecvHbHandler :: sendAck(const DechangMessageHbAck &message_ack) {
         ack[9] = ack[9] ^ ack[i];
     }
     ack[10] = 0x03;
-    _print_pack(ack, 11);
     mConn->send((const char *)ack, 11);
 }
 
