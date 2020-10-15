@@ -4,6 +4,7 @@
 #include "TcpServer.hpp"
 #include "DechangPacker.hpp"
 #include "DechangRecvHbHandler.hpp"
+#include "DechangRecvWarnHandler.hpp"
 #include <string>
 
 //TODO 移到相同的位置
@@ -18,6 +19,7 @@ private:
     TcpConnMgr *mTcpConnMgr;
     DechangPacker mPacker;
     DechangRecvHbHandler mRecvHbHandler;
+    DechangRecvWarnHandler mRecvWarnHandler;
     string mName;
 public:
     DechangServer();

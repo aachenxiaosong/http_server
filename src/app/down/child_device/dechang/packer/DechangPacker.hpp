@@ -33,6 +33,7 @@ private:
     } mState;
     int packCheck();
     DechangMessageRecvHb* unpackRecvHb();
+    DechangMessageRecvWarn* unpackRecvWarn();
 public:
     DechangPacker();
     ~DechangPacker();

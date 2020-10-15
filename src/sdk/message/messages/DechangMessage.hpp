@@ -41,6 +41,24 @@ public:
     ~DechangMessageHbAck() {}
 };
 
+class DechangMessageRecvWarn : public DechangMessage {
+    MEMBER(unsigned char, index)
+public:
+    DechangMessageRecvWarn() : DechangMessage(MSG_DECHANG_RECEIVE_WARN) {
+        index(0);
+    }
+    ~DechangMessageRecvWarn() {}
+};
+
+class DechangMessageWarnAck : public DechangMessage {
+    MEMBER(unsigned char, index)
+public:
+    DechangMessageWarnAck() : DechangMessage(MSG_DECHANG_HB_ACK) {
+        index(0);
+    }
+    ~DechangMessageWarnAck() {}
+};
+
 class DechangMessageSendCard : public DechangMessage {
     MEMBER(string, device_id)
     MEMBER(int, user_id)

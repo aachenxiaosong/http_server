@@ -83,6 +83,17 @@ DechangMessageRecvHb* DechangPacker :: unpackRecvHb() {
     return message;
 }
 
+DechangMessageRecvWarn* DechangPacker :: unpackRecvWarn() {
+    DechangMessageRecvWarn *message = new DechangMessageRecvWarn();
+    message->rand(mPack[1]);
+    message->cmd(mPack[2]);
+    message->address(mPack[3]);
+    message->door(mPack[4]);
+    message->index(mPack[16]);
+    return message;
+}
+
+
 Message* DechangPacker :: unpackOut() {
     Message* message = NULL;
     unsigned char c;
@@ -109,8 +120,12 @@ Message* DechangPacker :: unpackOut() {
                     switch (cmd_type) {
                         case 0x56: {
                             message = unpackRecvHb();
+                            break;
                         }
-                        break;
+                        case 0x54: {
+                            message = unpackRecvWarn();
+                            break;
+                        }
                         default:
                         break;
                     }
