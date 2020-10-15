@@ -7,7 +7,7 @@ DechangServer :: DechangServer() {
     mName = "dechang_server";
     mTcpServer = new TcpServer("dechang_tcp_server", DECHANG_TCP_SERVER_PORT);
     mTcpServer->setPacker(&mPacker);
-    mTcpServer->addReceiver(&mHbReceiver);
+    mTcpServer->addHandler(&mRecvHbHandler);
     mTcpConnMgr = mTcpServer->getConnMgr();
 }
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Message.hpp"
 #include "TcpEnum.hpp"
 
 using namespace std;
@@ -17,9 +18,9 @@ public:
     string getName();
     virtual ~ITcpPacker();
     //0=pack ok, -1=pack failed
-    virtual int packIn(const char *raw_data, int raw_data_len) = 0;
+    virtual int unpackIn(const char *raw_data, int raw_data_len) = 0;
     //0=pack has output, -1=pack has no output
-    virtual int packOut(char *packed_data, int *packed_data_len) = 0;
+    virtual Message* unpackOut() = 0;
     //packer会为每个conn拷贝一份,因为每个conn要独立缓存中间处理数据
     virtual ITcpPacker *copy() = 0;
 };

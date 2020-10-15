@@ -40,7 +40,7 @@ TcpClient :: ~TcpClient()
         delete *it;
         it = mReceivers.erase(it);
     }*/
-    mReceivers.clear();
+    mHandlers.clear();
     if (mThread != NULL)
     {
         mThread->join();
@@ -117,7 +117,7 @@ int TcpClient ::connect()
         LOGE(TCP_CLIENT_TAG, "connect server failed");
         return -1;
     }
-    mConnMgr.add(mServerIp.c_str(), mServerPort, bev, mReceivers, mPacker);
+    mConnMgr.add(mServerIp.c_str(), mServerPort, bev, mHandlers, mPacker);
     LOGT(TCP_CLIENT_TAG, "connect to server %s:%d",
          mServerIp.c_str(), mServerPort);
     //设置回调
@@ -133,9 +133,9 @@ int TcpClient :: setPacker(ITcpPacker *packer) {
     return 0;
 }
 
-int TcpClient :: addReceiver(ITcpReceiver *receiver) {
-    //mReceivers.push_back(receiver->copy());
-    mReceivers.push_back(receiver);
+int TcpClient :: addHandler(ITcpMessageHandler *handler) {
+    //mHandlers.push_back(handler->copy());
+    mHandlers.push_back(handler);
     return 0;
 }
 

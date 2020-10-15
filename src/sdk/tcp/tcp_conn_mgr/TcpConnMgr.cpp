@@ -7,10 +7,10 @@ TcpConnMgr :: ~TcpConnMgr() {
     mLock.unlock();
 }
 
-void TcpConnMgr :: add(string ip, uint16_t port, void *socket, vector<ITcpReceiver *> &receivers, ITcpPacker *packer)
+void TcpConnMgr :: add(string ip, uint16_t port, void *socket, vector<ITcpMessageHandler *> &handlers, ITcpPacker *packer)
 {
     mLock.lock();
-    TcpConn *conn = new TcpConn(ip, port, socket, receivers, packer);
+    TcpConn *conn = new TcpConn(ip, port, socket, handlers, packer);
     mConns.push_back(conn);
     mLock.unlock();
 }

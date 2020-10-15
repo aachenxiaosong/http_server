@@ -14,7 +14,7 @@ private:
 public:
     TcpConnMgr() = default;
     ~TcpConnMgr();
-    void add(string ip, uint16_t port, void *socket, vector<ITcpReceiver *> &receivers, ITcpPacker *packer);
+    void add(string ip, uint16_t port, void *socket, vector<ITcpMessageHandler *> &handlers, ITcpPacker *packer);
     void del(string ip);
     void del(string ip, uint16_t port);
     void del(void *socket);

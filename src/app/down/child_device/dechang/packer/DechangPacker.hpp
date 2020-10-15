@@ -3,6 +3,7 @@
 
 #include <string>
 #include "ITcpPacker.hpp"
+#include "DechangMessage.hpp"
 #include "uni_databuf.h"
 
 /*
@@ -31,13 +32,14 @@ private:
         STATE_STX_RECVED
     } mState;
     int packCheck();
+    DechangMessageRecvHb* unpackRecvHb();
 public:
     DechangPacker();
     ~DechangPacker();
     //0=pack ok, -1=pack failed
-    int packIn(const char *raw_data, int raw_data_len);
+    int unpackIn(const char *raw_data, int raw_data_len);
     //0=pack has output, -1=pack has no output
-    int packOut(char *packed_data, int *packed_data_len);
+    Message* unpackOut();
     ITcpPacker *copy();
 };
 

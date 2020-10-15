@@ -3,7 +3,7 @@
 
 #include "TcpServer.hpp"
 #include "DechangPacker.hpp"
-#include "DechangHbReceiver.hpp"
+#include "DechangRecvHbHandler.hpp"
 #include <string>
 
 //TODO 移到相同的位置
@@ -17,7 +17,7 @@ private:
     TcpServer *mTcpServer;
     TcpConnMgr *mTcpConnMgr;
     DechangPacker mPacker;
-    DechangHbReceiver mHbReceiver;
+    DechangRecvHbHandler mRecvHbHandler;
     string mName;
 public:
     DechangServer();

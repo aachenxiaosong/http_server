@@ -41,12 +41,12 @@ TcpServer :: ~TcpServer()
     /*if (mPacker) {
         delete mPacker;
     }
-    vector<ITcpReceiver *> :: iterator it;
-    for (it = mReceivers.begin(); it != mReceivers.end();) {
+    vector<ITcpMessageHandler *> :: iterator it;
+    for (it = mHandlers.begin(); it != mHandlers.end();) {
         delete *it;
-        it = mReceivers.erase(it);
+        it = mHandlers.erase(it);
     }*/
-    mReceivers.clear();
+    mHandlers.clear();
     if (mThread != NULL)
     {
         mThread->join();
@@ -111,7 +111,7 @@ void TcpServer :: listenerCb(struct evconnlistener *listener, evutil_socket_t fd
     }
     char *ip = inet_ntoa(client->sin_addr);
     uint16_t port = ntohs(client->sin_port);
-    server->mConnMgr.add(ip, port, bev, server->mReceivers, server->mPacker);
+    server->mConnMgr.add(ip, port, bev, server->mHandlers, server->mPacker);
     LOGT(server->mName.c_str(), "connect new client %s:%d", ip, port);
     //给bufferevent缓冲区设置回调
     //bufferevent_setcb(bev, readCb, writeCb, eventCb, inet_ntoa(client->sin_addr));
@@ -161,9 +161,9 @@ int TcpServer :: setPacker(ITcpPacker *packer) {
     return 0;
 }
 
-int TcpServer :: addReceiver(ITcpReceiver *receiver) {
-    //mReceivers.push_back(receiver->copy());
-    mReceivers.push_back(receiver);
+int TcpServer :: addHandler(ITcpMessageHandler *handler) {
+    //mHandlers.push_back(handler->copy());
+    mHandlers.push_back(handler);
     return 0;
 }
 

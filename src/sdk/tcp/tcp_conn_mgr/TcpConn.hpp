@@ -1,7 +1,8 @@
 #ifndef SDK_TCP_TCP_CONN_MGR_TCP_CONN_HPP_
 #define SDK_TCP_TCP_CONN_MGR_TCP_CONN_HPP_
 
-#include "ITcpReceiver.hpp"
+#include "MessageDispatcher.hpp"
+#include "ITcpMessageHandler.hpp"
 #include "ITcpPacker.hpp"
 #include "RwLock.hpp"
 #include <stdint.h>
@@ -19,14 +20,14 @@ private:
     void *mSocket;
 
 private:
-    vector <ITcpReceiver *> mReceivers;
+    vector <ITcpMessageHandler *> mHandlers;
     ITcpPacker *mPacker;
     RwLock mReceiverLock;
 
 public:
-    TcpConn(string &ip, uint16_t port, void *socket, vector<ITcpReceiver *> &receivers, ITcpPacker *packer);
+    TcpConn(const string &ip, uint16_t port, void *socket, vector<ITcpMessageHandler *> &handlers, ITcpPacker *packer);
     ~TcpConn();
-    void setTag(string &tag);
+    void setTag(const string &tag);
     string& getTag();
     string& getIp();
     uint16_t getPort();

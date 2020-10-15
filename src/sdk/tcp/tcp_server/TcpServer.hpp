@@ -1,6 +1,7 @@
 #ifndef  SDK_TCP_TCP_SERVER_TCP_SERVER_HPP_
 #define  SDK_TCP_TCP_SERVER_TCP_SERVER_HPP_
 
+#include "ITcpMessageHandler.hpp"
 #include "TcpConnMgr.hpp"
 #include "TcpEnum.hpp"
 #include "event2/event.h"
@@ -22,7 +23,7 @@ private:
     struct evconnlistener *mListener;
     thread *mThread;
     
-    vector <ITcpReceiver *> mReceivers;
+    vector <ITcpMessageHandler *> mHandlers;
     //packer会为每个conn拷贝一份,因为每个conn要独立缓存中间处理数据
     ITcpPacker *mPacker;
     
@@ -34,7 +35,7 @@ public:
     ~TcpServer();
     int listen();
     int setPacker(ITcpPacker *packer);
-    int addReceiver(ITcpReceiver *receiver);
+    int addHandler(ITcpMessageHandler *handler);
     TcpConnMgr *getConnMgr();
 
 private:

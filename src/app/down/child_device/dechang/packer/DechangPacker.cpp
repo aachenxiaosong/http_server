@@ -15,13 +15,23 @@ DechangPacker :: ~DechangPacker() {
     LOGT(DECHANG_PACKER_TAG, "packer is destroyed");
 }
 
-int DechangPacker :: packIn(const char *raw_data, int raw_data_len) {
-    int ret = -1;
+static void _print_pack(const unsigned char *data, int len) {
+    printf("pack is:");
+    for (int i = 0; i < len; i++) {
+        printf("0x%x ", data[i]);
+    }
+    printf("\n");
+}
+
+int DechangPacker :: unpackIn(const char *raw_data, int raw_data_len) {
+    int ret = 0;
     int write_size;
     int free_size = DataBufferGetFreeSize(mDataBuf);
+    _print_pack((const unsigned char *)raw_data, raw_data_len);
     if (free_size < raw_data_len) {
         LOGE(DECHANG_PACKER_TAG, "too much data for one time");
         write_size = free_size;
+        ret = -1;
     } else {
         write_size = raw_data_len;
     }
@@ -60,8 +70,21 @@ int DechangPacker :: packCheck() {
     return 0;
 }
 
-int DechangPacker :: packOut(char *packed_data, int *packed_data_len) {
-    int ret = -1;
+DechangMessageRecvHb* DechangPacker :: unpackRecvHb() {
+    DechangMessageRecvHb *message = new DechangMessageRecvHb();
+    char serial_num[7] = {0};
+    message->rand(mPack[1]);
+    message->cmd(mPack[2]);
+    message->address(mPack[3]);
+    message->door(mPack[4]);
+    memcpy(serial_num, &mPack[28], 6);
+    message->device_id(serial_num);
+    message->status(mPack[19]);
+    return message;
+}
+
+Message* DechangPacker :: unpackOut() {
+    Message* message = NULL;
     unsigned char c;
     while (DataBufferRead((char *)&c, 1, mDataBuf) == 1)
     {
@@ -78,17 +101,22 @@ int DechangPacker :: packOut(char *packed_data, int *packed_data_len) {
             mPackLen++;
             if (c == 0x03) {
                 mState = STATE_IDLE;
-                if (mPackLen > *packed_data_len) {
-                    mPackLen = 0;
-                    LOGE(DECHANG_PACKER_TAG, "packLen %d > bufLen %d", mPackLen, packed_data_len);
-                } else if (packCheck() != 0) {
+                if (packCheck() != 0) {
                     mPackLen = 0;
                     LOGE(DECHANG_PACKER_TAG, "pack check failed");
                 } else {
-                    memcpy(packed_data, mPack, mPackLen);
-                    *packed_data_len = mPackLen;
+                    unsigned char cmd_type = mPack[2];
+                    switch (cmd_type) {
+                        case 0x56: {
+                            message = unpackRecvHb();
+                        }
+                        break;
+                        default:
+                        break;
+                    }
+                    //memcpy(packed_data, mPack, mPackLen);
+                    //*packed_data_len = mPackLen;
                     mPackLen = 0;
-                    ret = 0;
                     break;
                 }
             } else {
@@ -99,7 +127,7 @@ int DechangPacker :: packOut(char *packed_data, int *packed_data_len) {
             }
         }
     }
-    return ret;
+    return message;
 }
 
 ITcpPacker * DechangPacker :: copy() {
