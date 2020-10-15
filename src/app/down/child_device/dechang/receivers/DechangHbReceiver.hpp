@@ -7,5 +7,5 @@ public:
     DechangHbReceiver();
     ~DechangHbReceiver();
     int onRecv(const char *data, int len);
-    ITcpReceiver *copy();
+    //ITcpReceiver *copy();
 };

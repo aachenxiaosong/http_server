@@ -38,14 +38,15 @@ TcpServer :: TcpServer(const char *name, string ip, int port)
 
 TcpServer :: ~TcpServer()
 {
-    if (mPacker) {
+    /*if (mPacker) {
         delete mPacker;
     }
     vector<ITcpReceiver *> :: iterator it;
     for (it = mReceivers.begin(); it != mReceivers.end();) {
         delete *it;
         it = mReceivers.erase(it);
-    }
+    }*/
+    mReceivers.clear();
     if (mThread != NULL)
     {
         mThread->join();
@@ -155,12 +156,14 @@ int TcpServer :: listen()
 }
 
 int TcpServer :: setPacker(ITcpPacker *packer) {
-    mPacker = packer->copy();
+    //mPacker = packer->copy();
+    mPacker = packer;
     return 0;
 }
 
 int TcpServer :: addReceiver(ITcpReceiver *receiver) {
-    mReceivers.push_back(receiver->copy());
+    //mReceivers.push_back(receiver->copy());
+    mReceivers.push_back(receiver);
     return 0;
 }
 

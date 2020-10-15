@@ -32,14 +32,15 @@ TcpClient :: TcpClient(const char *name, string server_ip, int server_port)
 
 TcpClient :: ~TcpClient()
 {
-    if (mPacker) {
+    /*if (mPacker) {
         delete mPacker;
     }
     vector<ITcpReceiver *> :: iterator it;
     for (it = mReceivers.begin(); it != mReceivers.end();) {
         delete *it;
         it = mReceivers.erase(it);
-    }
+    }*/
+    mReceivers.clear();
     if (mThread != NULL)
     {
         mThread->join();
@@ -127,12 +128,14 @@ int TcpClient ::connect()
 }
 
 int TcpClient :: setPacker(ITcpPacker *packer) {
-    mPacker = packer->copy();
+    //mPacker = packer->copy();
+    mPacker = packer;
     return 0;
 }
 
 int TcpClient :: addReceiver(ITcpReceiver *receiver) {
-    mReceivers.push_back(receiver->copy());
+    //mReceivers.push_back(receiver->copy());
+    mReceivers.push_back(receiver);
     return 0;
 }
 

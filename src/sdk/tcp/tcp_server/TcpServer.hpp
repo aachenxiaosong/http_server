@@ -22,8 +22,8 @@ private:
     struct evconnlistener *mListener;
     thread *mThread;
     
-    //receivers和packer会为每个conn拷贝一份
     vector <ITcpReceiver *> mReceivers;
+    //packer会为每个conn拷贝一份,因为每个conn要独立缓存中间处理数据
     ITcpPacker *mPacker;
     
     TcpConnMgr mConnMgr;

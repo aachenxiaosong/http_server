@@ -60,7 +60,12 @@ sdk_inc := src/sdk/http/http_server/inc \
            src/sdk/tcp/tcp_handle \
            src/sdk/msg_center/inc \
            src/sdk/msg_center/inc/mqtt \
-           src/sdk/msg_center
+           src/sdk/msg_center \
+           src/sdk/message \
+           src/sdk/message/message_type \
+           src/sdk/message/messages \
+           src/sdk/message/message_handler \
+           src/sdk/message/message_dispatcher
 
 app_src := src/app \
            src/app/left/lift_control/base/http \

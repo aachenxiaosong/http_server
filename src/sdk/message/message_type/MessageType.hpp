@@ -1,0 +1,8 @@
+#ifndef SDK_MESSAGE_MESSAGE_TYPE_HPP_
+#define SDK_MESSAGE_MESSAGE_TYPE_HPP_
+
+enum MessageType {
+    MSG_DECHANG_ADD_CARD
+};
+
+#endif  //  SDK_MESSAGE_MESSAGE_TYPE_HPP_

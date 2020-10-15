@@ -19,7 +19,8 @@ TcpConn :: TcpConn(string &ip, uint16_t port, void *socket, vector<ITcpReceiver 
     }
     vector<ITcpReceiver *> :: iterator it;
     for (it = receivers.begin(); it != receivers.end(); it++) {
-        ITcpReceiver *receiver = (*it)->copy();
+        //ITcpReceiver *receiver = (*it)->copy();
+        ITcpReceiver *receiver = *it;
         receiver->setConn(this);
         mReceivers.push_back(receiver);
     }
@@ -32,11 +33,14 @@ TcpConn :: ~TcpConn() {
     if (mPacker) {
         delete mPacker;
     }
+    /*
     vector<ITcpReceiver *> :: iterator it;
     for (it = mReceivers.begin(); it != mReceivers.end();) {
         delete *it;
         it = mReceivers.erase(it);
-    }
+    }*/
+    mReceivers.clear();
+
     LOGT(TCP_CONN_TAG, "tcp connection destroyed, ip=%s port=%d", mIp.c_str(), mPort);
     mReceiverLock.writeUnlock();
 }

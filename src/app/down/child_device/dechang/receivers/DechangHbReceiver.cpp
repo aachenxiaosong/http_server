@@ -46,8 +46,8 @@ int DechangHbReceiver :: onRecv(const char *data, int len) {
     return -1;
 }
 
-ITcpReceiver * DechangHbReceiver :: copy() {
+/*ITcpReceiver * DechangHbReceiver :: copy() {
     ITcpReceiver *receiver = new DechangHbReceiver();
     receiver->setConn(mConn);
     return receiver;
-}
+}*/
