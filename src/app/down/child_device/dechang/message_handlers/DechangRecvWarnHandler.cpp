@@ -10,7 +10,6 @@ DechangRecvWarnHandler :: DechangRecvWarnHandler() : ITcpMessageHandler("dechang
 DechangRecvWarnHandler :: ~DechangRecvWarnHandler() {}
 
 void DechangRecvWarnHandler :: sendAck(const DechangMessageWarnAck &message_ack) {
-
     unsigned char ack[10];
     ack[0] = 0x02;
     ack[1] = message_ack.rand();
@@ -34,7 +33,7 @@ int DechangRecvWarnHandler :: handle(const Message &message) {
     }
     LOGT(DECHANG_RECV_WARN_TAG, "MSG_DECHANG_RECEIVE_WARN message is handled");
     const DechangMessageRecvWarn& msg = (DechangMessageRecvWarn &)message;
-    LOGT(DECHANG_RECV_WARN_TAG, "warn received: index %d", msg.index());
+    LOGT(DECHANG_RECV_WARN_TAG, "warn received: index:%d", msg.index());
     DechangMessageWarnAck ack;
     ack.rand(msg.rand());
     ack.cmd(msg.cmd());

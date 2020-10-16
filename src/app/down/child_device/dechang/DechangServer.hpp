@@ -5,6 +5,7 @@
 #include "DechangPacker.hpp"
 #include "DechangRecvHbHandler.hpp"
 #include "DechangRecvWarnHandler.hpp"
+#include "DechangRecvSwipeHandler.hpp"
 #include <string>
 
 //TODO 移到相同的位置
@@ -20,6 +21,7 @@ private:
     DechangPacker mPacker;
     DechangRecvHbHandler mRecvHbHandler;
     DechangRecvWarnHandler mRecvWarnHandler;
+    DechangRecvSwipeHandler mRecvSwipeHandler;
     string mName;
 public:
     DechangServer();

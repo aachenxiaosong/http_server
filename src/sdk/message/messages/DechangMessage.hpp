@@ -5,7 +5,7 @@
 #include <string>
 
 using namespace std;
-
+//基础消息
 class DechangMessage : public Message {
     MEMBER(unsigned char, rand)
     MEMBER(unsigned char, cmd)
@@ -18,7 +18,7 @@ public:
     }
     virtual ~DechangMessage() {}
 };
-
+//心跳消息
 class DechangMessageRecvHb : public DechangMessage {
     MEMBER(string, device_id)
     MEMBER(int, status)
@@ -29,7 +29,6 @@ public:
     }
     ~DechangMessageRecvHb() {}
 };
-
 class DechangMessageHbAck : public DechangMessage {
     MEMBER(unsigned char, customer_code_h)
     MEMBER(unsigned char, customer_code_l)
@@ -40,7 +39,7 @@ public:
     }
     ~DechangMessageHbAck() {}
 };
-
+//警报消息
 class DechangMessageRecvWarn : public DechangMessage {
     MEMBER(unsigned char, index)
 public:
@@ -58,7 +57,33 @@ public:
     }
     ~DechangMessageWarnAck() {}
 };
+//刷卡消息
+class DechangMessageRecvSwipe : public DechangMessage {
+    MEMBER(string, card_no)
+    MEMBER(string, time)
+    MEMBER(unsigned char, type)
+    MEMBER(unsigned char, door_addr)
+    MEMBER(unsigned char, index)
+public:
+    DechangMessageRecvSwipe() : DechangMessage(MSG_DECHANG_RECEIVE_SWIPE) {
+        card_no("");
+        time("");
+        type(0);
+        door_addr(0);
+        index(0);
+    }
+    ~DechangMessageRecvSwipe() {}
+};
 
+class DechangMessageSwipeAck : public DechangMessage {
+    MEMBER(unsigned char, index)
+public:
+    DechangMessageSwipeAck() : DechangMessage(MSG_DECHANG_SWIPE_ACK) {
+        index(0);
+    }
+    ~DechangMessageSwipeAck() {}
+};
+//增加卡消息
 class DechangMessageSendCard : public DechangMessage {
     MEMBER(string, device_id)
     MEMBER(int, user_id)

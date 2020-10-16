@@ -84,6 +84,27 @@ DechangMessageRecvWarn* DechangPacker :: unpackRecvWarn() {
     return message;
 }
 
+DechangMessageRecvSwipe* DechangPacker :: unpackRecvSwipe() {
+    DechangMessageRecvSwipe *message = new DechangMessageRecvSwipe();
+    unsigned long card_no;
+    char card_no_str[16] = {0};
+    char time_str[20] = {0};
+    message->rand(mPack[1]);
+    message->cmd(mPack[2]);
+    message->address(mPack[3]);
+    message->door(mPack[4]);
+    card_no = mPack[7] + (mPack[8] << 8) + (mPack[9] << 16) + (mPack[10] << 24);
+    snprintf(card_no_str, sizeof(card_no), "%lu", card_no);
+    message->card_no(card_no_str);
+    snprintf(time_str, sizeof(time_str), "20%02d-%02d-%02d-%02d:%02d:%02d", mPack[16], mPack[15], mPack[14], mPack[13], mPack[12], mPack[11]);
+    message->time(time_str);
+    message->type(mPack[17]);
+    message->door_addr(18);
+    message->index(mPack[20]);
+    return message;
+}
+
+
 
 Message* DechangPacker :: unpackOut() {
     Message* message = NULL;
@@ -118,12 +139,16 @@ Message* DechangPacker :: unpackOut() {
                 } else {
                     unsigned char cmd_type = mPack[2];
                     switch (cmd_type) {
-                        case 0x56: {
+                        case 0x56: { //心跳
                             message = unpackRecvHb();
                             break;
                         }
-                        case 0x54: {
+                        case 0x54: { //警报记录
                             message = unpackRecvWarn();
+                            break;
+                        }
+                        case 0x53: { //刷卡记录
+                            message = unpackRecvSwipe();
                             break;
                         }
                         default:

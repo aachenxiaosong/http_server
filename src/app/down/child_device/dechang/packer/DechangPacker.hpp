@@ -36,6 +36,7 @@ private:
     int packCheck();
     DechangMessageRecvHb* unpackRecvHb();
     DechangMessageRecvWarn* unpackRecvWarn();
+    DechangMessageRecvSwipe* unpackRecvSwipe();
 public:
     DechangPacker();
     ~DechangPacker();

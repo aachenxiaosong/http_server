@@ -9,6 +9,7 @@ DechangServer :: DechangServer() {
     mTcpServer->setPacker(&mPacker);
     mTcpServer->addHandler(&mRecvHbHandler);
     mTcpServer->addHandler(&mRecvWarnHandler);
+    mTcpServer->addHandler(&mRecvSwipeHandler);
     mTcpConnMgr = mTcpServer->getConnMgr();
 }
 

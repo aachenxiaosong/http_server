@@ -39,7 +39,7 @@ int DechangRecvHbHandler :: handle(const Message &message) {
         //only set when first hb received
         mConn->setTag(msg.device_id());
     }
-    LOGT(DECHANG_RECV_HB_TAG, "hb received: device %s status %d",
+    LOGT(DECHANG_RECV_HB_TAG, "hb received: device:%s status:%d",
          msg.device_id().c_str(), msg.status());
     DechangMessageHbAck ack;
     ack.rand(msg.rand());
