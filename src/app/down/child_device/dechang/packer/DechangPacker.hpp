@@ -37,6 +37,12 @@ private:
     DechangMessageRecvHb* unpackRecvHb();
     DechangMessageRecvWarn* unpackRecvWarn();
     DechangMessageRecvSwipe* unpackRecvSwipe();
+    DechangMessageSendCardAck *upPackSendCardAck();
+    int packRecvHbAck(const DechangMessageRecvHbAck &message, char *out_data, int *out_data_len);
+    int packRecvWarnAck(const DechangMessageRecvWarnAck &message, char *out_data, int *out_data_len);
+    int packRecvSwipeAck(const DechangMessageRecvSwipeAck &message, char *out_data, int *out_data_len);
+    int packSendCard(const DechangMessageSendCard &message, char *out_data, int *out_data_len);
+    
 public:
     DechangPacker();
     ~DechangPacker();
@@ -44,6 +50,7 @@ public:
     int unpackIn(const char *raw_data, int raw_data_len);
     //0=pack has output, -1=pack has no output
     Message* unpackOut();
+    int pack(const Message &message, char *out_data, int *out_data_len);
     ITcpPacker *copy();
 };
 

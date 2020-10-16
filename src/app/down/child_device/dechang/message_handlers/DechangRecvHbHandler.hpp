@@ -6,7 +6,6 @@
 
 class DechangRecvHbHandler : public ITcpMessageHandler {
 private:
-    void sendAck(const DechangMessageHbAck &message_ack);
 public:
     DechangRecvHbHandler();
     ~DechangRecvHbHandler();

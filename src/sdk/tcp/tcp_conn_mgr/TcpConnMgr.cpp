@@ -1,5 +1,8 @@
 #include "TcpConnMgr.hpp"
 #include <string.h>
+#include "uni_log.h"
+
+#define TCP_CONN_MGR_TAG "tcp_conn_mgr"
 
 TcpConnMgr :: ~TcpConnMgr() {
     mLock.lock();
@@ -113,10 +116,14 @@ TcpConn *TcpConnMgr :: getByTag(string tag)
         conn = *iter;
         if (conn->getTag().compare(tag) == 0) {
             ret = conn;
+            LOGT(TCP_CONN_MGR_TAG, "conn found by tag %s", tag.c_str());
             break;
         }
     }
     mLock.unlock();
+    if (ret == NULL) {
+        LOGE(TCP_CONN_MGR_TAG, "conn not found by tag %s", tag.c_str());
+    }
     return ret;
 }
 

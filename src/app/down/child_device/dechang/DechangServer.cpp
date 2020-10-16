@@ -10,6 +10,7 @@ DechangServer :: DechangServer() {
     mTcpServer->addHandler(&mRecvHbHandler);
     mTcpServer->addHandler(&mRecvWarnHandler);
     mTcpServer->addHandler(&mRecvSwipeHandler);
+    mTcpServer->addHandler(&mSendCardHandler);
     mTcpConnMgr = mTcpServer->getConnMgr();
 }
 
@@ -19,4 +20,8 @@ int DechangServer :: run() {
         return -1;
     }
     return 0;
+}
+
+TcpConnMgr* DechangServer :: getConnMgr() {
+    return mTcpConnMgr;
 }

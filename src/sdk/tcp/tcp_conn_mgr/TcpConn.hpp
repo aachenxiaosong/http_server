@@ -36,6 +36,8 @@ public:
     int onRecv(const char *data, int len);
     //给app调用
     int send(const char *data, int len);
+    int onRecv(const Message& message);
+    int send(const Message& message);
 };
 
 #endif  //  SDK_TCP_TCP_CONN_MGR_TCP_CONN_HPP_

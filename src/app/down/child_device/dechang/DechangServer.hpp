@@ -6,6 +6,7 @@
 #include "DechangRecvHbHandler.hpp"
 #include "DechangRecvWarnHandler.hpp"
 #include "DechangRecvSwipeHandler.hpp"
+#include "DechangSendCardHandler.hpp"
 #include <string>
 
 //TODO 移到相同的位置
@@ -22,9 +23,11 @@ private:
     DechangRecvHbHandler mRecvHbHandler;
     DechangRecvWarnHandler mRecvWarnHandler;
     DechangRecvSwipeHandler mRecvSwipeHandler;
+    DechangSendCardHandler mSendCardHandler;
     string mName;
 public:
     DechangServer();
+    TcpConnMgr *getConnMgr();
     int run();
 };
 

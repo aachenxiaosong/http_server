@@ -6,7 +6,6 @@
 
 class DechangRecvWarnHandler : public ITcpMessageHandler {
 private:
-    void sendAck(const DechangMessageWarnAck &message_ack);
 public:
     DechangRecvWarnHandler();
     ~DechangRecvWarnHandler();

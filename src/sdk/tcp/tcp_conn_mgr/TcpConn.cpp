@@ -74,6 +74,7 @@ void* TcpConn :: getSocket() {
     return mSocket;
 }
 
+
 //给tcp server调用
 int TcpConn :: onRecv(const char *data, int len) {
     int data_received_ok = -1;
@@ -108,4 +109,31 @@ int TcpConn :: send(const char *data, int len) {
     LOGT(TCP_CONN_TAG, "send data len %d", len);
     _print_pack("send:", (const unsigned char *)data, len);
     return bufferevent_write((struct bufferevent *)mSocket, data, len);
+}
+
+int TcpConn :: onRecv(const Message& message) {
+    int message_handled_ok = -1;
+    ITcpMessageHandler *i_receiver = NULL;
+    vector<ITcpMessageHandler *>::iterator it;
+    mReceiverLock.readLock();
+    for (vector<ITcpMessageHandler *>::iterator it = mHandlers.begin(); it != mHandlers.end(); it++)
+    {
+        i_receiver = *it;
+        if (i_receiver->handle(message) == 0)
+        {
+            message_handled_ok = 0;
+            break;
+        }
+    }
+    mReceiverLock.readUnlock();
+    return message_handled_ok;
+}
+
+int TcpConn :: send(const Message& message) {
+    char data[MAX_TCP_PACK_LEN];
+    int data_len = MAX_TCP_PACK_LEN;
+    if (mPacker->pack(message, data, &data_len) == 0) {
+        return send(data, data_len);
+    }
+    return -1;
 }

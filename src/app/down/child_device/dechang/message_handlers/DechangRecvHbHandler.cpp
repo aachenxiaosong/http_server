@@ -9,46 +9,26 @@ DechangRecvHbHandler :: DechangRecvHbHandler() : ITcpMessageHandler("dechang_rec
 
 DechangRecvHbHandler :: ~DechangRecvHbHandler() {}
 
-void DechangRecvHbHandler :: sendAck(const DechangMessageHbAck &message_ack) {
-
-    unsigned char ack[11];
-    ack[0] = 0x02;
-    ack[1] = message_ack.rand();
-    ack[2] = message_ack.cmd();
-    ack[3] = message_ack.address();
-    ack[4] = message_ack.door();
-    ack[5] = 0x2;
-    ack[6] = 0x0;
-    ack[7] = message_ack.customer_code_h();
-    ack[8] = message_ack.customer_code_l();
-    ack[9] = 0x0;
-    for (int i = 0; i < 9; i++) {
-        ack[9] = ack[9] ^ ack[i];
-    }
-    ack[10] = 0x03;
-    mConn->send((const char *)ack, 11);
-}
-
 int DechangRecvHbHandler :: handle(const Message &message) {
     if (message.type() != MSG_DECHANG_RECEIVE_HB) {
         return -1;
     }
     LOGT(DECHANG_RECV_HB_TAG, "MSG_DECHANG_RECEIVE_HB message is handled");
-    const DechangMessageRecvHb& msg = (DechangMessageRecvHb &)message;
-    if (mConn->getTag().empty()) {
+    const DechangMessageRecvHb& msg = (const DechangMessageRecvHb &)message;
+    if (mConn->getTag().compare(msg.device_id()) != 0) {
         //only set when first hb received
         mConn->setTag(msg.device_id());
     }
     LOGT(DECHANG_RECV_HB_TAG, "hb received: device:%s status:%d",
          msg.device_id().c_str(), msg.status());
-    DechangMessageHbAck ack;
+    DechangMessageRecvHbAck ack;
     ack.rand(msg.rand());
     ack.cmd(msg.cmd());
     ack.address(msg.address());
     ack.door(msg.door());
     ack.customer_code_h(0);
     ack.customer_code_l(0);
-    sendAck(ack);
+    mConn->send(ack);
     return 0;
 }
 

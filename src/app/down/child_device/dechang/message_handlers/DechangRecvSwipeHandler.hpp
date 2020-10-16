@@ -6,7 +6,6 @@
 
 class DechangRecvSwipeHandler : public ITcpMessageHandler {
 private:
-    void sendAck(const DechangMessageSwipeAck &message_ack);
 public:
     DechangRecvSwipeHandler();
     ~DechangRecvSwipeHandler();

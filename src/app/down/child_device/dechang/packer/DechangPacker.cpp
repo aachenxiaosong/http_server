@@ -87,20 +87,28 @@ DechangMessageRecvWarn* DechangPacker :: unpackRecvWarn() {
 DechangMessageRecvSwipe* DechangPacker :: unpackRecvSwipe() {
     DechangMessageRecvSwipe *message = new DechangMessageRecvSwipe();
     unsigned long card_no;
-    char card_no_str[16] = {0};
     char time_str[20] = {0};
     message->rand(mPack[1]);
     message->cmd(mPack[2]);
     message->address(mPack[3]);
     message->door(mPack[4]);
     card_no = mPack[7] + (mPack[8] << 8) + (mPack[9] << 16) + (mPack[10] << 24);
-    snprintf(card_no_str, sizeof(card_no), "%lu", card_no);
-    message->card_no(card_no_str);
+    message->card_no(card_no);
     snprintf(time_str, sizeof(time_str), "20%02d-%02d-%02d-%02d:%02d:%02d", mPack[16], mPack[15], mPack[14], mPack[13], mPack[12], mPack[11]);
     message->time(time_str);
     message->type(mPack[17]);
     message->door_addr(18);
     message->index(mPack[20]);
+    return message;
+}
+
+DechangMessageSendCardAck* DechangPacker :: upPackSendCardAck() {
+    DechangMessageSendCardAck *message = new DechangMessageSendCardAck();
+    message->rand(mPack[1]);
+    message->cmd(mPack[2]);
+    message->address(mPack[3]);
+    message->door(mPack[4]);
+    message->ack(mPack[7]);
     return message;
 }
 
@@ -151,8 +159,14 @@ Message* DechangPacker :: unpackOut() {
                             message = unpackRecvSwipe();
                             break;
                         }
-                        default:
-                        break;
+                        case 0x62: { //增加卡ACK
+                            message = upPackSendCardAck();
+                            break;
+                        }
+                        default: {
+                            LOGE(DECHANG_PACKER_TAG, "unsupported message type");
+                            break;
+                        }
                     }
                     //memcpy(packed_data, mPack, mCurLen);
                     //*packed_data_len = mCurLen;
@@ -169,6 +183,158 @@ Message* DechangPacker :: unpackOut() {
     }
     return message;
 }
+
+int DechangPacker :: packRecvHbAck(const DechangMessageRecvHbAck &message, char *out_data, int *out_data_len) {
+    unsigned char ack[11];
+    ack[0] = 0x02;
+    ack[1] = message.rand();
+    ack[2] = message.cmd();
+    ack[3] = message.address();
+    ack[4] = message.door();
+    ack[5] = 0x2;
+    ack[6] = 0x0;
+    ack[7] = message.customer_code_h();
+    ack[8] = message.customer_code_l();
+    ack[9] = 0x0;
+    for (int i = 0; i < 9; i++) {
+        ack[9] = ack[9] ^ ack[i];
+    }
+    ack[10] = 0x03;
+    memcpy(out_data, ack, 11);
+    *out_data_len = 11;
+    return 0;
+}
+
+int DechangPacker :: packRecvWarnAck(const DechangMessageRecvWarnAck &message, char *out_data, int *out_data_len) {
+    unsigned char ack[10];
+    ack[0] = 0x02;
+    ack[1] = message.rand();
+    ack[2] = message.cmd();
+    ack[3] = message.address();
+    ack[4] = message.door();
+    ack[5] = 0x1;
+    ack[6] = 0x0;
+    ack[7] = message.index();
+    ack[8] = 0x0;
+    for (int i = 0; i < 8; i++) {
+        ack[8] = ack[8] ^ ack[i];
+    }
+    ack[9] = 0x03;
+    memcpy(out_data, ack, 10);
+    *out_data_len = 10;
+    return 0;
+}
+
+int DechangPacker :: packRecvSwipeAck(const DechangMessageRecvSwipeAck &message, char *out_data, int *out_data_len) {
+    unsigned char ack[10];
+    ack[0] = 0x02;
+    ack[1] = message.rand();
+    ack[2] = message.cmd();
+    ack[3] = message.address();
+    ack[4] = message.door();
+    ack[5] = 0x1;
+    ack[6] = 0x0;
+    ack[7] = message.index();
+    ack[8] = 0x0;
+    for (int i = 0; i < 8; i++) {
+        ack[8] = ack[8] ^ ack[i];
+    }
+    ack[9] = 0x03;
+    memcpy(out_data, ack, 10);
+    *out_data_len = 10;
+    return 0;
+}
+
+static void _password_convert(unsigned char *pwd_hex, const char *pwd)
+{
+  char pwd_a[] = "ffffffff";
+  for (int i = 0; i < strlen(pwd) && i < strlen(pwd_a); i++) {
+      pwd_a[i] = pwd[i];
+  }
+  char hex_str[] = "0x00";
+  unsigned int n = 0;
+  unsigned char c;
+  for (int i = 0; i < 4; i++) {
+    hex_str[2] = pwd_a[i * 2];
+    hex_str[3] = pwd_a[i * 2 + 1]; 
+    sscanf(hex_str, "%x", &n);
+    pwd_hex[i] = (unsigned char)n;
+  }
+}
+
+int DechangPacker :: packSendCard(const DechangMessageSendCard &message, char *out_data, int *out_data_len) {
+    unsigned char req[36];
+    req[0] = 0x02;
+    req[1] = 0;
+    req[2] = 0x62;
+    req[3] = 0;
+    req[4] = 0; //门编号为0会不会有问题?
+    req[5] = 27;
+    req[6] = 0x0;
+    //用户
+    req[7] = message.user_id() & 0xff;
+    req[8] = (message.user_id() >> 8) & 0xff;
+    //卡号,协议里是高位在前,实际是低位在前
+    /*req[9] = (message.card_no() >> 24) & 0xff;
+    req[10] = (message.card_no() >> 16) & 0xff;
+    req[11] = (message.card_no() >> 8) & 0xff;
+    req[12] = (message.card_no()) & 0xff;*/
+    req[9] = (message.card_no()) & 0xff;
+    req[10] = (message.card_no() >> 8) & 0xff;
+    req[11] = (message.card_no() >> 16) & 0xff;
+    req[12] = (message.card_no() >> 24) & 0xff;
+    //密码
+    _password_convert(&req[13], message.password().c_str());
+    //开放时间
+    req[17] = (message.door_access()) & 0xff;
+    req[18] = (message.door_access() >> 8) & 0xff;
+    //未用
+    req[19] = req[20] = 0x0;
+    //有效期,暂时写死,到时候看expire_date的格式,2050.1.1:0:0
+    req[21] = 50;
+    req[22] = 1;
+    req[23] = 1;
+    req[24] = 0;
+    req[25] = 0;
+    //状态
+    //req[26] = message.status();
+    snprintf((char *)&req[26], 8, "%s", message.user_name().c_str());
+    //checksum
+    req[34] = 0;
+    for (int i = 0; i < 34; i++)
+    {
+        req[34] = req[34] ^ req[i];
+    }
+    req[35] = 0x03;
+    memcpy(out_data, req, 36);
+    *out_data_len = 36;
+    return 0;
+}
+
+    
+int DechangPacker :: pack(const Message &message,
+                          char *out_data, int *out_data_len) {
+    switch (message.type()) {
+        case MSG_DECHANG_RECEIVE_HB_ACK: {
+            return packRecvHbAck((DechangMessageRecvHbAck &)message, out_data, out_data_len);
+        }
+        case MSG_DECHANG_RECEIVE_WARN_ACK: {
+            return packRecvWarnAck((DechangMessageRecvWarnAck &)message, out_data, out_data_len);
+        }
+        case MSG_DECHANG_RECEIVE_SWIPE_ACK: {
+            return packRecvSwipeAck((DechangMessageRecvSwipeAck &)message, out_data, out_data_len);
+        }
+        case MSG_DECHANG_SEND_CARD: {
+            return packSendCard((DechangMessageSendCard &)message, out_data, out_data_len);
+        }
+        default: {
+            LOGE(DECHANG_PACKER_TAG, "unsupport message type %d", message.type());
+            break;
+        }
+    }
+    return -1;
+}
+
 
 ITcpPacker * DechangPacker :: copy() {
     ITcpPacker *packer = new DechangPacker();
