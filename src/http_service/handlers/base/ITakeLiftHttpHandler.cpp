@@ -27,10 +27,10 @@ int ITakeLiftHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_field
         err_field = "elevatorId";
         return -1;
     }
-    if (true != jrequest.Get("lightupFloor", svalue)) {
+    /*if (true != jrequest.Get("lightupFloor", svalue)) {
         err_field = "lightupFloor";
         return -1;
-    }
+    }*/
     if (true != jrequest.Get("unlockFloors", jvalue) || true != jvalue.IsArray()) {
         err_field = "unlockFloors";
         return -1;

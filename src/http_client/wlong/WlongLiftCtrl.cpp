@@ -51,10 +51,15 @@ int WlongLiftCtrl :: callElevatorByFoor(int lift_id, string& open_floors, string
     char *result = NULL;
     int ret;
     snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), CALL_ELEVATOR_BY_FLOOR_PATH);
-    snprintf(request, sizeof(request), "appId=%s&appSecret=%s&licence=%s&deviceId=%d&openFloor=%s&unlockFloor=%s",
-             appid.c_str(), appsecret.c_str(), licence.c_str(), lift_id, open_floors.c_str(), unlock_floors.c_str());
+    if (open_floors.empty()) {
+      snprintf(request, sizeof(request), "appId=%s&appSecret=%s&licence=%s&deviceId=%d&unlockFloor=%s",
+          appid.c_str(), appsecret.c_str(), licence.c_str(), lift_id, unlock_floors.c_str());
+    } else {
+      snprintf(request, sizeof(request), "appId=%s&appSecret=%s&licence=%s&deviceId=%d&openFloor=%s&unlockFloor=%s",
+          appid.c_str(), appsecret.c_str(), licence.c_str(), lift_id, open_floors.c_str(), unlock_floors.c_str());
+    }
     LOGT(WLONG_3P_CTRL, "call_elevator_by_floor url:%s, request:%s", request_url, request);
-    #if !STUB_ENABLE
+#if !STUB_ENABLE
     ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
     #else
     ret = 0;
