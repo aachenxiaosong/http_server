@@ -189,6 +189,6 @@ void HttpGetTokenFree(Token *token) {
   }
 }
 
-void HttpGetTokenCacheUpdate() {
-  _auth_register_token();
+int HttpGetTokenCacheUpdate() {
+  return _auth_register_token();
 }

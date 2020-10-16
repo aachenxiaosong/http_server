@@ -30,7 +30,7 @@
 #define RES_PREFETCH_TAG "resource_prefetch"
 
 
-#define REFRESH_PERIOD_SEC           (10)
+#define REFRESH_PERIOD_SEC           (60)
 #define REFRESH_PERIOD_MSEC          (REFRESH_PERIOD_SEC * 1000)
 #define HB_PERIOD_MSEC                    (60 * 1000)
 
@@ -40,7 +40,7 @@ static struct {
 } g_res_prefetch = {0};
 
 static int _token_refresh(void * arg) {
-  static int lasting_time = 0;
+  static unsigned long lasting_time = 0;
   Token *token = HttpGetToken();
   if (token == NULL) {
     HttpGetTokenCacheUpdate();
@@ -48,8 +48,9 @@ static int _token_refresh(void * arg) {
   } else {
     lasting_time += REFRESH_PERIOD_SEC;
     if (lasting_time > (token->valid_time >> 1)) {
-      HttpGetTokenCacheUpdate();
-      lasting_time = 0;
+      if (0 == HttpGetTokenCacheUpdate()) {
+        lasting_time = 0;
+      }
     }
     HttpGetTokenFree(token);
   }

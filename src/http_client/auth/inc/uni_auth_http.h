@@ -40,7 +40,7 @@ typedef struct {
 Token* HttpGetToken();
 void   HttpGetTokenFree(Token *token);
 
-void   HttpGetTokenCacheUpdate();
+int   HttpGetTokenCacheUpdate();
 
 #ifdef __cplusplus
 }
