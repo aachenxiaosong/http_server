@@ -72,6 +72,7 @@ Result ResPrefetchInit(void) {
   #endif
 
   /* step1: timer for periodic update */
+  HttpGetTokenCacheUpdate();
   g_res_prefetch.token_timer = TimerStart(REFRESH_PERIOD_MSEC,
                                           TIMER_TYPE_PERIODICAL,
                                           _token_refresh,
