@@ -37,11 +37,15 @@ private:
     DechangMessageRecvHb* unpackRecvHb();
     DechangMessageRecvWarn* unpackRecvWarn();
     DechangMessageRecvSwipe* unpackRecvSwipe();
-    DechangMessageSendCardAck *upPackSendCardAck();
+    DechangMessageSendAddCardAck *upPackSendAddCardAck();
+    DechangMessageSendDelCardAck *upPackSendDelCardAck();
+    DechangMessageSendDelAllCardAck *upPackSendDelAllCardAck();
     int packRecvHbAck(const DechangMessageRecvHbAck &message, char *out_data, int *out_data_len);
     int packRecvWarnAck(const DechangMessageRecvWarnAck &message, char *out_data, int *out_data_len);
     int packRecvSwipeAck(const DechangMessageRecvSwipeAck &message, char *out_data, int *out_data_len);
-    int packSendCard(const DechangMessageSendCard &message, char *out_data, int *out_data_len);
+    int packSendAddCard(const DechangMessageSendAddCard &message, char *out_data, int *out_data_len);
+    int packSendDelCard(const DechangMessageSendDelCard &message, char *out_data, int *out_data_len);
+    int packSendDelAllCard(const DechangMessageSendDelAllCard &message, char *out_data, int *out_data_len);
     
 public:
     DechangPacker();

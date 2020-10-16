@@ -84,14 +84,15 @@ public:
     ~DechangMessageRecvSwipeAck() {}
 };
 //增加卡消息
-//device_id是刷卡其的序列号,用于唯一确定tcp长连接
-//user_id需要从0开始,比如宿舍4个人,应为0 1 2 3
-//user_name必填,固定8字节,不够补0
-//卡号4字节,需要按要求转换
-//密码,固定8字节
-//超时时间6字节,需要按要求转换
-//状态,1表示有效 0表示无效
-class DechangMessageSendCard : public DechangMessage {
+/* device_id是刷卡其的序列号,用于唯一确定tcp长连接
+ * user_id需要从0开始,比如宿舍4个人,应为0 1 2 3
+ * user_name必填,固定8字节,不够补0
+ * 卡号4字节,需要按要求转换
+ * 密码,固定8字节
+ * 超时时间6字节,需要按要求转换
+ * 状态,1表示有效 0表示无效
+*/
+class DechangMessageSendAddCard : public DechangMessage {
     MEMBER(string, device_id)
     MEMBER(unsigned int, user_id)
     MEMBER(string, user_name)
@@ -101,7 +102,7 @@ class DechangMessageSendCard : public DechangMessage {
     MEMBER(string, expire_date)
     MEMBER(unsigned char, status)
 public:
-    DechangMessageSendCard() : DechangMessage(MSG_DECHANG_SEND_CARD) {
+    DechangMessageSendAddCard() : DechangMessage(MSG_DECHANG_SEND_ADD_CARD) {
         device_id("");
         user_id(0);
         user_name("");
@@ -111,16 +112,57 @@ public:
         expire_date("");
         status(0);
     }
-    ~DechangMessageSendCard() {}
+    ~DechangMessageSendAddCard() {}
 };
 
-class DechangMessageSendCardAck : public DechangMessage {
+class DechangMessageSendAddCardAck : public DechangMessage {
     MEMBER(unsigned char, ack)
 public:
-    DechangMessageSendCardAck() : DechangMessage(MSG_DECHANG_SEND_CARD_ACK) {
+    DechangMessageSendAddCardAck() : DechangMessage(MSG_DECHANG_SEND_ADD_CARD_ACK) {
         ack(0);
     }
-    ~DechangMessageSendCardAck() {}
+    ~DechangMessageSendAddCardAck() {}
 };
 
+//删除卡消息
+class DechangMessageSendDelCard : public DechangMessage {
+    MEMBER(string, device_id)
+    MEMBER(unsigned int, user_id)
+    MEMBER(unsigned long, card_no)
+public:
+    DechangMessageSendDelCard() : DechangMessage(MSG_DECHANG_SEND_DEL_CARD) {
+        device_id("");
+        user_id(0);
+        card_no(0);
+    }
+    ~DechangMessageSendDelCard() {}
+};
+
+class DechangMessageSendDelCardAck : public DechangMessage {
+    MEMBER(unsigned char, ack)
+public:
+    DechangMessageSendDelCardAck() : DechangMessage(MSG_DECHANG_SEND_DEL_CARD_ACK) {
+        ack(0);
+    }
+    ~DechangMessageSendDelCardAck() {}
+};
+
+//删除所有卡
+class DechangMessageSendDelAllCard : public DechangMessage {
+    MEMBER(string, device_id)
+public:
+    DechangMessageSendDelAllCard() : DechangMessage(MSG_DECHANG_SEND_DEL_ALL_CARD) {
+        device_id("");
+    }
+    ~DechangMessageSendDelAllCard() {}
+};
+
+class DechangMessageSendDelAllCardAck : public DechangMessage {
+    MEMBER(unsigned char, ack)
+public:
+    DechangMessageSendDelAllCardAck() : DechangMessage(MSG_DECHANG_SEND_DEL_ALL_CARD_ACK) {
+        ack(0);
+    }
+    ~DechangMessageSendDelAllCardAck() {}
+};
 #endif  //  SDK_MESSAGE_MESSAGES_DECHANG_MESSAGE_HPP_

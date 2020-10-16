@@ -102,8 +102,8 @@ DechangMessageRecvSwipe* DechangPacker :: unpackRecvSwipe() {
     return message;
 }
 
-DechangMessageSendCardAck* DechangPacker :: upPackSendCardAck() {
-    DechangMessageSendCardAck *message = new DechangMessageSendCardAck();
+DechangMessageSendAddCardAck* DechangPacker :: upPackSendAddCardAck() {
+    DechangMessageSendAddCardAck *message = new DechangMessageSendAddCardAck();
     message->rand(mPack[1]);
     message->cmd(mPack[2]);
     message->address(mPack[3]);
@@ -112,6 +112,25 @@ DechangMessageSendCardAck* DechangPacker :: upPackSendCardAck() {
     return message;
 }
 
+DechangMessageSendDelCardAck* DechangPacker :: upPackSendDelCardAck() {
+    DechangMessageSendDelCardAck *message = new DechangMessageSendDelCardAck();
+    message->rand(mPack[1]);
+    message->cmd(mPack[2]);
+    message->address(mPack[3]);
+    message->door(mPack[4]);
+    message->ack(mPack[7]);
+    return message;
+}
+
+DechangMessageSendDelAllCardAck* DechangPacker :: upPackSendDelAllCardAck() {
+    DechangMessageSendDelAllCardAck *message = new DechangMessageSendDelAllCardAck();
+    message->rand(mPack[1]);
+    message->cmd(mPack[2]);
+    message->address(mPack[3]);
+    message->door(mPack[4]);
+    message->ack(mPack[7]);
+    return message;
+}
 
 
 Message* DechangPacker :: unpackOut() {
@@ -160,7 +179,15 @@ Message* DechangPacker :: unpackOut() {
                             break;
                         }
                         case 0x62: { //增加卡ACK
-                            message = upPackSendCardAck();
+                            message = upPackSendAddCardAck();
+                            break;
+                        }
+                        case 0x16: { //增加卡ACK
+                            message = upPackSendDelCardAck();
+                            break;
+                        }
+                        case 0x17: { //增加卡ACK
+                            message = upPackSendDelAllCardAck();
                             break;
                         }
                         default: {
@@ -262,7 +289,7 @@ static void _password_convert(unsigned char *pwd_hex, const char *pwd)
   }
 }
 
-int DechangPacker :: packSendCard(const DechangMessageSendCard &message, char *out_data, int *out_data_len) {
+int DechangPacker :: packSendAddCard(const DechangMessageSendAddCard &message, char *out_data, int *out_data_len) {
     unsigned char req[36];
     req[0] = 0x02;
     req[1] = 0;
@@ -311,6 +338,60 @@ int DechangPacker :: packSendCard(const DechangMessageSendCard &message, char *o
     return 0;
 }
 
+int DechangPacker :: packSendDelCard(const DechangMessageSendDelCard &message, char *out_data, int *out_data_len) {
+    unsigned char req[15];
+    req[0] = 0x02;
+    req[1] = 0;
+    req[2] = 0x16;
+    req[3] = 0;
+    req[4] = 0; //门编号为0会不会有问题?
+    req[5] = 6;
+    req[6] = 0x0;
+    //用户
+    req[7] = message.user_id() & 0xff;
+    req[8] = (message.user_id() >> 8) & 0xff;
+    //卡号,协议里是高位在前,实际是低位在前
+    /*req[9] = (message.card_no() >> 24) & 0xff;
+    req[10] = (message.card_no() >> 16) & 0xff;
+    req[11] = (message.card_no() >> 8) & 0xff;
+    req[12] = (message.card_no()) & 0xff;*/
+    req[9] = (message.card_no()) & 0xff;
+    req[10] = (message.card_no() >> 8) & 0xff;
+    req[11] = (message.card_no() >> 16) & 0xff;
+    req[12] = (message.card_no() >> 24) & 0xff;
+    //checksum
+    req[13] = 0;
+    for (int i = 0; i < 13; i++)
+    {
+        req[13] = req[13] ^ req[i];
+    }
+    req[14] = 0x03;
+    memcpy(out_data, req, 15);
+    *out_data_len = 15;
+    return 0;
+}
+
+int DechangPacker :: packSendDelAllCard(const DechangMessageSendDelAllCard &message, char *out_data, int *out_data_len) {
+    unsigned char req[9];
+    req[0] = 0x02;
+    req[1] = 0;
+    req[2] = 0x17;
+    req[3] = 0;
+    req[4] = 0; //门编号为0会不会有问题?
+    req[5] = 0;
+    req[6] = 0x0;
+    //checksum
+    req[7] = 0;
+    for (int i = 0; i < 7; i++)
+    {
+        req[7] = req[7] ^ req[i];
+    }
+    req[8] = 0x03;
+    memcpy(out_data, req, 9);
+    *out_data_len = 9;
+    return 0;
+}
+
     
 int DechangPacker :: pack(const Message &message,
                           char *out_data, int *out_data_len) {
@@ -324,8 +405,14 @@ int DechangPacker :: pack(const Message &message,
         case MSG_DECHANG_RECEIVE_SWIPE_ACK: {
             return packRecvSwipeAck((DechangMessageRecvSwipeAck &)message, out_data, out_data_len);
         }
-        case MSG_DECHANG_SEND_CARD: {
-            return packSendCard((DechangMessageSendCard &)message, out_data, out_data_len);
+        case MSG_DECHANG_SEND_ADD_CARD: {
+            return packSendAddCard((DechangMessageSendAddCard &)message, out_data, out_data_len);
+        }
+        case MSG_DECHANG_SEND_DEL_CARD: {
+            return packSendDelCard((DechangMessageSendDelCard &)message, out_data, out_data_len);
+        }
+        case MSG_DECHANG_SEND_DEL_ALL_CARD: {
+            return packSendDelAllCard((DechangMessageSendDelAllCard &)message, out_data, out_data_len);
         }
         default: {
             LOGE(DECHANG_PACKER_TAG, "unsupport message type %d", message.type());
