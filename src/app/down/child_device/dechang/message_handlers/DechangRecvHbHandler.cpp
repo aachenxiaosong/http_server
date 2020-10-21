@@ -14,7 +14,7 @@ int DechangRecvHbHandler :: handle(const Message &message) {
         return -1;
     }
     LOGT(DECHANG_RECV_HB_TAG, "MSG_DECHANG_RECEIVE_HB message is handled");
-    const DechangMessageRecvHb& msg = (const DechangMessageRecvHb &)message;
+    const DechangMessageRecvHb& msg = dynamic_cast<const DechangMessageRecvHb &>(message);
     if (mConn->getTag().compare(msg.device_id()) != 0) {
         //only set when first hb received
         mConn->setTag(msg.device_id());

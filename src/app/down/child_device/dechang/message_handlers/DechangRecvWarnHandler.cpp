@@ -14,7 +14,7 @@ int DechangRecvWarnHandler :: handle(const Message &message) {
         return -1;
     }
     LOGT(DECHANG_RECV_WARN_TAG, "MSG_DECHANG_RECEIVE_WARN message is handled");
-    const DechangMessageRecvWarn& msg = (const DechangMessageRecvWarn &)message;
+    const DechangMessageRecvWarn& msg = dynamic_cast<const DechangMessageRecvWarn &>(message);
     LOGT(DECHANG_RECV_WARN_TAG, "warn received: index:%d", msg.index());
     DechangMessageRecvWarnAck ack;
     ack.rand(msg.rand());

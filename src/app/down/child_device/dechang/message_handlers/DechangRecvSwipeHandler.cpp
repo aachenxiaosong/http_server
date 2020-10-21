@@ -14,7 +14,7 @@ int DechangRecvSwipeHandler :: handle(const Message &message) {
         return -1;
     }
     LOGT(DECHANG_RECV_SWIPE_TAG, "MSG_DECHANG_RECEIVE_SWIPE message is handled");
-    const DechangMessageRecvSwipe& msg = (const DechangMessageRecvSwipe &)message;
+    const DechangMessageRecvSwipe& msg = dynamic_cast<const DechangMessageRecvSwipe &>(message);
     LOGT(DECHANG_RECV_SWIPE_TAG, "swip card received: card_no:%lu time:%s type:%d index:%d",
          msg.card_no(), msg.time().c_str(), msg.type(), msg.index());
     DechangMessageRecvSwipeAck ack;

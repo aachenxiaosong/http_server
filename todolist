@@ -20,5 +20,4 @@ bc5300620e7bc0b8b063464f7e97e04c
 
 1, 在wlong liftcontrol和rili liftctrl这两个client里加一层适配层,server端调用的接口不变
 2, mqtt的sender要单独定义出来,加上topic;sender要加回调事件等待,心跳这块要拎出来放到app层
-3, 在dechang server上面再封一层dechang.cpp负责对上提供接口,负责send和ack关联(可能要用到event);
-4, 拔网线没有disconnet事件
+4, 拔网线没有disconnet事件:这个问题不好解决,是libevent自身的问题,conn可以通过统计心跳丢失次数,来决定是否析构自己.

@@ -33,7 +33,7 @@ int DechangSendAddCardHandler :: handle(const Message &message) {
         }
         return 0;
     } else if (message.type() == MSG_DECHANG_SEND_ADD_CARD_ACK) {
-        const DechangMessageSendAddCardAck& msg = (const DechangMessageSendAddCardAck&)message;
+        const DechangMessageSendAddCardAck& msg = dynamic_cast<const DechangMessageSendAddCardAck&>(message);
         LOGT(DECHANG_SEND_ADD_CARD_TAG, "MSG_DECHANG_SEND_ADD_CARD_ACK message is received, status is %s",
              msg.ack() == 0x06 ? "OK" : "FAIL");
         return 0;
