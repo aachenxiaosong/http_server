@@ -28,6 +28,10 @@
 #define DEVICE_TAG "device"
 
 static int _get_mac_address(char *address, uni_s32 len) {
+#ifdef IS_UBUNTU
+  snprintf(address, len, "%s", "7ccbe2e29774");
+  return 0;
+#else
   int sock, ret;
   struct ifreq ifr;
   memset(&ifr, 0, sizeof(ifr));
@@ -52,6 +56,7 @@ static int _get_mac_address(char *address, uni_s32 len) {
   close(sock);
   LOGT(DEVICE_TAG, "get device mac %s", address);
   return ret;
+#endif
 }
 
 const char* DeviceGetMac(void) {

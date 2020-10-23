@@ -1,10 +1,11 @@
 #include "Dechang.hpp"
+#include "SulinkSignature.hpp"
 #include <iostream>
 #include "unistd.h"
 
 using namespace std;
 
-#define TEST_NUM 0
+#define TEST_NUM 2
 
 Dechang dechang;
 
@@ -52,5 +53,10 @@ void AppTest() {
     //_send_del_all_card();
     _send_del_card();
     _send_add_card();
+#elif (TEST_NUM == 1)
+    map<string, string> params;
+    params["deviceCode"] = "yzs82193=#http://";
+    cout << SulinkSignature::create(params, "shimao62ae0b32d0", "f6339f4974cacdeca4037489", "1603420266159") << endl;
+#elif (TEST_NUM == 2)
 #endif
 }

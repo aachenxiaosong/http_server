@@ -1,0 +1,6 @@
+source codes: https://github.com/eclipse/paho.mqtt.c.git
+documents: https://www.eclipse.org/paho/files/mqttdoc/MQTTClient/html/index.html
+3a - async
+3as async with ssl
+3c - sync(c means classic)
+3cs - sync with ssl

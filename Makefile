@@ -48,18 +48,15 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
-           src/sdk/tcp/tcp_handle \
            src/sdk/msg_center
 
-sdk_inc := src/sdk/http/http_server/inc \
-           src/sdk/http/http_server \
+sdk_inc := src/sdk/http/http_server \
            src/sdk/http/http_client \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
            src/sdk/tcp/tcp_handle \
            src/sdk/msg_center/inc \
-           src/sdk/msg_center/inc/mqtt \
            src/sdk/msg_center \
            src/sdk/message \
            src/sdk/message/message_type \
@@ -96,15 +93,21 @@ app_inc := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
+           src/app/up/sulink \
            src/app/down/child_device/dechang \
            src/app/down/child_device/dechang/packer \
            src/app/down/child_device/dechang/message_handlers
 
+lib_inc := lib/libevent/inc \
+           lib/mqtt_embed/inc \
+           lib/mqtt/inc
+
 test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test
 
+
 SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src) $(test_src)
-INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) $(test_inc)
+INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) $(lib_inc) $(test_inc)
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))
@@ -126,13 +129,17 @@ CPP_OBJ_FILES := $(call cpp_to_o,$(CPP_FILES))
 CPP_OBJ_FILES := $(call change_file_location, $(CPP_OBJ_FILES), $(BUILD_DIR))
 DEP_FILES := $(call o_to_d,$(C_OBJ_FILES) $(CPP_OBJ_FILES))
 
-LIB := -Llib -levent-2.2 -lpaho-embed-mqtt3c -lcurl -lm -lpthread
+LIB := -Llib/libevent -Llib/mqtt_embed -Llib/mqtt -levent-2.2 -lpaho-embed-mqtt3c -lcurl -lm -lpthread
 
 ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)
 endif
 
 CFLAGS := -g -std=c++11
+IS_UBUNTU=$(shell uname -a | grep ubuntu)
+ifneq ($(IS_UBUNTU),)
+CFLAGS += -DIS_UBUNTU
+endif
 $(C_OBJ_FILES):$(BUILD_DIR)/%.o: %.c
 	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
 
