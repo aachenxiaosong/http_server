@@ -16,7 +16,7 @@
  *    Al Stockdill-Mander - Version using the embedded C client
  *    Ian Craggs - update MQTTClient function names
  *******************************************************************************/
-#include "MQTTClient.h"
+#include "MQTTClient_embed.h"
 #include <signal.h>
 #include <sys/time.h>
 

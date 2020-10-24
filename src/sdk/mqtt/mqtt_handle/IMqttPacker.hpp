@@ -3,12 +3,12 @@
 
 #include <string>
 #include <vector>
-#include "Message.hpp"
+#include "IMqttMessage.hpp"
 
 using namespace std;
 
 
-/* 可以仅仅做分包(防止粘包或半包),也可以深层次地转数据结构 */
+/* data<-->数据结构 */
 class IMqttPacker {
 private:
     string mName;
@@ -16,13 +16,10 @@ public:
     IMqttPacker(const char *name) {mName = name;}
     string getName() {return mName;}
     virtual ~IMqttPacker();
-    //0=pack ok, -1=pack failed
-    virtual int unpackIn(const char *raw_data, int raw_data_len) = 0;
-    //0=pack has output, -1=pack has no output
-    virtual Message* unpackOut() = 0;
-    virtual int pack(const Message &message, char *out_data, int *out_data_len) = 0;
-    //packer会为每个conn拷贝一份,因为每个conn要独立缓存中间处理数据
-    virtual IMqttPacker *copy() = 0;
+    //return message need to be released by app
+    virtual IMqttMessage* unpack(const string& raw_data) = 0;
+    //return string need to be released by app
+    virtual string* pack(const IMqttMessage &message) = 0;
 };
 
 #endif  //  SDK_MQTT_MQTT_HANDLE_IMQTT_PACKER_HPP_

@@ -80,7 +80,7 @@ int TcpConn :: onRecv(const char *data, int len) {
     int data_received_ok = -1;
     char pack_buf[MAX_TCP_PACK_LEN] = {0};
     int pack_len = MAX_TCP_PACK_LEN;
-    ITcpMessageHandler *i_receiver = NULL;
+    ITcpMessageHandler *i_handler = NULL;
     vector<ITcpMessageHandler *>::iterator it;
     Message *message;
     _print_pack("recv:", (const unsigned char *)data, len);
@@ -91,8 +91,8 @@ int TcpConn :: onRecv(const char *data, int len) {
         {
             for (vector<ITcpMessageHandler *>::iterator it = mHandlers.begin(); it != mHandlers.end(); it++)
             {
-                i_receiver = *it;
-                if (i_receiver->handle(*message) == 0)
+                i_handler = *it;
+                if (i_handler->handle(*message) == 0)
                 {
                     data_received_ok = 0;
                     break;
@@ -113,13 +113,12 @@ int TcpConn :: send(const char *data, int len) {
 
 int TcpConn :: onRecv(const Message& message) {
     int message_handled_ok = -1;
-    ITcpMessageHandler *i_receiver = NULL;
-    vector<ITcpMessageHandler *>::iterator it;
+    ITcpMessageHandler *i_handler = NULL;
     mReceiverLock.readLock();
     for (vector<ITcpMessageHandler *>::iterator it = mHandlers.begin(); it != mHandlers.end(); it++)
     {
-        i_receiver = *it;
-        if (i_receiver->handle(message) == 0)
+        i_handler = *it;
+        if (i_handler->handle(message) == 0)
         {
             message_handled_ok = 0;
             break;

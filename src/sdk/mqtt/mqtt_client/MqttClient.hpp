@@ -3,11 +3,13 @@
 
 #include "IMqttMessageHandler.hpp"
 #include "IMqttPacker.hpp"
-#include <thread>
+#include "MQTTClient.h"
 #include <string>
 #include <vector>
+#include <thread>
 
-#define MAX_MQTT_RECV_LEN 1024 * 100
+#define MQTT_RECV_MAX_LEN (1024 * 100)
+#define MQTT_QOS          1
 
 using namespace std;
 
@@ -19,24 +21,28 @@ private:
     vector<string> mPubList;
     vector<string> mSubList;
 
-    struct event_base *mEventBase;
-    thread *mThread;
-    
+    MQTTClient mClient;
     IMqttPacker *mPacker;
     vector <IMqttMessageHandler *> mHandlers;
 
+    bool mIsConnected;
+    thread* mReconnectThread;
+
 public:
-    MqttClient(const char *name, string server_ip, int server_port);
+    MqttClient(const char* name, string server_ip, int server_port,
+               const vector<string>& publist,
+               const vector<string>& sublist);
     ~MqttClient();
     int connect();
     int setPacker(IMqttPacker *packer);
     int addHandler(IMqttMessageHandler *handler);
-    int send(const char *data, int len);
+    int send(const string& pub_topic, const string& data);
     int send(const Message& message);
 
 private:
-    static void readCb(struct bufferevent *bev, void *arg);
-    static void eventCb(struct bufferevent *bev, short events, void *arg);
-    static void dispathTask(void *arg);
+    static void reconnectTask(void *arg);
+    static void delivered(void *context, MQTTClient_deliveryToken dt);
+    static int messageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
+    static void connlost(void *context, char *cause);
 };
 #endif  //  SDK_MQTT_MQTT_CLIENT_MQTT_CLIENT_HPP_

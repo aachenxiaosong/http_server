@@ -48,6 +48,7 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
+           src/sdk/mqtt/mqtt_client \
            src/sdk/msg_center
 
 sdk_inc := src/sdk/http/http_server \
@@ -56,6 +57,8 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
            src/sdk/tcp/tcp_handle \
+           src/sdk/mqtt/mqtt_client \
+           src/sdk/mqtt/mqtt_handle \
            src/sdk/msg_center/inc \
            src/sdk/msg_center \
            src/sdk/message \
@@ -129,7 +132,7 @@ CPP_OBJ_FILES := $(call cpp_to_o,$(CPP_FILES))
 CPP_OBJ_FILES := $(call change_file_location, $(CPP_OBJ_FILES), $(BUILD_DIR))
 DEP_FILES := $(call o_to_d,$(C_OBJ_FILES) $(CPP_OBJ_FILES))
 
-LIB := -Llib/libevent -Llib/mqtt_embed -Llib/mqtt -levent-2.2 -lpaho-embed-mqtt3c -lcurl -lm -lpthread
+LIB := -Llib/libevent -Llib/mqtt_embed -Llib/mqtt -levent-2.2 -lpaho-mqtt3c -lpaho-embed-mqtt3c -lcurl -lm -lpthread
 
 ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)

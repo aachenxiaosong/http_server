@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 #include "uni_iot.h"
-#include "MQTTClient.h"
+#include "MQTTClient_embed.h"
 
 #define MC_TC_DEVICE_ID "u4-testdeviceid1234"
 #define MC_SUBSYSTEM_ID "9"
