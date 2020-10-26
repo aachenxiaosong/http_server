@@ -45,6 +45,15 @@ extern "C" {
 #endif
 
 #define CLOUD_UC_TS_URL  "http://uc.hivoice.cn/timestamp.jsp"
+/***************************** sulink ***********************/
+#define SULINK_ACCESS_KEY           "847a82be3eff4060b8f4c4f3e0ed27da"
+#define SULINK_SECRET_KEY           "7c3d1867d911450db784496e382dbfbb"
+#define SULINK_BRAND                "xilaideng"
+#define SULINK_SERVER_IP            "https://test-api.shimaoiot.com/"
+#define SULINK_DEVICE_REGISTER_URL  SULINK_SERVER_IP"api/sulink/v2/device/register"
+
+/************************************************************/
+
 
 #define STUB_ENABLE 0
 

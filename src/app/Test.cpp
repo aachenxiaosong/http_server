@@ -1,7 +1,10 @@
 #include "Dechang.hpp"
 #include "SulinkSignature.hpp"
+#include "SulinkDeviceRegister.hpp"
+#include "SulinkTraceid.hpp"
+#include "UniUtil.hpp"
 #include <iostream>
-#include "unistd.h"
+#include <unistd.h>
 
 using namespace std;
 
@@ -56,7 +59,9 @@ void AppTest() {
 #elif (TEST_NUM == 1)
     map<string, string> params;
     params["deviceCode"] = "yzs82193=#http://";
-    cout << SulinkSignature::create(params, "shimao62ae0b32d0", "f6339f4974cacdeca4037489", "1603420266159") << endl;
+    cout << SulinkSignature::build(params, "1603420266159") << endl;
 #elif (TEST_NUM == 2)
+    SulinkDeviceRegister resister;
+    resister.request();
 #endif
 }

@@ -24,7 +24,7 @@
 
 #include "uni_mc_param.h"
 #include "uni_sha.h"
-
+#include "uni_time_tick.h"
 #include "uni_log.h"
 
 #define MC_PARAM_TAG "mc_param"

@@ -1,13 +1,32 @@
-#ifndef UTILS_HTTP_INC_MD5_SUM_HPP_
-#define UTILS_HTTP_INC_MD5_SUM_HPP_
 
+#ifndef UTILS_UNI_UTIL_INC_UNI_UTIL_H_
+#define UTILS_UNI_UTIL_INC_UNI_UTIL_H_
+
+#include "uni_uuid.h"
+#include "uni_time_tick.h"
+#include "uni_device.h"
 #include "uni_md5sum.h"
 #include <string>
 
 using namespace std;
 
-class Md5Sum {
+class UniUtil {
 public:
+    /* UUID */
+    static string uuid() {
+        char id[UUID_LEN + 1];
+        GetUuid(id);
+        return id;
+    }
+    /* timestamp */
+    static string timestampMs() {
+        return to_string(uni_get_clock_time_ms());
+    }
+    /* device code*/
+    static string deviceCode() {
+        return DeviceGetUdid();
+    }
+    /* md5 */
     static string md5(const string& text) {
         uint8_t digest[MD5SUM_LEN];
         size_t initial_len = text.length();
@@ -27,4 +46,4 @@ public:
     }
 };
 
-#endif  //  UTILS_HTTP_INC_MD5_SUM_HPP_
+#endif  // UTILS_UNI_UTIL_INC_UNI_UTIL_H_

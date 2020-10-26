@@ -22,8 +22,10 @@ utils_src := src/utils/bitmap/src \
              src/utils/md5sum/src \
              src/utils/memcheck/src \
              src/utils/timer/src \
+             src/utils/time_tick/src \
              src/utils/rwlock
-utils_inc := src/utils/bitmap/inc \
+utils_inc := src/utils/uni_util/inc \
+             src/utils/bitmap/inc \
              src/utils/json/inc \
              src/utils/data_buf/inc \
              src/utils/device/inc \
@@ -41,6 +43,7 @@ utils_inc := src/utils/bitmap/inc \
              src/utils/md5sum/inc \
              src/utils/memcheck/inc \
              src/utils/timer/inc \
+             src/utils/time_tick/inc \
              src/utils/rwlock
 
 sdk_src := src/sdk/http/http_server \
@@ -79,6 +82,7 @@ app_src := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
+           src/app/up/sulink/http \
            src/app/down/child_device/dechang \
            src/app/down/child_device/dechang/packer \
            src/app/down/child_device/dechang/message_handlers
@@ -96,7 +100,7 @@ app_inc := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
-           src/app/up/sulink \
+           src/app/up/sulink/http \
            src/app/down/child_device/dechang \
            src/app/down/child_device/dechang/packer \
            src/app/down/child_device/dechang/message_handlers
