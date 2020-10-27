@@ -11,26 +11,33 @@ class SulinkDeviceRegister {
 private:
     string mClientId;
     string mServerIp;
-    string mPort;
+    int mServerPort;
     string mUserName;
     string mPassword;
+    int mKeepAlive;
     vector<string> mSubTopics;
     vector<string> mPubTopics;
 public:
-    SulinkDeviceRegister() = default;
+    SulinkDeviceRegister() {
+        mServerPort = 0;
+        mKeepAlive = 0;
+    }
     ~SulinkDeviceRegister() {
         mSubTopics.clear();
         mPubTopics.clear();
     }
     const string& getClientId() {return mClientId;}
     const string& getServerIp() {return mServerIp;}
-    const string& getPort() {return mPort;}
+    const int getPort() {return mServerPort;}
     const string& getUserName() {return mUserName;}
     const string& getPassword() {return mPassword;}
     const vector<string>& getSubTopics() {return mSubTopics;}
     const vector<string>& getPubTopics() {return mPubTopics;}
+private:
+    int parseResult(const string& result);
 public:
     int request();
+    string toString() const;
 };
 
 #endif  //  APP_UP_SULINK_HTTP_SULINK_DEVICE_REGISTER_HPP_

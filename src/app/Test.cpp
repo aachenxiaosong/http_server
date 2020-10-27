@@ -61,7 +61,8 @@ void AppTest() {
     params["deviceCode"] = "yzs82193=#http://";
     cout << SulinkSignature::build(params, "1603420266159") << endl;
 #elif (TEST_NUM == 2)
-    SulinkDeviceRegister resister;
-    resister.request();
+    SulinkDeviceRegister reg;
+    reg.request();
+    cout << reg.toString() << endl;
 #endif
 }
