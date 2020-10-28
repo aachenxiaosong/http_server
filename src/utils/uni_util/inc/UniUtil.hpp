@@ -19,6 +19,9 @@ public:
         return id;
     }
     /* timestamp */
+    static long timestampMsL() {
+        return uni_get_clock_time_ms();
+    }
     static string timestampMs() {
         return to_string(uni_get_clock_time_ms());
     }

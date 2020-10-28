@@ -28,7 +28,7 @@ public:
     }
     const string& getClientId() {return mClientId;}
     const string& getServerIp() {return mServerIp;}
-    const int getPort() {return mServerPort;}
+    const int getServerPort() {return mServerPort;}
     const string& getUserName() {return mUserName;}
     const string& getPassword() {return mPassword;}
     const vector<string>& getSubTopics() {return mSubTopics;}

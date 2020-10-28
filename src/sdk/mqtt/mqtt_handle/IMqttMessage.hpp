@@ -9,7 +9,9 @@ using namespace std;
 
 
 class IMqttMessage : public Message {
-    MEMBER(string, pubTopic)
+    MEMBER(string, topic)
+public:
+    IMqttMessage(MessageType type) : Message(type) {}
 };
 
 #endif  //  SDK_MQTT_MQTT_HANDLE_IMQTT_MESSAGE_HPP_

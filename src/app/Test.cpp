@@ -2,13 +2,15 @@
 #include "SulinkSignature.hpp"
 #include "SulinkDeviceRegister.hpp"
 #include "SulinkTraceid.hpp"
+#include "SulinkClient.hpp"
+#include "SulinkMessage.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
 
 using namespace std;
 
-#define TEST_NUM 2
+#define TEST_NUM 3
 
 Dechang dechang;
 
@@ -64,5 +66,22 @@ void AppTest() {
     SulinkDeviceRegister reg;
     reg.request();
     cout << reg.toString() << endl;
+#elif (TEST_NUM == 3)
+    SulinkClient sulink_client;
+    SulinkMessageSendDeviceInfo message;
+    long timestamp = UniUtil::timestampMsL();
+    message.device_sn(UniUtil::deviceCode());
+    message.device_type("gongkongji");
+    message.payload_version(1);
+    message.timestamp(timestamp);
+    message.topic("pub/device");
+    message.trace_id(SulinkTraceid::build(to_string(timestamp)));
+    message.up_time(timestamp);
+    while (1) {
+        if (sulink_client.send(message) == 0) {
+            break;
+        }
+        sleep(5);
+    }
 #endif
 }

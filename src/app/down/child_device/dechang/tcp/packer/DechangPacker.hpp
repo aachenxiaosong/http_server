@@ -1,5 +1,5 @@
-#ifndef APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_PACKER_HPP_
-#define APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_PACKER_HPP_
+#ifndef APP_DOWN_CHILD_DEVICE_DECHANG_TCP_PACKER_DECHANG_PACKER_HPP_
+#define APP_DOWN_CHILD_DEVICE_DECHANG_TCP_PACKER_DECHANG_PACKER_HPP_
 
 #include <string>
 #include "ITcpPacker.hpp"
@@ -37,9 +37,9 @@ private:
     DechangMessageRecvHb* unpackRecvHb();
     DechangMessageRecvWarn* unpackRecvWarn();
     DechangMessageRecvSwipe* unpackRecvSwipe();
-    DechangMessageSendAddCardAck *upPackSendAddCardAck();
-    DechangMessageSendDelCardAck *upPackSendDelCardAck();
-    DechangMessageSendDelAllCardAck *upPackSendDelAllCardAck();
+    DechangMessageSendAddCardAck *unpackSendAddCardAck();
+    DechangMessageSendDelCardAck *unpackSendDelCardAck();
+    DechangMessageSendDelAllCardAck *unpackSendDelAllCardAck();
     int packRecvHbAck(const DechangMessageRecvHbAck &message, char *out_data, int *out_data_len);
     int packRecvWarnAck(const DechangMessageRecvWarnAck &message, char *out_data, int *out_data_len);
     int packRecvSwipeAck(const DechangMessageRecvSwipeAck &message, char *out_data, int *out_data_len);
@@ -58,4 +58,4 @@ public:
     ITcpPacker *copy();
 };
 
-#endif  //  APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_PACKER_HPP_
+#endif  //  APP_DOWN_CHILD_DEVICE_DECHANG_TCP_PACKER_DECHANG_PACKER_HPP_

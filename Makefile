@@ -83,9 +83,13 @@ app_src := src/app \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/up/sulink/http \
+           src/app/up/sulink/mqtt \
+           src/app/up/sulink/mqtt/packer \
+           src/app/up/sulink/mqtt/message_handlers \
            src/app/down/child_device/dechang \
-           src/app/down/child_device/dechang/packer \
-           src/app/down/child_device/dechang/message_handlers
+           src/app/down/child_device/dechang/tcp \
+           src/app/down/child_device/dechang/tcp/packer \
+           src/app/down/child_device/dechang/tcp/message_handlers
 
 app_inc := src/app \
            src/app/config \
@@ -101,9 +105,13 @@ app_inc := src/app \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/up/sulink/http \
+           src/app/up/sulink/mqtt \
+           src/app/up/sulink/mqtt/packer \
+           src/app/up/sulink/mqtt/message_handlers \
            src/app/down/child_device/dechang \
-           src/app/down/child_device/dechang/packer \
-           src/app/down/child_device/dechang/message_handlers
+           src/app/down/child_device/dechang/tcp \
+           src/app/down/child_device/dechang/tcp/packer \
+           src/app/down/child_device/dechang/tcp/message_handlers
 
 lib_inc := lib/libevent/inc \
            lib/mqtt_embed/inc \

@@ -1,5 +1,5 @@
-#ifndef APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_SERVER_HPP_
-#define APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_SERVER_HPP_
+#ifndef APP_DOWN_CHILD_DEVICE_DECHANG_TCP_DECHANG_SERVER_HPP_
+#define APP_DOWN_CHILD_DEVICE_DECHANG_TCP_DECHANG_SERVER_HPP_
 
 #include "TcpServer.hpp"
 #include "DechangPacker.hpp"
@@ -31,8 +31,9 @@ private:
     string mName;
 public:
     DechangServer();
+    ~DechangServer();
     TcpConnMgr *getConnMgr();
     int run();
 };
 
-#endif  //  APP_DOWN_CHILD_DEVICE_DECHANG_DECHANG_SERVER_HPP_
+#endif  //  APP_DOWN_CHILD_DEVICE_DECHANG_TCP_DECHANG_SERVER_HPP_

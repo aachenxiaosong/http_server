@@ -11,7 +11,7 @@ using namespace std;
 
 class SulinkTraceid {
 public:
-    static string build(const map<string, string>& params, const string& timestamp) {
+    static string build(const string& timestamp) {
         string trace_id;
         string device_code = UniUtil::deviceCode();
         string uuid = UniUtil::uuid();

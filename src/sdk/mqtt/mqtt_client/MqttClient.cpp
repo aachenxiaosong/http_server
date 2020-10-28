@@ -95,12 +95,28 @@ int MqttClient :: send(const string& pub_topic, const string& data) {
 int MqttClient :: send(const Message &message) {
     int rc = -1;
     const IMqttMessage& mqtt_message = dynamic_cast<const IMqttMessage&>(message);
+    string topic = findPubTopic(mqtt_message.topic());
+    if (topic.empty()) {
+        return rc;
+    }
     string* data = mPacker->pack(mqtt_message);
     if (data) {
-        rc = send(mqtt_message.pubTopic(), *data);
+        rc = send(mqtt_message.topic(), *data);
         delete data;
     }
     return rc;
+}
+
+string MqttClient :: findPubTopic(const string& topic_key) {
+    vector<string>::iterator it;
+    for (it = mPubList.begin(); it != mPubList.end(); it++) {
+        if ((*it).find(topic_key) != string::npos) {
+            LOGE(MQTT_CLIENT_TAG, "topic for key %s found: %s", topic_key.c_str(), (*it).c_str());
+            return (*it);
+        }
+    }
+    LOGE(MQTT_CLIENT_TAG, "topic for key %s not found", topic_key.c_str());
+    return "";
 }
 
 
@@ -144,6 +160,7 @@ int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
         IMqttMessage *mqtt_message = mqtt_client->mPacker->unpack(data);
         if (mqtt_message)
         {
+            mqtt_message->topic(topicName);
             for (vector<IMqttMessageHandler *>::iterator it = mqtt_client->mHandlers.begin(); it != mqtt_client->mHandlers.end(); it++)
             {
                 i_handler = *it;
@@ -153,6 +170,7 @@ int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
                     break;
                 }
             }
+            delete mqtt_message;
         }
     }
     return message_handled_ok;

@@ -15,7 +15,7 @@ private:
 public:
     IMqttPacker(const char *name) {mName = name;}
     string getName() {return mName;}
-    virtual ~IMqttPacker();
+    virtual ~IMqttPacker() {};
     //return message need to be released by app
     virtual IMqttMessage* unpack(const string& raw_data) = 0;
     //return string need to be released by app

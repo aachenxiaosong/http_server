@@ -102,7 +102,7 @@ DechangMessageRecvSwipe* DechangPacker :: unpackRecvSwipe() {
     return message;
 }
 
-DechangMessageSendAddCardAck* DechangPacker :: upPackSendAddCardAck() {
+DechangMessageSendAddCardAck* DechangPacker :: unpackSendAddCardAck() {
     DechangMessageSendAddCardAck *message = new DechangMessageSendAddCardAck();
     message->rand(mPack[1]);
     message->cmd(mPack[2]);
@@ -112,7 +112,7 @@ DechangMessageSendAddCardAck* DechangPacker :: upPackSendAddCardAck() {
     return message;
 }
 
-DechangMessageSendDelCardAck* DechangPacker :: upPackSendDelCardAck() {
+DechangMessageSendDelCardAck* DechangPacker :: unpackSendDelCardAck() {
     DechangMessageSendDelCardAck *message = new DechangMessageSendDelCardAck();
     message->rand(mPack[1]);
     message->cmd(mPack[2]);
@@ -122,7 +122,7 @@ DechangMessageSendDelCardAck* DechangPacker :: upPackSendDelCardAck() {
     return message;
 }
 
-DechangMessageSendDelAllCardAck* DechangPacker :: upPackSendDelAllCardAck() {
+DechangMessageSendDelAllCardAck* DechangPacker :: unpackSendDelAllCardAck() {
     DechangMessageSendDelAllCardAck *message = new DechangMessageSendDelAllCardAck();
     message->rand(mPack[1]);
     message->cmd(mPack[2]);
@@ -179,15 +179,15 @@ Message* DechangPacker :: unpackOut() {
                             break;
                         }
                         case 0x62: { //增加卡ACK
-                            message = upPackSendAddCardAck();
+                            message = unpackSendAddCardAck();
                             break;
                         }
                         case 0x16: { //增加卡ACK
-                            message = upPackSendDelCardAck();
+                            message = unpackSendDelCardAck();
                             break;
                         }
                         case 0x17: { //增加卡ACK
-                            message = upPackSendDelAllCardAck();
+                            message = unpackSendDelAllCardAck();
                             break;
                         }
                         default: {

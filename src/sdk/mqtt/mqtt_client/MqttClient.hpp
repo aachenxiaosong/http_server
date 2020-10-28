@@ -40,6 +40,9 @@ public:
     int send(const Message& message);
 
 private:
+    string findPubTopic(const string& topic_key);
+
+private:
     static void reconnectTask(void *arg);
     static void delivered(void *context, MQTTClient_deliveryToken dt);
     static int messageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);

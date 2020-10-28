@@ -12,7 +12,9 @@ class IMqttMessageHandler : public IMessageHandler {
     protected:
     MqttClient *mConn;
     public:
-    IMqttMessageHandler(const char* name) : IMessageHandler(name) {}
+    IMqttMessageHandler(const char* name) : IMessageHandler(name) {
+        mConn = NULL;
+    }
     virtual ~IMqttMessageHandler() {}
     void setConn(MqttClient *conn) { mConn = conn; }
     virtual int handle(const Message &message) = 0;
