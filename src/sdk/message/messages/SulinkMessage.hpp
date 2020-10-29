@@ -77,5 +77,32 @@ public:
     }
     ~SulinkMessageRecvPassRuleAck() {}
 };
+//通行记录上报
+class SulinkMessageSendPassRecord : public SulinkMessage {
+    MEMBER(string, device_code)
+    MEMBER(string, code)
+    MEMBER(string, ext_data)
+    MEMBER(string, pass_photo)
+    MEMBER(int, pass_result)
+    MEMBER(string, pass_time)
+    MEMBER(string, pass_type)
+    MEMBER(string, person_id)
+    MEMBER(string, person_name)
+    MEMBER(string, person_temp)
+    MEMBER(int, person_type)
+    MEMBER(string, req_id)
+public:
+    SulinkMessageSendPassRecord() : SulinkMessage(MSG_SULINK_SEND_PASS_RECORD) {
+        method("pass-record");
+    }
+    ~SulinkMessageSendPassRecord() {}
+};
+class SulinkMessageSendPassRecordAck : public SulinkMessage {
+public:
+    SulinkMessageSendPassRecordAck() : SulinkMessage(MSG_SULINK_SEND_PASS_RECORD_ACK) {
+        method("pass-record-ack");
+    }
+    ~SulinkMessageSendPassRecordAck() {}
+};
 
 #endif  //  SDK_MESSAGE_MESSAGES_SULINK_MESSAGE_HPP_

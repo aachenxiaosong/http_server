@@ -35,6 +35,35 @@ string* SulinkPacker :: packSendDeviceInfo(const SulinkMessageSendDeviceInfo& me
     return new string(jmessage.ToString());
 }
 
+string* SulinkPacker :: packSendPassRecord(const SulinkMessageSendPassRecord& message) {
+    CJsonObject jheader;
+    jheader.Add("traceId", message.trace_id());
+    jheader.Add("payloadVersion", message.payload_version());
+    jheader.Add("brand", message.brand());
+    jheader.Add("timestamp", message.timestamp());
+    jheader.Add("method", message.method());
+    CJsonObject jrecord;
+    jrecord.Add("code", message.code());
+    jrecord.Add("extData", message.ext_data());
+    jrecord.Add("passPhoto", message.pass_photo());
+    jrecord.Add("passResult", message.pass_result());
+    jrecord.Add("passTime", message.pass_time());
+    jrecord.Add("passType", message.pass_type());
+    jrecord.Add("personId", message.person_id());
+    jrecord.Add("personName", message.person_name());
+    jrecord.Add("personTemp", message.person_temp());
+    jrecord.Add("personType", message.person_type());
+    CJsonObject jpayload;
+    jpayload.AddEmptySubArray("passRecords");
+    jpayload["passRecords"].Add(jrecord);
+    jpayload.Add("deviceCode", message.device_code());
+    jpayload.Add("reqId", message.req_id());
+    CJsonObject jmessage;
+    jmessage.Add("header", jheader);
+    jmessage.Add("payload", jpayload);
+    return new string(jmessage.ToString());
+}
+
 int SulinkPacker :: packCheck(const string& raw_data) {
     CJsonObject jmessage(raw_data);
     CJsonObject jheader;
@@ -60,6 +89,24 @@ SulinkMessageRecvPassRuleInfo* SulinkPacker :: unpackRecvPassRuleInfo(const stri
     return NULL;
 }
 
+SulinkMessageSendPassRecordAck* SulinkPacker :: unpackSendPassRecordAck(const string& raw_data) {
+    CJsonObject jack(raw_data);
+    CJsonObject jheader;
+    jack.Get("header", jheader);
+    string svalue;
+    int ivalue;
+    long lvalue;
+    SulinkMessageSendPassRecordAck* ack = new SulinkMessageSendPassRecordAck();
+    jack.Get("traceId", svalue);
+    ack->trace_id(svalue);
+    jack.Get("payloadVersion", ivalue);
+    ack->payload_version(ivalue);
+    jack.Get("timestamp", lvalue);
+    ack->timestamp(lvalue);
+    return ack;
+}
+
+
 IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
     if (packCheck(raw_data) != 0) {
         return NULL;
@@ -68,8 +115,9 @@ IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
     CJsonObject(raw_data)["header"].Get("method", message_type);
     if (message_type.compare("pass-rule-info") == 0) {
         return unpackRecvPassRuleInfo(raw_data);
+    } else if (message_type.compare("pass-record-ack") == 0) {
+        return unpackSendPassRecordAck(raw_data);
     }
-    CJsonObject jheader;
     return NULL;
 }
 
@@ -78,6 +126,9 @@ string* SulinkPacker :: pack(const IMqttMessage &message) {
     switch (message.type()) {
         case MSG_SULINK_SEND_DEVICE_INFO:
             data = packSendDeviceInfo(dynamic_cast<const SulinkMessageSendDeviceInfo&>(message));
+            break;
+        case MSG_SULINK_SEND_PASS_RECORD:
+            data = packSendPassRecord(dynamic_cast<const SulinkMessageSendPassRecord&>(message));
             break;
         default:
             break;

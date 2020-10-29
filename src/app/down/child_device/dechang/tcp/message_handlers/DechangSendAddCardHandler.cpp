@@ -26,7 +26,7 @@ int DechangSendAddCardHandler :: handle(const Message &message) {
             if (mAckReceived == 0) {
                 LOGE(DECHANG_SEND_ADD_CARD_TAG, "MSG_DECHANG_SEND_ADD_CARD sent timeout(3s)");
             } else {
-                LOGE(DECHANG_SEND_ADD_CARD_TAG, "MSG_DECHANG_SEND_ADD_CARD sent OK");
+                LOGT(DECHANG_SEND_ADD_CARD_TAG, "MSG_DECHANG_SEND_ADD_CARD sent OK");
             }
         } else {
             LOGE(DECHANG_SEND_ADD_CARD_TAG, "MSG_DECHANG_SEND_ADD_CARD sent failed");
