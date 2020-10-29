@@ -70,8 +70,11 @@ void AppTest() {
     SulinkClient sulink_client;
     SulinkMessageSendDeviceInfo message;
     long timestamp = UniUtil::timestampMsL();
+    message.app_key(SULINK_ACCESS_KEY);
     message.device_sn(UniUtil::deviceCode());
-    message.device_type("gongkongji");
+    message.brand(SULINK_BRAND);
+    message.device_type("边缘网关");
+    message.app_version(MY_VERSION);
     message.payload_version(1);
     message.timestamp(timestamp);
     message.topic("pub/device");

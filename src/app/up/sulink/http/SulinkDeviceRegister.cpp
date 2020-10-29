@@ -57,12 +57,12 @@ int SulinkDeviceRegister :: parseResult(const string& result) {
     jconnection.Get("keepAlive", mKeepAlive);
     mPubTopics.clear();
     for (int i = 0; i < jpub.GetArraySize(); i++) {
-        jpub.Get(1, svalue);
+        jpub.Get(i, svalue);
         mPubTopics.push_back(svalue);
     }
     mSubTopics.clear();
     for (int i = 0; i < jsub.GetArraySize(); i++) {
-        jsub.Get(1, svalue);
+        jsub.Get(i, svalue);
         mSubTopics.push_back(svalue);
     }
     return 0;

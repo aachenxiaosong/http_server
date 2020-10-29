@@ -28,7 +28,7 @@ string* SulinkPacker :: packSendDeviceInfo(const SulinkMessageSendDeviceInfo& me
     jdevice.Add("deviceType", message.device_type());
     CJsonObject jpayload;
     jpayload.AddEmptySubArray("devices");
-    jpayload["devices"][0] = jdevice;
+    jpayload["devices"].Add(jdevice);
     CJsonObject jmessage;
     jmessage.Add("header", jheader);
     jmessage.Add("payload", jpayload);

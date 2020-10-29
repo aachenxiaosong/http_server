@@ -58,11 +58,11 @@ int MqttClient :: connect() {
     }
     LOGT(MQTT_CLIENT_TAG, "mqtt connected, server: %s", server_addr);*/
     //注册订阅
-    for (auto topic : mSubList) {
+    /*for (auto topic : mSubList) {
         if (MQTTCLIENT_SUCCESS != MQTTClient_subscribe(mClient, topic.c_str(), MQTT_QOS)) {
             LOGE(MQTT_CLIENT_TAG, "subscribe for topic %s failed", topic.c_str());
         }
-    }
+    }*/
     mReconnectThread = new thread(reconnectTask, this);
     return 0;
 }
@@ -111,7 +111,7 @@ string MqttClient :: findPubTopic(const string& topic_key) {
     vector<string>::iterator it;
     for (it = mPubList.begin(); it != mPubList.end(); it++) {
         if ((*it).find(topic_key) != string::npos) {
-            LOGE(MQTT_CLIENT_TAG, "topic for key %s found: %s", topic_key.c_str(), (*it).c_str());
+            LOGT(MQTT_CLIENT_TAG, "topic for key %s found: %s", topic_key.c_str(), (*it).c_str());
             return (*it);
         }
     }
@@ -138,6 +138,14 @@ void MqttClient :: reconnectTask(void *arg) {
                 LOGE(MQTT_CLIENT_TAG1, "mqtt connect failed, rc = %d\n", rc);
             } else {
                 LOGT(MQTT_CLIENT_TAG1, "mqtt connected OK");
+                //注册订阅
+                for (auto topic : mqtt_client->mSubList)
+                {
+                    if (MQTTCLIENT_SUCCESS != MQTTClient_subscribe(mqtt_client->mClient, topic.c_str(), MQTT_QOS))
+                    {
+                        LOGE(MQTT_CLIENT_TAG1, "subscribe for topic %s failed", topic.c_str());
+                    }
+                }
                 mqtt_client->mIsConnected = true;
             }
         }
