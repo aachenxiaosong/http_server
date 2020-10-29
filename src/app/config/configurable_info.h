@@ -49,9 +49,9 @@ extern "C" {
 #define SULINK_ACCESS_KEY           "847a82be3eff4060b8f4c4f3e0ed27da"
 #define SULINK_SECRET_KEY           "7c3d1867d911450db784496e382dbfbb"
 #define SULINK_BRAND                "xilaideng"
-#define SULINK_SERVER_IP            "https://test-api.shimaoiot.com/"
-#define SULINK_DEVICE_REGISTER_URL  SULINK_SERVER_IP"api/sulink/v2/device/register"
-
+#define SULINK_SERVER               "https://test-api.shimaoiot.com/"
+#define SULINK_DEVICE_REGISTER_URL  SULINK_SERVER"api/sulink/v2/device/register"
+#define SULINK_HB_URL               SULINK_SERVER"device-monitor/v2/hb/up"
 /************************************************************/
 
 

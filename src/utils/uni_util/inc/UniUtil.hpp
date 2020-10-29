@@ -6,6 +6,7 @@
 #include "uni_time_tick.h"
 #include "uni_device.h"
 #include "uni_md5sum.h"
+#include "uni_system_resource.h"
 #include <string>
 
 using namespace std;
@@ -20,10 +21,10 @@ public:
     }
     /* timestamp */
     static long timestampMsL() {
-        return uni_get_clock_time_ms();
+        return uni_get_now_msec();
     }
     static string timestampMs() {
-        return to_string(uni_get_clock_time_ms());
+        return to_string(uni_get_now_msec());
     }
     /* device code*/
     static string deviceCode() {
@@ -47,6 +48,15 @@ public:
         }
         return md5;
     }
+    /* cpu utility */
+    static double cpuUtility() {
+        return CpuUtility();
+    }
+    /* memory utility */
+    static double memoryUtility() {
+        return MemoryUtility();
+    }
+
 };
 
 #endif  // UTILS_UNI_UTIL_INC_UNI_UTIL_H_

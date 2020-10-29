@@ -4,13 +4,14 @@
 #include "SulinkTraceid.hpp"
 #include "SulinkClient.hpp"
 #include "SulinkMessage.hpp"
+#include "SulinkHb.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
 
 using namespace std;
 
-#define TEST_NUM 3
+#define TEST_NUM 4
 
 Dechang dechang;
 
@@ -86,5 +87,8 @@ void AppTest() {
         }
         sleep(5);
     }
+#elif (TEST_NUM == 4)
+    SulinkHb hb;
+    cout << "hb request result: " << hb.request() << endl;
 #endif
 }

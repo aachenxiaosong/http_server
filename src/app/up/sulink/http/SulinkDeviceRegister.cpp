@@ -82,7 +82,7 @@ int SulinkDeviceRegister :: request()
     string result;
     int rc = HttpClient::post(SULINK_DEVICE_REGISTER_URL, content, result, headers);
     if (rc != 0) {
-        LOGT(SULINK_DEVICE_REG_TAG, "request failed");
+        LOGE(SULINK_DEVICE_REG_TAG, "request failed");
     } else {
         LOGT(SULINK_DEVICE_REG_TAG, "request ok");
         if (!result.empty()) {

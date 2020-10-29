@@ -21,6 +21,7 @@ utils_src := src/utils/bitmap/src \
              src/utils/uart/src \
              src/utils/md5sum/src \
              src/utils/memcheck/src \
+             src/utils/system_resource/src \
              src/utils/timer/src \
              src/utils/time_tick/src \
              src/utils/rwlock
@@ -42,6 +43,7 @@ utils_inc := src/utils/uni_util/inc \
              src/utils/uart/inc \
              src/utils/md5sum/inc \
              src/utils/memcheck/inc \
+             src/utils/system_resource/inc \
              src/utils/timer/inc \
              src/utils/time_tick/inc \
              src/utils/rwlock
