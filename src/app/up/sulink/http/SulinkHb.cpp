@@ -13,12 +13,12 @@ using namespace neb;
 int SulinkHb :: request() {
     map<string, string> headers;
     map<string, string> params;
-    string timestamp = UniUtil::timestampMs();
+    long timestamp = UniUtil::timestampMs();
     params["deviceCode"] = UniUtil::deviceCode();
     headers["Content-Type"] = "application/json";
     headers["brand"] = SULINK_BRAND;
-    headers["timestamp"] = timestamp;
-    headers["signature"] = SulinkSignature::build(params, timestamp);
+    headers["timestamp"] = to_string(timestamp);
+    headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     CJsonObject jcontent;
     jcontent.Add("deviceCode", UniUtil::deviceCode());
     jcontent.Add("upTime", timestamp);
@@ -34,7 +34,7 @@ int SulinkHb :: request() {
         int ret_code = -1;
         CJsonObject jresult(result);
         jresult.Get("retcode", ret_code);
-        LOGE(SULINK_HB_TAG, "request ok, retcode is %d", ret_code);
+        LOGT(SULINK_HB_TAG, "request ok, retcode is %d", ret_code);
         rc = ret_code;
     }
     return rc;

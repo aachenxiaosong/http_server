@@ -20,11 +20,8 @@ public:
         return id;
     }
     /* timestamp */
-    static long timestampMsL() {
+    static long timestampMs() {
         return uni_get_now_msec();
-    }
-    static string timestampMs() {
-        return to_string(uni_get_now_msec());
     }
     /* device code*/
     static string deviceCode() {

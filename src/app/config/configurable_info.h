@@ -52,6 +52,7 @@ extern "C" {
 #define SULINK_SERVER               "https://test-api.shimaoiot.com/"
 #define SULINK_DEVICE_REGISTER_URL  SULINK_SERVER"api/sulink/v2/device/register"
 #define SULINK_HB_URL               SULINK_SERVER"device-monitor/v2/hb/up"
+#define SULINK_TIME_SYNC_URL        SULINK_SERVER"api/sulink/v2/time/sync"
 /************************************************************/
 
 

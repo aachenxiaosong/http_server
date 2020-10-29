@@ -5,13 +5,14 @@
 #include "SulinkClient.hpp"
 #include "SulinkMessage.hpp"
 #include "SulinkHb.hpp"
+#include "SulinkTimeSync.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
 
 using namespace std;
 
-#define TEST_NUM 4
+#define TEST_NUM 5
 
 Dechang dechang;
 
@@ -90,5 +91,8 @@ void AppTest() {
 #elif (TEST_NUM == 4)
     SulinkHb hb;
     cout << "hb request result: " << hb.request() << endl;
+#elif (TEST_NUM == 5)
+    SulinkTimeSync time_sync;
+    cout << "time_sync request result: " << time_sync.request() << endl;
 #endif
 }

@@ -72,12 +72,12 @@ int SulinkDeviceRegister :: request()
 {
     map<string, string> headers;
     map<string, string> params;
-    string timestamp = UniUtil::timestampMs();
+    long timestamp = UniUtil::timestampMs();
     params["deviceCode"] = UniUtil::deviceCode();
     headers["Content-Type"] = "application/json";
     headers["brand"] = SULINK_BRAND;
-    headers["timestamp"] = timestamp;
-    headers["signature"] = SulinkSignature::build(params, timestamp);
+    headers["timestamp"] = to_string(timestamp);
+    headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     string content = "{\"deviceCode\":\"" + UniUtil::deviceCode() + "\"}";
     string result;
     int rc = HttpClient::post(SULINK_DEVICE_REGISTER_URL, content, result, headers);
