@@ -1,5 +1,5 @@
-#ifndef SDK_MESSAGE_MESSAGES_DECHANG_MESSAGE_HPP_
-#define SDK_MESSAGE_MESSAGES_DECHANG_MESSAGE_HPP_
+#ifndef APP_DOWN_CHILD_DEVICE_DECHANG_TCP_MESSAGES_DECHANG_MESSAGE_HPP_
+#define APP_DOWN_CHILD_DEVICE_DECHANG_TCP_MESSAGES_DECHANG_MESSAGE_HPP_
 
 #include "Message.hpp"
 #include <string>
@@ -20,22 +20,22 @@ public:
 };
 //心跳消息
 class DechangMessageRecvHb : public DechangMessage {
-    MEMBER(string, device_id)
+    MEMBER(string, deviceId)
     MEMBER(int, status)
 public:
     DechangMessageRecvHb() : DechangMessage(MSG_DECHANG_RECEIVE_HB) {
-        device_id("");
+        deviceId("");
         status(0);
     }
     ~DechangMessageRecvHb() {}
 };
 class DechangMessageRecvHbAck : public DechangMessage {
-    MEMBER(unsigned char, customer_code_h)
-    MEMBER(unsigned char, customer_code_l)
+    MEMBER(unsigned char, customerCodeH)
+    MEMBER(unsigned char, customerCodeL)
 public:
     DechangMessageRecvHbAck() : DechangMessage(MSG_DECHANG_RECEIVE_HB_ACK) {
-        customer_code_h(0);
-        customer_code_l(0);
+        customerCodeH(0);
+        customerCodeL(0);
     }
     ~DechangMessageRecvHbAck() {}
 };
@@ -59,17 +59,17 @@ public:
 };
 //刷卡消息
 class DechangMessageRecvSwipe : public DechangMessage {
-    MEMBER(unsigned long, card_no)
+    MEMBER(unsigned long, cardNo)
     MEMBER(string, time)
     MEMBER(unsigned char, type)
-    MEMBER(unsigned char, door_addr)
+    MEMBER(unsigned char, doorAddr)
     MEMBER(unsigned char, index)
 public:
     DechangMessageRecvSwipe() : DechangMessage(MSG_DECHANG_RECEIVE_SWIPE) {
-        card_no(0);
+        cardNo(0);
         time("");
         type(0);
-        door_addr(0);
+        doorAddr(0);
         index(0);
     }
     ~DechangMessageRecvSwipe() {}
@@ -93,23 +93,23 @@ public:
  * 状态,1表示有效 0表示无效
 */
 class DechangMessageSendAddCard : public DechangMessage {
-    MEMBER(string, device_id)
-    MEMBER(unsigned int, user_id)
-    MEMBER(string, user_name)
-    MEMBER(unsigned long, card_no)
+    MEMBER(string, deviceId)
+    MEMBER(unsigned int, userId)
+    MEMBER(string, userName)
+    MEMBER(unsigned long, cardNo)
     MEMBER(string, password)
-    MEMBER(unsigned short, door_access)
-    MEMBER(string, expire_date)
+    MEMBER(unsigned short, doorAccess)
+    MEMBER(string, expireDate)
     MEMBER(unsigned char, status)
 public:
     DechangMessageSendAddCard() : DechangMessage(MSG_DECHANG_SEND_ADD_CARD) {
-        device_id("");
-        user_id(0);
-        user_name("");
-        card_no(0);
+        deviceId("");
+        userId(0);
+        userName("");
+        cardNo(0);
         password("");
-        door_access(0);
-        expire_date("");
+        doorAccess(0);
+        expireDate("");
         status(0);
     }
     ~DechangMessageSendAddCard() {}
@@ -126,14 +126,14 @@ public:
 
 //删除卡消息
 class DechangMessageSendDelCard : public DechangMessage {
-    MEMBER(string, device_id)
-    MEMBER(unsigned int, user_id)
-    MEMBER(unsigned long, card_no)
+    MEMBER(string, deviceId)
+    MEMBER(unsigned int, userId)
+    MEMBER(unsigned long, cardNo)
 public:
     DechangMessageSendDelCard() : DechangMessage(MSG_DECHANG_SEND_DEL_CARD) {
-        device_id("");
-        user_id(0);
-        card_no(0);
+        deviceId("");
+        userId(0);
+        cardNo(0);
     }
     ~DechangMessageSendDelCard() {}
 };
@@ -149,10 +149,10 @@ public:
 
 //删除所有卡
 class DechangMessageSendDelAllCard : public DechangMessage {
-    MEMBER(string, device_id)
+    MEMBER(string, deviceId)
 public:
     DechangMessageSendDelAllCard() : DechangMessage(MSG_DECHANG_SEND_DEL_ALL_CARD) {
-        device_id("");
+        deviceId("");
     }
     ~DechangMessageSendDelAllCard() {}
 };
@@ -165,4 +165,4 @@ public:
     }
     ~DechangMessageSendDelAllCardAck() {}
 };
-#endif  //  SDK_MESSAGE_MESSAGES_DECHANG_MESSAGE_HPP_
+#endif  //  APP_DOWN_CHILD_DEVICE_DECHANG_TCP_MESSAGES_DECHANG_MESSAGE_HPP_

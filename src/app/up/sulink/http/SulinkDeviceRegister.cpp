@@ -49,21 +49,21 @@ int SulinkDeviceRegister :: parseResult(const string& result) {
         LOGT(SULINK_DEVICE_REG_TAG, "parse sub failed");
         return -1;
     }
-    jdata.Get("clientId", mParam.mClientId);
-    jconnection.Get("ip", mParam.mServerIp);
-    jconnection.Get("port", mParam.mServerPort);
-    jconnection.Get("username", mParam.mUserName);
-    jconnection.Get("password", mParam.mPassword);
-    jconnection.Get("keepAlive", mParam.mKeepAlive);
-    mParam.mPubTopics.clear();
+    jdata.Get("clientId", mParam.clientId);
+    jconnection.Get("ip", mParam.serverIp);
+    jconnection.Get("port", mParam.serverPort);
+    jconnection.Get("username", mParam.userName);
+    jconnection.Get("password", mParam.password);
+    jconnection.Get("keepAlive", mParam.keepAlive);
+    mParam.pubTopics.clear();
     for (int i = 0; i < jpub.GetArraySize(); i++) {
         jpub.Get(i, svalue);
-        mParam.mPubTopics.push_back(svalue);
+        mParam.pubTopics.push_back(svalue);
     }
-    mParam.mSubTopics.clear();
+    mParam.subTopics.clear();
     for (int i = 0; i < jsub.GetArraySize(); i++) {
         jsub.Get(i, svalue);
-        mParam.mSubTopics.push_back(svalue);
+        mParam.subTopics.push_back(svalue);
     }
     return 0;
 }

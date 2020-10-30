@@ -15,19 +15,19 @@ int DechangRecvHbHandler :: handle(const Message &message) {
     }
     LOGT(DECHANG_RECV_HB_TAG, "MSG_DECHANG_RECEIVE_HB message is handled");
     const DechangMessageRecvHb& msg = dynamic_cast<const DechangMessageRecvHb &>(message);
-    if (mConn->getTag().compare(msg.device_id()) != 0) {
+    if (mConn->getTag().compare(msg.deviceId()) != 0) {
         //only set when first hb received
-        mConn->setTag(msg.device_id());
+        mConn->setTag(msg.deviceId());
     }
     LOGT(DECHANG_RECV_HB_TAG, "hb received: device:%s status:%d",
-         msg.device_id().c_str(), msg.status());
+         msg.deviceId().c_str(), msg.status());
     DechangMessageRecvHbAck ack;
     ack.rand(msg.rand());
     ack.cmd(msg.cmd());
     ack.address(msg.address());
     ack.door(msg.door());
-    ack.customer_code_h(0);
-    ack.customer_code_l(0);
+    ack.customerCodeH(0);
+    ack.customerCodeL(0);
     mConn->send(ack);
     return 0;
 }

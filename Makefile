@@ -68,7 +68,6 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/msg_center \
            src/sdk/message \
            src/sdk/message/message_type \
-           src/sdk/message/messages \
            src/sdk/message/message_handler \
            src/sdk/message/message_dispatcher
 
@@ -108,10 +107,12 @@ app_inc := src/app \
            src/app/right/lift_control/wlong \
            src/app/up/sulink/http \
            src/app/up/sulink/mqtt \
+           src/app/up/sulink/mqtt/messages \
            src/app/up/sulink/mqtt/packer \
            src/app/up/sulink/mqtt/message_handlers \
            src/app/down/child_device/dechang \
            src/app/down/child_device/dechang/tcp \
+           src/app/down/child_device/dechang/tcp/messages \
            src/app/down/child_device/dechang/tcp/packer \
            src/app/down/child_device/dechang/tcp/message_handlers
 

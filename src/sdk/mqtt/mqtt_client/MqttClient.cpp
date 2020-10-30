@@ -30,14 +30,14 @@ MqttClient :: ~MqttClient() {
 
 int MqttClient :: connect() {
     int rc;
-    string server_addr = "tcp://" + mParam.mServerIp + ":" + to_string(mParam.mServerPort);
-    rc = MQTTClient_create(&mClient, server_addr.c_str(), mParam.mClientId.c_str(),
+    string server_addr = "tcp://" + mParam.serverIp + ":" + to_string(mParam.serverPort);
+    rc = MQTTClient_create(&mClient, server_addr.c_str(), mParam.clientId.c_str(),
                            MQTTCLIENT_PERSISTENCE_NONE, NULL);
     if (MQTTCLIENT_SUCCESS != rc) {
         LOGE(MQTT_CLIENT_TAG, "mqtt create failed, rc = %d", rc);
         return -1;
     }
-    LOGT(MQTT_CLIENT_TAG, "mqtt create ok, server=%s client_id=%s", server_addr.c_str(), mParam.mClientId.c_str());
+    LOGT(MQTT_CLIENT_TAG, "mqtt create ok, server=%s client_id=%s", server_addr.c_str(), mParam.clientId.c_str());
     mReconnectThread = new thread(reconnectTask, this);
     return 0;
 }
@@ -100,7 +100,7 @@ int MqttClient :: onRecv(const Message& message) {
 
 string MqttClient :: findPubTopic(const string& topic_key) {
     vector<string>::iterator it;
-    for (it = mParam.mPubTopics.begin(); it != mParam.mPubTopics.end(); it++) {
+    for (it = mParam.pubTopics.begin(); it != mParam.pubTopics.end(); it++) {
         if ((*it).find(topic_key) != string::npos) {
             LOGT(MQTT_CLIENT_TAG, "topic for key %s found: %s", topic_key.c_str(), (*it).c_str());
             return (*it);
@@ -121,10 +121,10 @@ void MqttClient :: reconnectTask(void *arg) {
         {
             MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
             int rc;
-            conn_opts.keepAliveInterval = mqtt_client->mParam.mKeepAlive;
+            conn_opts.keepAliveInterval = mqtt_client->mParam.keepAlive;
             conn_opts.cleansession = 1;
-            conn_opts.username = mqtt_client->mParam.mUserName.c_str();
-            conn_opts.password = mqtt_client->mParam.mPassword.c_str();
+            conn_opts.username = mqtt_client->mParam.userName.c_str();
+            conn_opts.password = mqtt_client->mParam.password.c_str();
             MQTTClient_setCallbacks(mqtt_client->mClient, mqtt_client, connlost, messageArrived, delivered);
             LOGT(MQTT_CLIENT_TAG1, "mqtt connecting... username:%s password:%s", conn_opts.username, conn_opts.password);
             rc = MQTTClient_connect(mqtt_client->mClient, &conn_opts);
@@ -134,7 +134,7 @@ void MqttClient :: reconnectTask(void *arg) {
             } else {
                 LOGT(MQTT_CLIENT_TAG1, "mqtt connected OK");
                 //注册订阅
-                for (auto topic : mqtt_client->mParam.mSubTopics)
+                for (auto topic : mqtt_client->mParam.subTopics)
                 {
                     if (MQTTCLIENT_SUCCESS != MQTTClient_subscribe(mqtt_client->mClient, topic.c_str(), MQTT_QOS))
                     {
@@ -177,6 +177,8 @@ int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
             delete mqtt_message;
         }
     }
+    MQTTClient_freeMessage(&message);
+    MQTTClient_free(topicName);
     return message_handled_ok;
 }
 

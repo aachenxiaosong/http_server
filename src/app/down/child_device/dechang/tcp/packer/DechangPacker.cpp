@@ -69,7 +69,7 @@ DechangMessageRecvHb* DechangPacker :: unpackRecvHb() {
     message->address(mPack[3]);
     message->door(mPack[4]);
     memcpy(serial_num, &mPack[28], 6);
-    message->device_id(serial_num);
+    message->deviceId(serial_num);
     message->status(mPack[19]);
     return message;
 }
@@ -93,11 +93,11 @@ DechangMessageRecvSwipe* DechangPacker :: unpackRecvSwipe() {
     message->address(mPack[3]);
     message->door(mPack[4]);
     card_no = mPack[7] + (mPack[8] << 8) + (mPack[9] << 16) + (mPack[10] << 24);
-    message->card_no(card_no);
+    message->cardNo(card_no);
     snprintf(time_str, sizeof(time_str), "20%02d-%02d-%02d-%02d:%02d:%02d", mPack[16], mPack[15], mPack[14], mPack[13], mPack[12], mPack[11]);
     message->time(time_str);
     message->type(mPack[17]);
-    message->door_addr(18);
+    message->doorAddr(18);
     message->index(mPack[20]);
     return message;
 }
@@ -220,8 +220,8 @@ int DechangPacker :: packRecvHbAck(const DechangMessageRecvHbAck &message, char 
     ack[4] = message.door();
     ack[5] = 0x2;
     ack[6] = 0x0;
-    ack[7] = message.customer_code_h();
-    ack[8] = message.customer_code_l();
+    ack[7] = message.customerCodeH();
+    ack[8] = message.customerCodeL();
     ack[9] = 0x0;
     for (int i = 0; i < 9; i++) {
         ack[9] = ack[9] ^ ack[i];
@@ -299,22 +299,22 @@ int DechangPacker :: packSendAddCard(const DechangMessageSendAddCard &message, c
     req[5] = 27;
     req[6] = 0x0;
     //用户
-    req[7] = message.user_id() & 0xff;
-    req[8] = (message.user_id() >> 8) & 0xff;
+    req[7] = message.userId() & 0xff;
+    req[8] = (message.userId() >> 8) & 0xff;
     //卡号,协议里是高位在前,实际是低位在前
     /*req[9] = (message.card_no() >> 24) & 0xff;
     req[10] = (message.card_no() >> 16) & 0xff;
     req[11] = (message.card_no() >> 8) & 0xff;
     req[12] = (message.card_no()) & 0xff;*/
-    req[9] = (message.card_no()) & 0xff;
-    req[10] = (message.card_no() >> 8) & 0xff;
-    req[11] = (message.card_no() >> 16) & 0xff;
-    req[12] = (message.card_no() >> 24) & 0xff;
+    req[9] = (message.cardNo()) & 0xff;
+    req[10] = (message.cardNo() >> 8) & 0xff;
+    req[11] = (message.cardNo() >> 16) & 0xff;
+    req[12] = (message.cardNo() >> 24) & 0xff;
     //密码
     _password_convert(&req[13], message.password().c_str());
     //开放时间
-    req[17] = (message.door_access()) & 0xff;
-    req[18] = (message.door_access() >> 8) & 0xff;
+    req[17] = (message.doorAccess()) & 0xff;
+    req[18] = (message.doorAccess() >> 8) & 0xff;
     //未用
     req[19] = req[20] = 0x0;
     //有效期,暂时写死,到时候看expire_date的格式,2050.1.1:0:0
@@ -325,7 +325,7 @@ int DechangPacker :: packSendAddCard(const DechangMessageSendAddCard &message, c
     req[25] = 0;
     //状态
     //req[26] = message.status();
-    snprintf((char *)&req[26], 8, "%s", message.user_name().c_str());
+    snprintf((char *)&req[26], 8, "%s", message.userName().c_str());
     //checksum
     req[34] = 0;
     for (int i = 0; i < 34; i++)
@@ -348,17 +348,17 @@ int DechangPacker :: packSendDelCard(const DechangMessageSendDelCard &message, c
     req[5] = 6;
     req[6] = 0x0;
     //用户
-    req[7] = message.user_id() & 0xff;
-    req[8] = (message.user_id() >> 8) & 0xff;
+    req[7] = message.userId() & 0xff;
+    req[8] = (message.userId() >> 8) & 0xff;
     //卡号,协议里是高位在前,实际是低位在前
     /*req[9] = (message.card_no() >> 24) & 0xff;
     req[10] = (message.card_no() >> 16) & 0xff;
     req[11] = (message.card_no() >> 8) & 0xff;
     req[12] = (message.card_no()) & 0xff;*/
-    req[9] = (message.card_no()) & 0xff;
-    req[10] = (message.card_no() >> 8) & 0xff;
-    req[11] = (message.card_no() >> 16) & 0xff;
-    req[12] = (message.card_no() >> 24) & 0xff;
+    req[9] = (message.cardNo()) & 0xff;
+    req[10] = (message.cardNo() >> 8) & 0xff;
+    req[11] = (message.cardNo() >> 16) & 0xff;
+    req[12] = (message.cardNo() >> 24) & 0xff;
     //checksum
     req[13] = 0;
     for (int i = 0; i < 13; i++)

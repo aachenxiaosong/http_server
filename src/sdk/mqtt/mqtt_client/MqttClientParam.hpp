@@ -7,44 +7,44 @@
 using namespace std;
 
 struct MqttClientParam {
-    string mClientId;
-    string mServerIp;
-    int mServerPort;
-    string mUserName;
-    string mPassword;
-    int mKeepAlive;
-    vector<string> mSubTopics;
-    vector<string> mPubTopics;
+    string clientId;
+    string serverIp;
+    int serverPort;
+    string userName;
+    string password;
+    int keepAlive;
+    vector<string> subTopics;
+    vector<string> pubTopics;
     MqttClientParam() {
-        mServerPort = 0;
-        mKeepAlive = 0;
+        serverPort = 0;
+        keepAlive = 0;
     }
     MqttClientParam(const MqttClientParam& param) {
-        mClientId = param.mClientId;
-        mServerIp = param.mServerIp;
-        mServerPort = param.mServerPort;
-        mUserName = param.mUserName;
-        mPassword = param.mPassword;
-        mKeepAlive = param.mKeepAlive;
-        mSubTopics.assign(param.mSubTopics.begin(), param.mSubTopics.end());
-        mPubTopics.assign(param.mPubTopics.begin(), param.mPubTopics.end());
+        clientId = param.clientId;
+        serverIp = param.serverIp;
+        serverPort = param.serverPort;
+        userName = param.userName;
+        password = param.password;
+        keepAlive = param.keepAlive;
+        subTopics.assign(param.subTopics.begin(), param.subTopics.end());
+        pubTopics.assign(param.pubTopics.begin(), param.pubTopics.end());
     }
     ~MqttClientParam() {
-        mSubTopics.clear();
-        mPubTopics.clear();
+        subTopics.clear();
+        pubTopics.clear();
     }
     
     MqttClientParam& operator=(const MqttClientParam& param) {
-        mSubTopics.clear();
-        mPubTopics.clear();
-        mClientId = param.mClientId;
-        mServerIp = param.mServerIp;
-        mServerPort = param.mServerPort;
-        mUserName = param.mUserName;
-        mPassword = param.mPassword;
-        mKeepAlive = param.mKeepAlive;
-        mSubTopics.assign(param.mSubTopics.begin(), param.mSubTopics.end());
-        mPubTopics.assign(param.mPubTopics.begin(), param.mPubTopics.end());
+        subTopics.clear();
+        pubTopics.clear();
+        clientId = param.clientId;
+        serverIp = param.serverIp;
+        serverPort = param.serverPort;
+        userName = param.userName;
+        password = param.password;
+        keepAlive = param.keepAlive;
+        subTopics.assign(param.subTopics.begin(), param.subTopics.end());
+        pubTopics.assign(param.pubTopics.begin(), param.pubTopics.end());
         return *this;
     }
 
@@ -52,21 +52,21 @@ struct MqttClientParam {
     {
         string s;
         s.append("--------------------------- sulink mqtt info begin --------------------------");
-        s.append("\nclientId: " + mClientId);
-        s.append("\nserverIp: " + mServerIp);
-        s.append("\nserverPort: " + to_string(mServerPort));
-        s.append("\nuserName: " + mUserName);
-        s.append("\npassWord: " + mPassword);
-        s.append("\nkeepAlive: " + to_string(mKeepAlive));
+        s.append("\nclientId: " + clientId);
+        s.append("\nserverIp: " + serverIp);
+        s.append("\nserverPort: " + to_string(serverPort));
+        s.append("\nuserName: " + userName);
+        s.append("\npassWord: " + password);
+        s.append("\nkeepAlive: " + to_string(keepAlive));
         s.append("\npubTopics:");
-        for (int i = 0; i < mPubTopics.size(); i++)
+        for (int i = 0; i < pubTopics.size(); i++)
         {
-            s.append("\n  " + mSubTopics[i]);
+            s.append("\n  " + subTopics[i]);
         }
         s.append("\nsubTopics:");
-        for (int i = 0; i < mSubTopics.size(); i++)
+        for (int i = 0; i < subTopics.size(); i++)
         {
-            s.append("\n  " + mSubTopics[i]);
+            s.append("\n  " + subTopics[i]);
         }
         s.append("\n--------------------------- sulink mqtt info end --------------------------");
         return s;

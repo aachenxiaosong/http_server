@@ -1,5 +1,5 @@
-#ifndef SDK_MESSAGE_MESSAGES_SULINK_MESSAGE_HPP_
-#define SDK_MESSAGE_MESSAGES_SULINK_MESSAGE_HPP_
+#ifndef APP_UP_SULINK_MQTT_MESSAGES_SULINK_MESSAGE_HPP_
+#define APP_UP_SULINK_MQTT_MESSAGES_SULINK_MESSAGE_HPP_
 
 #include "IMqttMessage.hpp"
 #include <string>
@@ -7,38 +7,38 @@
 using namespace std;
 //基础消息
 class SulinkMessage : public IMqttMessage {
-    MEMBER(string, trace_id)
-    MEMBER(int, payload_version)
+    MEMBER(string, traceId)
+    MEMBER(int, payloadVersion)
     MEMBER(string, brand)
     MEMBER(long, timestamp)
     MEMBER(string, method)
 public:
     SulinkMessage(MessageType type) : IMqttMessage(type) {
-        payload_version(1);
+        payloadVersion(1);
     }
     virtual ~SulinkMessage() {}
 };
 
 //设备信息上报
 class SulinkMessageSendDeviceInfo : public SulinkMessage {
-    MEMBER(string, app_key)
-    MEMBER(string, device_sn)
+    MEMBER(string, appKey)
+    MEMBER(string, deviceSn)
     //up_time就是unix时间戳
-    MEMBER(long, up_time)
-    MEMBER(string, app_version)
-    MEMBER(string, device_type)
+    MEMBER(long, upTime)
+    MEMBER(string, appVersion)
+    MEMBER(string, deviceType)
 public:
     SulinkMessageSendDeviceInfo() : SulinkMessage(MSG_SULINK_SEND_DEVICE_INFO) {
         method("device-info");
-        up_time(0);
+        upTime(0);
     }
     ~SulinkMessageSendDeviceInfo() {}
 };
 
 //通行规则下发
 class SulinkMessageRecvPassRule : public SulinkMessage {
-    MEMBER(string, device_code)
-    MEMBER(string, req_id)
+    MEMBER(string, deviceCode)
+    MEMBER(string, reqId)
     //TODO
 public:
     SulinkMessageRecvPassRule() : SulinkMessage(MSG_SULINK_RECV_PASS_RULE) {
@@ -48,9 +48,9 @@ public:
 };
 
 class SulinkMessageRecvPassRuleAck : public SulinkMessage {
-    MEMBER(string, device_code)
-    MEMBER(string, req_id)
-    MEMBER(string, ack_req_id)
+    MEMBER(string, deviceCode)
+    MEMBER(string, reqId)
+    MEMBER(string, ackReqId)
     //TODO
 public:
     SulinkMessageRecvPassRuleAck() : SulinkMessage(MSG_SULINK_RECV_PASS_RULE_ACK) {
@@ -60,18 +60,18 @@ public:
 };
 //通行记录上报
 class SulinkMessageSendPassRecord : public SulinkMessage {
-    MEMBER(string, device_code)
+    MEMBER(string, deviceCode)
     MEMBER(string, code)
-    MEMBER(string, ext_data)
-    MEMBER(string, pass_photo)
-    MEMBER(int, pass_result)
-    MEMBER(string, pass_time)
-    MEMBER(string, pass_type)
-    MEMBER(string, person_id)
-    MEMBER(string, person_name)
-    MEMBER(string, person_temp)
-    MEMBER(int, person_type)
-    MEMBER(string, req_id)
+    MEMBER(string, extData)
+    MEMBER(string, passPhoto)
+    MEMBER(int, passResult)
+    MEMBER(string, passTime)
+    MEMBER(string, passType)
+    MEMBER(string, personId)
+    MEMBER(string, personName)
+    MEMBER(string, personTemp)
+    MEMBER(int, personType)
+    MEMBER(string, reqId)
 public:
     SulinkMessageSendPassRecord() : SulinkMessage(MSG_SULINK_SEND_PASS_RECORD) {
         method("pass-record");
@@ -88,4 +88,4 @@ public:
     ~SulinkMessageSendPassRecordAck() {}
 };
 
-#endif  //  SDK_MESSAGE_MESSAGES_SULINK_MESSAGE_HPP_
+#endif  //  APP_UP_SULINK_MQTT_MESSAGES_SULINK_MESSAGE_HPP_
