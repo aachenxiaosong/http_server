@@ -12,7 +12,7 @@ private:
     string* packSendDeviceInfo(const SulinkMessageSendDeviceInfo& message);
     string* packSendPassRecord(const SulinkMessageSendPassRecord& message);
     int packCheck(const string& raw_data);
-    SulinkMessageRecvPassRuleInfo* unpackRecvPassRuleInfo(const string& raw_data);
+    SulinkMessageRecvPassRule* unpackRecvPassRule(const string& raw_data);
     SulinkMessageSendPassRecordAck* unpackSendPassRecordAck(const string& raw_data);
 public:
     SulinkPacker();

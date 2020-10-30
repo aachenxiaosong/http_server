@@ -5,7 +5,8 @@
 #include "SulinkDeviceRegister.hpp"
 #include "SulinkPacker.hpp"
 #include "SulinkSendDeviceInfoHandler.hpp"
-#include "SulinkRecvPassRuleInfoHandler.hpp"
+#include "SulinkSendPassRecordHandler.hpp"
+#include "SulinkRecvPassRuleHandler.hpp"
 #include <thread>
 
 class SulinkClient {
@@ -14,7 +15,8 @@ private:
     SulinkDeviceRegister mDeviceRegister;
     SulinkPacker mPacker;
     SulinkSendDeviceInfoHandler mSendDeviceInfoHandler;
-    SulinkRecvPassRuleInfoHandler mRecvPassRuleInfoHandler;
+    SulinkSendPassRecordHandler mSendPassRecordHandler;
+    SulinkRecvPassRuleHandler mRecvPassRuleHandler;
     string mName;
     thread *mLinkThread;
     bool mIsConnected;
@@ -23,7 +25,7 @@ private:
 public:
     SulinkClient();
     ~SulinkClient();
-    int send(const Message& message);
+    int onRecvMessage(const Message& message);
 };
 
 #endif  //  APP_UP_SULINK_MQTT_SULINK_CLIENT_HPP_

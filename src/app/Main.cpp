@@ -36,8 +36,15 @@ static int _msg_center_init() {
     return 0;
 }
 
-int main() { 
+int main() {
+#if 1
+    extern void AppTest();
+    AppTest();
+    while(1) {
+        sleep(100); 
+    }
     srand(time(0));
+#else
     //串口
     if (0 != serial_init()) {
         LOGE(MAIN_TAG, "uart init failed");
@@ -59,15 +66,12 @@ int main() {
     if (0 != _common_init()) {
         LOGE(MAIN_TAG, "common init failed");
         return -1;
-    }
-    extern void AppTest();
-    AppTest();
-    while(1) {
-        sleep(100); 
-    }
+    }*/
+    
     delete rili_subscriber;
     delete wlong_subscriber;
     serial_release();
+    #endif
     return 0;
 }
 

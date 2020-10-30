@@ -15,7 +15,7 @@ SulinkSendPassRecordHandler :: ~SulinkSendPassRecordHandler() {}
 int SulinkSendPassRecordHandler :: handle(const Message &message) {
     if (mConn == NULL)
     {
-        LOGT(SULINK_SEND_PASS_RECORD_TAG, "mqtt client is null");
+        LOGE(SULINK_SEND_PASS_RECORD_TAG, "mqtt client is null");
         return -1;
     }
     if (message.type() == MSG_SULINK_SEND_PASS_RECORD)
@@ -24,22 +24,24 @@ int SulinkSendPassRecordHandler :: handle(const Message &message) {
         int wait_time = 1000 * 3; //3s超时
         if (0 == mConn->send(message))
         {
-            while (mAckReceived == 0 && wait_time > 0)
+            while (mAckReceived == false && wait_time > 0)
             {
                 usleep(1000 * 10);
                 wait_time -= 10;
             }
-            if (mAckReceived == 0) {
-                LOGE(SULINK_SEND_PASS_RECORD_TAG, "%s sent timeout(3s)", message.type());
+            if (mAckReceived == false) {
+                LOGE(SULINK_SEND_PASS_RECORD_TAG, "message MSG_SULINK_SEND_PASS_RECORD sent timeout(3s)");
             } else {
-                LOGT(SULINK_SEND_PASS_RECORD_TAG, "%s sent OK", message.type());
+                LOGT(SULINK_SEND_PASS_RECORD_TAG, "message MSG_SULINK_SEND_PASS_RECORD sent OK");
             }
         } else {
-            LOGE(SULINK_SEND_PASS_RECORD_TAG, "%s sent failed", message.type());
+            LOGE(SULINK_SEND_PASS_RECORD_TAG, "message MSG_SULINK_SEND_PASS_RECORD sent failed");
         }
         return 0;
     } else if (message.type() == MSG_SULINK_SEND_PASS_RECORD_ACK) {
-        LOGT(SULINK_SEND_PASS_RECORD_TAG, "%s received", message.type());
+        mAckReceived = true;
+        const SulinkMessageSendPassRecordAck& msg = dynamic_cast<const SulinkMessageSendPassRecordAck&>(message);
+        LOGT(SULINK_SEND_PASS_RECORD_TAG, "message MSG_SULINK_SEND_PASS_RECORD_ACK received, code = %d", msg.code());
         return 0;
     }
     return -1;

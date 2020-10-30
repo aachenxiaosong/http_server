@@ -49,21 +49,21 @@ int SulinkDeviceRegister :: parseResult(const string& result) {
         LOGT(SULINK_DEVICE_REG_TAG, "parse sub failed");
         return -1;
     }
-    jdata.Get("clientId", mClientId);
-    jconnection.Get("ip", mServerIp);
-    jconnection.Get("port", mServerPort);
-    jconnection.Get("username", mUserName);
-    jconnection.Get("password", mPassword);
-    jconnection.Get("keepAlive", mKeepAlive);
-    mPubTopics.clear();
+    jdata.Get("clientId", mParam.mClientId);
+    jconnection.Get("ip", mParam.mServerIp);
+    jconnection.Get("port", mParam.mServerPort);
+    jconnection.Get("username", mParam.mUserName);
+    jconnection.Get("password", mParam.mPassword);
+    jconnection.Get("keepAlive", mParam.mKeepAlive);
+    mParam.mPubTopics.clear();
     for (int i = 0; i < jpub.GetArraySize(); i++) {
         jpub.Get(i, svalue);
-        mPubTopics.push_back(svalue);
+        mParam.mPubTopics.push_back(svalue);
     }
-    mSubTopics.clear();
+    mParam.mSubTopics.clear();
     for (int i = 0; i < jsub.GetArraySize(); i++) {
         jsub.Get(i, svalue);
-        mSubTopics.push_back(svalue);
+        mParam.mSubTopics.push_back(svalue);
     }
     return 0;
 }
@@ -90,25 +90,4 @@ int SulinkDeviceRegister :: request()
         }
     }
     return rc;
-}
-
-string SulinkDeviceRegister :: toString() const {
-    string s;
-    s.append("--------------------------- sulink mqtt info begin --------------------------");
-    s.append("\nclientId: " + mClientId);
-    s.append("\nserverIp: " + mServerIp);
-    s.append("\nserverPort: " + to_string(mServerPort));
-    s.append("\nuserName: " + mUserName);
-    s.append("\npassWord: " + mPassword);
-    s.append("\nkeepAlive: " + to_string(mKeepAlive));
-    s.append("\npubTopics:");
-    for (int i = 0; i < mPubTopics.size(); i++) {
-        s.append("\n  " + mSubTopics[i]);
-    }
-    s.append("\nsubTopics:");
-    for (int i = 0; i < mSubTopics.size(); i++) {
-        s.append("\n  " + mSubTopics[i]);
-    }
-    s.append("\n--------------------------- sulink mqtt info end --------------------------");
-    return s;
 }

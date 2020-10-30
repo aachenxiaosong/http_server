@@ -12,7 +12,7 @@
 
 using namespace std;
 
-#define TEST_NUM 5
+#define TEST_NUM 6
 
 Dechang dechang;
 
@@ -71,7 +71,7 @@ void AppTest() {
 #elif (TEST_NUM == 3)
     SulinkClient sulink_client;
     SulinkMessageSendDeviceInfo message;
-    long timestamp = UniUtil::timestampMsL();
+    long timestamp = UniUtil::timestampMs();
     message.app_key(SULINK_ACCESS_KEY);
     message.device_sn(UniUtil::deviceCode());
     message.brand(SULINK_BRAND);
@@ -83,7 +83,7 @@ void AppTest() {
     message.trace_id(SulinkTraceid::build(to_string(timestamp)));
     message.up_time(timestamp);
     while (1) {
-        if (sulink_client.send(message) == 0) {
+        if (sulink_client.onRecvMessage(message) == 0) {
             break;
         }
         sleep(5);
@@ -94,5 +94,32 @@ void AppTest() {
 #elif (TEST_NUM == 5)
     SulinkTimeSync time_sync;
     cout << "time_sync request result: " << time_sync.request() << endl;
+#elif (TEST_NUM == 6)
+    SulinkClient sulink_client;
+    SulinkMessageSendPassRecord message;
+    long timestamp = UniUtil::timestampMs();
+    message.brand(SULINK_BRAND);
+    message.code("12345678");//学号
+    message.device_code(UniUtil::deviceCode());
+    message.ext_data("");
+    message.pass_photo("");
+    message.pass_result(0);
+    message.pass_time("2020-10-21 18:05:51");
+    message.pass_type("CARD");
+    message.payload_version(1);
+    message.person_id("1234567890");//人员编号
+    message.person_name("bob");
+    message.person_temp("36.5");
+    message.person_type(3);
+    message.req_id("1");
+    message.timestamp(timestamp);
+    message.topic("pub/passRule");
+    message.trace_id(SulinkTraceid::build(to_string(timestamp)));
+    while (1) {
+        if (sulink_client.onRecvMessage(message) == 0) {
+            break;
+        }
+        sleep(5);
+    }
 #endif
 }

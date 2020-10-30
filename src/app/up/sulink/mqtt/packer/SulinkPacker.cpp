@@ -84,7 +84,7 @@ int SulinkPacker :: packCheck(const string& raw_data) {
     return 0;
 }
 
-SulinkMessageRecvPassRuleInfo* SulinkPacker :: unpackRecvPassRuleInfo(const string& raw_data) {
+SulinkMessageRecvPassRule* SulinkPacker :: unpackRecvPassRule(const string& raw_data) {
     //TODO
     return NULL;
 }
@@ -103,6 +103,12 @@ SulinkMessageSendPassRecordAck* SulinkPacker :: unpackSendPassRecordAck(const st
     ack->payload_version(ivalue);
     jack.Get("timestamp", lvalue);
     ack->timestamp(lvalue);
+    CJsonObject jpayload;
+    if (true == jack.Get("payload", jpayload)) {
+        if (true == jpayload.Get("code", ivalue)) {
+            ack->code(ivalue);
+        }
+    }
     return ack;
 }
 
@@ -114,7 +120,7 @@ IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
     string message_type;
     CJsonObject(raw_data)["header"].Get("method", message_type);
     if (message_type.compare("pass-rule-info") == 0) {
-        return unpackRecvPassRuleInfo(raw_data);
+        return unpackRecvPassRule(raw_data);
     } else if (message_type.compare("pass-record-ack") == 0) {
         return unpackSendPassRecordAck(raw_data);
     }

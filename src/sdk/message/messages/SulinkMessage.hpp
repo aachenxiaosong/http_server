@@ -19,7 +19,7 @@ public:
     virtual ~SulinkMessage() {}
 };
 
-//心跳消息
+//设备信息上报
 class SulinkMessageSendDeviceInfo : public SulinkMessage {
     MEMBER(string, app_key)
     MEMBER(string, device_sn)
@@ -35,35 +35,16 @@ public:
     ~SulinkMessageSendDeviceInfo() {}
 };
 
-/*class SulinkMessageSendHb : public SulinkMessage {
-    MEMBER(string, device_code)
-    MEMBER(long, up_time)
-    MEMBER(double, cpu)
-    MEMBER(double, memory)
-    MEMBER(double, used_storage)
-    MEMBER(double, total_storage)
-    MEMBER(string, version_number)
-public:
-    SulinkMessageSendHb() : SulinkMessage(MSG_SULINK_SEND_HB) {
-        method("");
-        up_time(0);
-        cpu(0);
-        memory(0);
-        used_storage(0);
-        total_storage(0);
-    }
-    ~SulinkMessageSendHb() {}
-};*/
-
-class SulinkMessageRecvPassRuleInfo : public SulinkMessage {
+//通行规则下发
+class SulinkMessageRecvPassRule : public SulinkMessage {
     MEMBER(string, device_code)
     MEMBER(string, req_id)
     //TODO
 public:
-    SulinkMessageRecvPassRuleInfo() : SulinkMessage(MSG_SULINK_RECV_PASS_RULE_INFO) {
+    SulinkMessageRecvPassRule() : SulinkMessage(MSG_SULINK_RECV_PASS_RULE) {
         method("pass-rule-info");
     }
-    ~SulinkMessageRecvPassRuleInfo() {}
+    ~SulinkMessageRecvPassRule() {}
 };
 
 class SulinkMessageRecvPassRuleAck : public SulinkMessage {
@@ -98,9 +79,11 @@ public:
     ~SulinkMessageSendPassRecord() {}
 };
 class SulinkMessageSendPassRecordAck : public SulinkMessage {
+    MEMBER(int, code)
 public:
     SulinkMessageSendPassRecordAck() : SulinkMessage(MSG_SULINK_SEND_PASS_RECORD_ACK) {
         method("pass-record-ack");
+        code(-1);
     }
     ~SulinkMessageSendPassRecordAck() {}
 };
