@@ -53,8 +53,7 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
-           src/sdk/mqtt/mqtt_client \
-           src/sdk/msg_center
+           src/sdk/mqtt/mqtt_client
 
 sdk_inc := src/sdk/http/http_server \
            src/sdk/http/http_client \
@@ -64,8 +63,6 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/tcp/tcp_handle \
            src/sdk/mqtt/mqtt_client \
            src/sdk/mqtt/mqtt_handle \
-           src/sdk/msg_center/inc \
-           src/sdk/msg_center \
            src/sdk/message \
            src/sdk/message/message_type \
            src/sdk/message/message_handler \
@@ -75,9 +72,7 @@ app_src := src/app \
            src/app/left/lift_control/base/http \
            src/app/left/lift_control/rili/http \
            src/app/left/lift_control/wlong/http \
-           src/app/left/lift_control/base/mqtt \
-           src/app/left/lift_control/rili/mqtt \
-           src/app/left/lift_control/wlong/mqtt \
+           src/app/left/lift_control/base/data \
            src/app/right/common/auth \
            src/app/right/common/hb \
            src/app/right/common \
@@ -97,9 +92,7 @@ app_inc := src/app \
            src/app/left/lift_control/base/http \
            src/app/left/lift_control/rili/http \
            src/app/left/lift_control/wlong/http \
-           src/app/left/lift_control/base/mqtt \
-           src/app/left/lift_control/rili/mqtt \
-           src/app/left/lift_control/wlong/mqtt \
+           src/app/left/lift_control/base/data \
            src/app/right/common/auth \
            src/app/right/common/hb \
            src/app/right/common \
@@ -117,7 +110,6 @@ app_inc := src/app \
            src/app/down/child_device/dechang/tcp/message_handlers
 
 lib_inc := lib/libevent/inc \
-           lib/mqtt_embed/inc \
            lib/mqtt/inc
 
 test_src := src/sdk/tcp/test
@@ -147,7 +139,7 @@ CPP_OBJ_FILES := $(call cpp_to_o,$(CPP_FILES))
 CPP_OBJ_FILES := $(call change_file_location, $(CPP_OBJ_FILES), $(BUILD_DIR))
 DEP_FILES := $(call o_to_d,$(C_OBJ_FILES) $(CPP_OBJ_FILES))
 
-LIB := -Llib/libevent -Llib/mqtt_embed -Llib/mqtt -levent-2.2 -lpaho-mqtt3c -lpaho-embed-mqtt3c -lcurl -lm -lpthread
+LIB := -Llib/libevent -Llib/mqtt -Llib/poco -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lcurl -lm -lpthread
 
 ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)
