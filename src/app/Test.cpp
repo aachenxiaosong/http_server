@@ -6,6 +6,7 @@
 #include "SulinkMessage.hpp"
 #include "SulinkHb.hpp"
 #include "SulinkTimeSync.hpp"
+#include "SulinkLiftInitData.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
@@ -125,6 +126,7 @@ void AppTest() {
     SulinkClient sulink_client;
     while (1) {
         sleep(5);
+        SulinkLiftInitData::toString();
     }
 #endif
 }

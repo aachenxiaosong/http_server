@@ -46,10 +46,11 @@ extern "C" {
 
 #define CLOUD_UC_TS_URL  "http://uc.hivoice.cn/timestamp.jsp"
 /***************************** sulink ***********************/
-#if 0
+#if 1
 #define SULINK_ACCESS_KEY           "847a82be3eff4060b8f4c4f3e0ed27da"
 #define SULINK_SECRET_KEY           "7c3d1867d911450db784496e382dbfbb"
 #define SULINK_BRAND                "xilaideng"
+#define SULINK_PAYLOAD_VERSION      1
 #else
 #define SULINK_ACCESS_KEY           "shimao62ae1634e0b32d0"
 #define SULINK_SECRET_KEY           "f6339f4974cac548080ecdeca4037489"

@@ -24,7 +24,7 @@ static int _common_init() {
 
 
 int main() {
-#if 0
+#if 1
     extern void AppTest();
     AppTest();
     while(1) {

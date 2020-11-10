@@ -61,7 +61,7 @@ struct SulinkPassRule {
     string ruleCode;
     string ruleName;
     string recognizeType; // FACE-人脸 CARD-卡 QRCODE-二维码 PWD-密码 FINGER-指纹，多种类型以，号分割
-    vector<string> devices; //device code,用来快速索引需要下发的设备
+    vector<string> devices; //deviceCode列表,用来快速索引需要下发的设备
     vector<Person> persons;
     vector<TimeRule> timeRules;
 };

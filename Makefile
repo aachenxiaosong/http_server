@@ -78,6 +78,7 @@ app_src := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
+           src/app/up/sulink/data \
            src/app/up/sulink/http \
            src/app/up/sulink/mqtt \
            src/app/up/sulink/mqtt/packer \
@@ -98,6 +99,7 @@ app_inc := src/app \
            src/app/right/common \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
+           src/app/up/sulink/data \
            src/app/up/sulink/http \
            src/app/up/sulink/mqtt \
            src/app/up/sulink/mqtt/messages \

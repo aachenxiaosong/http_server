@@ -18,6 +18,10 @@ int SulinkSendPassRecordHandler :: handle(const Message &message) {
         LOGE(SULINK_SEND_PASS_RECORD_TAG, "mqtt client is null");
         return -1;
     }
+    if (message.type() != MSG_SULINK_SEND_PASS_RECORD && message.type() != MSG_SULINK_SEND_PASS_RECORD_ACK) {
+        return -1;
+    }
+
     if (message.type() == MSG_SULINK_SEND_PASS_RECORD)
     {
         mAckReceived = false;

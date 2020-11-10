@@ -43,10 +43,12 @@ void SulinkClient :: linkTask(void *arg) {
     client->mSendDeviceInfoHandler.setConn(client->mMqttClient);
     client->mSendPassRecordHandler.setConn(client->mMqttClient);
     client->mRecvPassRuleHandler.setConn(client->mMqttClient);
+    client->mRecvLiftInfoHandler.setConn(client->mMqttClient);
 
     client->mMqttClient->addHandler(&client->mSendDeviceInfoHandler);
     client->mMqttClient->addHandler(&client->mSendPassRecordHandler);
     client->mMqttClient->addHandler(&client->mRecvPassRuleHandler);
+    client->mMqttClient->addHandler(&client->mRecvLiftInfoHandler);
     
     client->mMqttClient->connect();
     client->mIsConnected = true;

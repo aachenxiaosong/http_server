@@ -6,5 +6,5 @@ SulinkRecvPassRuleHandler :: ~SulinkRecvPassRuleHandler() {}
 
 int SulinkRecvPassRuleHandler :: handle(const Message &message) {
     //TODO
-    return 0;
+    return -1;
 }

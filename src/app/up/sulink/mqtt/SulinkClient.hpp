@@ -7,6 +7,7 @@
 #include "SulinkSendDeviceInfoHandler.hpp"
 #include "SulinkSendPassRecordHandler.hpp"
 #include "SulinkRecvPassRuleHandler.hpp"
+#include "SulinkRecvLiftInfoHandler.hpp"
 #include <thread>
 
 class SulinkClient {
@@ -17,6 +18,7 @@ private:
     SulinkSendDeviceInfoHandler mSendDeviceInfoHandler;
     SulinkSendPassRecordHandler mSendPassRecordHandler;
     SulinkRecvPassRuleHandler mRecvPassRuleHandler;
+    SulinkRecvLiftInfoHandler mRecvLiftInfoHandler;
     string mName;
     thread *mLinkThread;
     bool mIsConnected;
