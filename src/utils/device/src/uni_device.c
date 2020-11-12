@@ -83,6 +83,46 @@ const char* DeviceGetSecretKey(void) {
   return MY_SECKEY;
 }
 
+static int _get_ip_address(char *address, uni_s32 len) {
+    int sd;
+    struct sockaddr_in sin;
+    struct ifreq ifr;
+    sd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (-1 == sd)
+    {
+	LOGE(DEVICE_TAG, "socket error: %s", strerror(errno));
+        return -1;
+    }
+
+    strncpy(ifr.ifr_name, NET_NAME, IFNAMSIZ);
+    ifr.ifr_name[IFNAMSIZ - 1] = 0;
+
+    // if error: No such device
+    if (ioctl(sd, SIOCGIFADDR, &ifr) < 0)
+    {
+	LOGE(DEVICE_TAG, "ioctl error: %s", strerror(errno));
+        close(sd);
+        return -1;
+    }
+
+    memcpy(&sin, &ifr.ifr_addr, sizeof(sin));
+    snprintf(address, len, "%s", inet_ntoa(sin.sin_addr));
+    close(sd);
+    LOGT(DEVICE_TAG, "get device ip %s for eth %s", address, NET_NAME);
+    return 0;
+}
+
 const char* DeviceGetServerUrl(void) {
-  return MY_SERVER_URL;
+  static char url[64] = {0};
+  static char ip[16] = {0};
+  if (uni_strlen(ip) > 0) {
+    snprintf(url, sizeof(url), "http://%s:8080", ip);
+    return url;
+  }
+  if (0 != _get_ip_address(ip, sizeof(ip))) {
+    LOGE(DEVICE_TAG, "get ip address failed");
+    return NULL;
+  }
+  snprintf(url, sizeof(url), "http://%s:8080", ip);
+  return url;
 }
