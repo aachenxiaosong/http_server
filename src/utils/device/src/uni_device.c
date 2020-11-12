@@ -113,6 +113,9 @@ static int _get_ip_address(char *address, uni_s32 len) {
 }
 
 const char* DeviceGetServerUrl(void) {
+#ifdef MY_SERVER_URL
+  return MY_SERVER_URL;
+#else
   static char url[64] = {0};
   static char ip[16] = {0};
   if (uni_strlen(ip) > 0) {
@@ -125,4 +128,5 @@ const char* DeviceGetServerUrl(void) {
   }
   snprintf(url, sizeof(url), "http://%s:8080", ip);
   return url;
+#endif
 }
