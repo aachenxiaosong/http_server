@@ -4,6 +4,11 @@
 #include "IMqttMessage.hpp"
 #include <string>
 
+#define SPACE_TYPE_HOME     "home"
+#define SPACE_TYPE_FLOOR    "floor"
+#define SPACE_TYPE_UNIT     "unit"
+#define SPACE_TYPE_BUILDING "building"
+
 using namespace std;
 //基础消息
 class SulinkMessage : public IMqttMessage {

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <map>
 
 using namespace std;
 /*
@@ -116,6 +117,7 @@ int main() {
 }
 */
 
+/*
 class A {
 private:
     int i;
@@ -136,5 +138,17 @@ A A::a;
 
 int main() {
     cout << A::toString() << endl;
+    return 0;
+}
+*/
+
+int main() {
+    map<string, int> m;
+    m["abc"] = 1;
+    cout << "size is " << m.size() << endl;
+    cout << "value is " << m["abc"] << endl;
+    m["abc"] = 2;
+    cout << "size is " << m.size() << endl;
+    cout << "value is " << m["abc"] << endl;
     return 0;
 }

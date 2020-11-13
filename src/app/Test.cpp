@@ -126,7 +126,17 @@ void AppTest() {
     SulinkClient sulink_client;
     while (1) {
         sleep(5);
-        SulinkLiftInitData::toString();
+        cout << "building: " << SulinkLiftInitData::getBuildingNoBySpaceId("2094581") << endl;
+        cout << "unit: " << SulinkLiftInitData::getUnitNoBySpaceId("2094581") << endl;
+        cout << "home: " << SulinkLiftInitData::getHomeNoBySpaceId("2094581") << endl;
+        cout << "cluster id: " << SulinkLiftInitData::getClusterIdBySpaceId("2094581") << endl;
+        cout << "cluster url: " << SulinkLiftInitData::getClusterUrlBySpaceId("2094581") << endl;
+        cout << "floor: " << SulinkLiftInitData::getFloorNoBySpaceId("2094581") << endl;
+        cout << "device floor: " << SulinkLiftInitData::getDeviceFloorNo("hf0000123") << endl;
+        cout << "device hall: " << SulinkLiftInitData::getDeviceHallNo("hf0000123") << endl;
+        cout << "device work mode: " << SulinkLiftInitData::getDeviceWorkMode("hf0000123") << endl;
+        cout << "device pub floor: " << SulinkLiftInitData::getDevicePubFloors("hf0000123") << endl;
+        cout << "device lift id: " << SulinkLiftInitData::getDeviceLiftId("hf0000123") << endl;
     }
 #endif
 }
