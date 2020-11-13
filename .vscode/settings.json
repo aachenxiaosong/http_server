@@ -4,6 +4,7 @@
         "uni_device.h": "c",
         "thread": "cpp",
         "*.tcc": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp"
     }
 }

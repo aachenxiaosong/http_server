@@ -349,14 +349,14 @@ SulinkMessageRecvLiftInfo* SulinkPacker :: unpackRecvLiftInfo(const string& raw_
         LiftInfoCluster cluster;
         for (int i = 0; i < jclusters.GetArraySize(); i++) {
             jclusters.Get(i, jcluster);
-            if (jclusters.Get("controllerIp", svalue) != true) {
+            if (jcluster.Get("controllerIp", svalue) != true) {
                 //LOGE(SULINK_PACKER_TAG, "parse cluster ip failed, i=%d", i);
                 //return NULL;
                 err_message = "parse cluster ip failed, i=" + to_string(i);
                 goto L_ERROR;
             }
             cluster.controllerIp(svalue);
-            if (jclusters.Get("controllerId", svalue) != true) {
+            if (jcluster.Get("controllerId", svalue) != true) {
                 //LOGE(SULINK_PACKER_TAG, "parse cluster id failed, i=%d", i);
                 //return NULL;
                 err_message = "parse cluster id failed, i=" + to_string(i);
@@ -416,16 +416,16 @@ SulinkMessageRecvLiftInfo* SulinkPacker :: unpackRecvLiftInfo(const string& raw_
             device.hallNo(svalue);
         }
         if (jdevice.Get("timestamp", lvalue) != true) {
-            LOGW(SULINK_PACKER_TAG, "parse device timestamp failed");
-        } else {
-            device.timestamp(lvalue);
+            err_message = "parse device timestamp failed";
+            goto L_ERROR;
         }
+        device.timestamp(lvalue);
         info.accessDevices().push_back(device);
     }
     if (jpayload.Get("timestamp", lvalue) != true) {
         //LOGE(SULINK_PACKER_TAG, "parse timestamp failed");
         //return NULL;
-        err_message = "parse timestamp failed";
+        err_message = "parse info timestamp failed";
         goto L_ERROR;
     }
     info.timestamp(lvalue);

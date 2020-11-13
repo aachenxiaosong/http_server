@@ -139,6 +139,8 @@ void MqttClient :: reconnectTask(void *arg) {
                     if (MQTTCLIENT_SUCCESS != MQTTClient_subscribe(mqtt_client->mClient, topic.c_str(), MQTT_QOS))
                     {
                         LOGE(MQTT_CLIENT_TAG1, "subscribe for topic %s failed", topic.c_str());
+                    } else {
+                        LOGT(MQTT_CLIENT_TAG1, "subscribe for topic %s OK", topic.c_str());
                     }
                 }
                 mqtt_client->mIsConnected = true;
@@ -155,13 +157,14 @@ void MqttClient :: delivered(void *context, MQTTClient_deliveryToken dt) {
 
 int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
                                  MQTTClient_message *message) {
-    int message_handled_ok = -1;
+    //int message_handled_ok = -1;
     MqttClient *mqtt_client = (MqttClient *)context;
     IMqttMessageHandler *i_handler = NULL;
-    LOGT(MQTT_CLIENT_TAG1, "message arrived, topic %s data %s", topicName, message->payload);
+    string stopic(topicName, topicLen);
+    string sdata((const char *)message->payload, message->payloadlen);
+    LOGT(MQTT_CLIENT_TAG1, "message arrived, topic %s data %s", stopic.c_str(), sdata.c_str());
     if (mqtt_client->mPacker) {
-        string data((const char *)message->payload, message->payloadlen);
-        IMqttMessage *mqtt_message = mqtt_client->mPacker->unpack(data);
+        IMqttMessage *mqtt_message = mqtt_client->mPacker->unpack(sdata);
         if (mqtt_message)
         {
             mqtt_message->topic(topicName);
@@ -170,7 +173,7 @@ int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
                 i_handler = *it;
                 if (i_handler->handle(*mqtt_message) == 0)
                 {
-                    message_handled_ok = 0;
+                    //message_handled_ok = 0;
                     break;
                 }
             }
@@ -179,7 +182,9 @@ int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
     }
     MQTTClient_freeMessage(&message);
     MQTTClient_free(topicName);
-    return message_handled_ok;
+    //return message_handled_ok;
+    //成功处理了,必须free掉message和topicName,并且返回1
+    return 1;
 }
 
 void MqttClient :: connlost(void *context, char *cause) {
