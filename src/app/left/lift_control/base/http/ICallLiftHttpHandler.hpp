@@ -10,6 +10,7 @@ using namespace neb;
 class ICallLiftHttpHandler :  public IHttpRequestHandler {
     protected:
     int checkRqeust(CJsonObject& jrequest, string& err_field);
+    void assambleResponse(int ret_code, const string& msg, int ack_code, int elevator_id, CJsonObject& jresponse);
     virtual int handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) = 0;
     public:
     ICallLiftHttpHandler(const char* name);

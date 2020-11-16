@@ -1,5 +1,5 @@
 #include "ITakeLiftHttpHandler.hpp"
-#include "InitInfo.hpp"
+#include "SulinkLiftInitData.hpp"
 #include "uni_log.h"
 #include "uni_iot.h"
 
@@ -12,34 +12,33 @@ ITakeLiftHttpHandler :: ITakeLiftHttpHandler(const char* name) : IHttpRequestHan
 ITakeLiftHttpHandler :: ~ITakeLiftHttpHandler() {}
 
 int ITakeLiftHttpHandler :: checkRqeust(CJsonObject& jrequest, string& err_field) {
-    int ivalue;
     string svalue;
-    CJsonObject jvalue;
-    if (true != jrequest.Get("buildingId", ivalue)) {
-        err_field = "buildingId";
+    if (true != jrequest.Get("defaultHomeId", svalue)) {
+        err_field = "defaultHomeId";
         return -1;
     }
-    if (true != jrequest.Get("unitId", ivalue)) {
-        err_field = "unitId";
+    /*if (true != jrequest.Get("homeIds", jvalue) || true != jvalue.IsArray()) {
+        err_field = "homeIds";
         return -1;
-    }
-    if (true != jrequest.Get("elevatorId", ivalue)) {
-        err_field = "elevatorId";
-        return -1;
-    }
-    if (true != jrequest.Get("lightupFloor", svalue)) {
-        err_field = "lightupFloor";
-        return -1;
-    }
-    if (true != jrequest.Get("unlockFloors", jvalue) || true != jvalue.IsArray()) {
-        err_field = "unlockFloors";
+    }*/
+    if (true != jrequest.Get("deviceCode", svalue)) {
+        err_field = "deviceCode";
         return -1;
     }
     return 0;
 }
 
+void ITakeLiftHttpHandler :: assambleResponse(int ret_code, const string& msg, int ack_code, CJsonObject& jresponse)
+{
+    jresponse.Add("retcode", ret_code);
+    jresponse.Add("msg", msg);
+    CJsonObject jdata;
+    jdata.Add("ackCode", ack_code);
+    jresponse.Add("data", jdata);
+}
+
 int ITakeLiftHttpHandler :: handle(string& path, string& request, string& response) {
-    if (path.compare("/liftCtrl/v2/takeLift") != 0) {
+    if (path.compare("/liftCtrl/v3/takeLift") != 0) {
         LOGT(I_TAKE_TAG, "%s is not for me", path.c_str());
         return -1;
     }
@@ -47,23 +46,20 @@ int ITakeLiftHttpHandler :: handle(string& path, string& request, string& respon
     /* process request */
     CJsonObject jrequest(request);
     CJsonObject jresponse;
-    CJsonObject jinfo;
     /* step 1, check init info */
-    if (0 != InitInfo :: getInfo(jinfo)) {
-        LOGE(I_TAKE_TAG, "reject request for init info is not ready (sent from connecting platform)");
-        jresponse.Add("errCode", 1);
-        jresponse.Add("errMsg", "lack of init info");
-        jresponse.Add("ackCode", 0);
+    if (true != SulinkLiftInitData :: inited()) {
+        string msg = "lift init info absent";
+        LOGE(I_TAKE_TAG, "reject request %s for %s", request.c_str(), msg.c_str());
+        assambleResponse(-1, msg, 0, jresponse);
         response = jresponse.ToString();
         return 0;
     }
     /* step2, check request */
     string err_field = "";
     if (0 != checkRqeust(jrequest, err_field)) {
-        LOGT(I_TAKE_TAG, "check request %s failed", request.c_str());
-        jresponse.Add("errCode", 1);
-        jresponse.Add("errMsg", "wrong param " + err_field);
-        jresponse.Add("ackCode", 0);
+        string msg = "wrong param " + err_field;
+        LOGE(I_TAKE_TAG, "reject request %s for %s", request.c_str(), msg.c_str());
+        assambleResponse(-1, msg, 0, jresponse);
         response = jresponse.ToString();
         return 0;
     }

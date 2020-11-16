@@ -1,5 +1,4 @@
 #include "WlongCallLiftHttpHandler.hpp"
-#include "InitInfo.hpp"
 #include "WlongLiftCtrl.hpp"
 #include "configurable_info.h"
 #include "uni_log.h"
@@ -12,7 +11,7 @@ WlongCallLiftHttpHandler :: WlongCallLiftHttpHandler() : ICallLiftHttpHandler("w
 }
 
 int WlongCallLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
-    int cluster_id;
+    /*int cluster_id;
     string from_floor;
     string updown;
     string open_floors;
@@ -64,6 +63,6 @@ int WlongCallLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject
         jresponse.Add("errMsg", "request of 3p interface failed");
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
-    }
+    }*/
     return 0;
 }

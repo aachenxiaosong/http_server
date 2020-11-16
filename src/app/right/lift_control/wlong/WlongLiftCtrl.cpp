@@ -1,6 +1,4 @@
 #include "WlongLiftCtrl.hpp"
-#include "InitInfo.hpp"
-#include "WlongLiftCtrl.hpp"
 #include "uni_http.h"
 #include "uni_log.h"
 #include "configurable_info.h"

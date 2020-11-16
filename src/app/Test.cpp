@@ -123,7 +123,7 @@ void AppTest() {
         sleep(5);
     }
 #elif (TEST_NUM == 7)
-    SulinkClient sulink_client;
+    //SulinkClient sulink_client;
     while (1) {
         sleep(5);
         cout << "building: " << SulinkLiftInitData::getBuildingNoBySpaceId("2094581") << endl;

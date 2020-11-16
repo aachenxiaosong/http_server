@@ -191,6 +191,11 @@ const string SulinkLiftInitData :: mToString()
     return ret;
 }
 
+bool SulinkLiftInitData :: inited()
+{
+    return (mData.mInfo != NULL);
+}
+
 //不直接定义mInfo成静态成员的原因是,读文件的部分需要静态初始化,所以要借助静态的mData成员
 void SulinkLiftInitData :: updateInfo(const SulinkMessageRecvLiftInfo &info)
 {

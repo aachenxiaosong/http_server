@@ -72,7 +72,6 @@ app_src := src/app \
            src/app/left/lift_control/base/http \
            src/app/left/lift_control/rili/http \
            src/app/left/lift_control/wlong/http \
-           src/app/left/lift_control/base/data \
            src/app/right/common/auth \
            src/app/right/common/hb \
            src/app/right/common \
@@ -93,7 +92,6 @@ app_inc := src/app \
            src/app/left/lift_control/base/http \
            src/app/left/lift_control/rili/http \
            src/app/left/lift_control/wlong/http \
-           src/app/left/lift_control/base/data \
            src/app/right/common/auth \
            src/app/right/common/hb \
            src/app/right/common \

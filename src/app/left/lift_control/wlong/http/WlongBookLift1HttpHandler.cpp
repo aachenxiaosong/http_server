@@ -1,5 +1,4 @@
 #include "WlongBookLift1HttpHandler.hpp"
-#include "InitInfo.hpp"
 #include "WlongLiftCtrl.hpp"
 #include "configurable_info.h"
 #include "uni_log.h"
@@ -7,12 +6,12 @@
 
 #define WLONG_BOOK1_TAG getName().c_str()
 
-WlongBookLift1HttpHandler :: WlongBookLift1HttpHandler() : IBookLift1HttpHandler("wlong_book_lift1") {
+WlongBookLift1HttpHandler :: WlongBookLift1HttpHandler() : IBookLiftHttpHandler("wlong_book_lift1") {
     LOGT(WLONG_BOOK1_TAG, "WlongBookLift1 object created");
 }
 
 int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
-    int cluster_id;
+    /*int cluster_id;
     string from_floor;
     string updown;
     string open_floors;
@@ -66,6 +65,6 @@ int WlongBookLift1HttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObjec
         jresponse.Add("errMsg", "request of 3p interface failed");
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
-    }
+    }*/
     return 0;
 }

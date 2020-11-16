@@ -1,5 +1,4 @@
 #include "RiliCallLiftHttpHandler.hpp"
-#include "InitInfo.hpp"
 #include "rili_uart_protocol.h"
 #include "uni_log.h"
 
@@ -9,7 +8,7 @@ RiliCallLiftHttpHandler :: RiliCallLiftHttpHandler() : ICallLiftHttpHandler("ril
     LOGT(RILI_CALL_TAG, "RiliCallLift object created");
 }
 int RiliCallLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
-    int ivalue;
+    /*int ivalue;
     string svalue;
     CJsonObject jbuilding;
     CJsonObject jdhome;
@@ -72,6 +71,6 @@ int RiliCallLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject&
         jresponse.Add("errMsg", "request of Rili 3p interface failed");
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
-    }
+    }*/
     return 0;
 }
