@@ -69,14 +69,15 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/message/message_dispatcher
 
 app_src := src/app \
-           src/app/left/lift_control/base/http \
-           src/app/left/lift_control/rili/http \
-           src/app/left/lift_control/wlong/http \
-           src/app/right/common/auth \
-           src/app/right/common/hb \
-           src/app/right/common \
+           src/app/left/lift_control \
+           src/app/left/lift_control/http/service \
+           src/app/left/lift_control/http/packer \
+           src/app/left/lift_control/http/request_handler \
+           src/app/left/lift_control/http/request_handler/message_handlers/rili \
+           src/app/left/lift_control/http/request_handler/message_handlers/wlong \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
+           src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \
            src/app/up/sulink/mqtt \
@@ -89,14 +90,17 @@ app_src := src/app \
 
 app_inc := src/app \
            src/app/config \
-           src/app/left/lift_control/base/http \
-           src/app/left/lift_control/rili/http \
-           src/app/left/lift_control/wlong/http \
-           src/app/right/common/auth \
-           src/app/right/common/hb \
-           src/app/right/common \
+           src/app/left/lift_control \
+           src/app/left/lift_control/http/service \
+           src/app/left/lift_control/http/messages \
+           src/app/left/lift_control/http/packer \
+           src/app/left/lift_control/http/request_handler \
+           src/app/left/lift_control/http/request_handler/message_handlers \
+           src/app/left/lift_control/http/request_handler/message_handlers/rili \
+           src/app/left/lift_control/http/request_handler/message_handlers/wlong \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
+           src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \
            src/app/up/sulink/mqtt \

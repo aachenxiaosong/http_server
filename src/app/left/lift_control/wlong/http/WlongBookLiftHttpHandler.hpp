@@ -1,7 +1,6 @@
 #ifndef LEFT_LIFT_CONTROL_WLONG_HTTP_WLONG_BOOK_LIFT_HTTP_HANDLER_H_
 #define LEFT_LIFT_CONTROL_WLONG_HTTP_WLONG_BOOK_LIFT_HTTP_HANDLER_H_
 
-#include "IBookLiftHttpHandler.hpp"
 #include "CJsonObject.hpp"
 
 using namespace std;

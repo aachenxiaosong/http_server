@@ -11,6 +11,7 @@ WlongBookLiftHttpHandler :: WlongBookLiftHttpHandler() : IBookLiftHttpHandler("w
 }
 
 int WlongBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
+    //TODO
     /*int cluster_id;
     string from_floor;
     string updown;

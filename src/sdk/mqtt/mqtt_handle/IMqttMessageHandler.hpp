@@ -9,9 +9,9 @@ using namespace std;
 class MqttClient;
 
 class IMqttMessageHandler : public IMessageHandler {
-    protected:
+protected:
     MqttClient *mConn;
-    public:
+public:
     IMqttMessageHandler(const char* name) : IMessageHandler(name) {
         mConn = NULL;
     }

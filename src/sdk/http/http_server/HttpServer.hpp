@@ -5,6 +5,7 @@
 
 int http_server_start();
 int http_server_add_handler(IHttpRequestHandler *handler);
+int http_server_del_handler(IHttpRequestHandler *handler);
 int http_server_clear_handler();
 
 

@@ -27,6 +27,7 @@ private:
 public:
     SulinkClient();
     ~SulinkClient();
+    int start();
     int onRecvMessage(const Message& message);
 };
 

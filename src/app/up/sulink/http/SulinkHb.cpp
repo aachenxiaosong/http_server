@@ -9,6 +9,26 @@
 #define SULINK_HB_TAG "sulink_hb_http"
 using namespace neb;
 
+SulinkHb :: SulinkHb() {
+    mIsRunning = false;
+}
+
+int SulinkHb :: startHbTask() {
+    mHbThread = new thread(hbTask, this);
+    if (mHbThread == NULL) {
+        LOGE(SULINK_HB_TAG, "start hb task failed");
+        return -1;
+    }
+    return 0;
+}
+
+SulinkHb :: ~SulinkHb() {
+    mIsRunning = false;
+    if (mHbThread) {
+        mHbThread->join();
+        delete mHbThread;
+    }
+}
 
 int SulinkHb :: request() {
     map<string, string> headers;
@@ -38,4 +58,14 @@ int SulinkHb :: request() {
         rc = ret_code;
     }
     return rc;
+}
+
+void SulinkHb :: hbTask(void *arg)
+{
+    SulinkHb* hb = (SulinkHb*)arg;
+    hb->mIsRunning = true;
+    while (hb->mIsRunning) {
+        hb->request();
+        sleep(HB_INTERVAL);
+    }
 }

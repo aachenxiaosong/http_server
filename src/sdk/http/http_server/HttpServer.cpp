@@ -25,6 +25,7 @@
 
 #include "IHttpRequestHandler.hpp"
 #include "HttpServer.hpp"
+#include "RwLock.hpp"
 
 #define BUF_MAX              (1024 * 16)
 #define HTTP_SERVER_TAG      "http_server"
@@ -39,6 +40,7 @@ pthread_t g_threads[HTTP_SERVER_NTHREADS];
 httpd_info g_info_arr[HTTP_SERVER_NTHREADS];
 
 vector<IHttpRequestHandler *> g_http_handlers;
+RwLock g_http_handler_lock;
 
 //解析http url中的path
 static int find_http_path(struct evhttp_request *req, char *result) {
@@ -178,6 +180,7 @@ int process_post_request(char *path, char *request, char *response) {
   string srequest = request;
   string sresponse = "";
   IHttpRequestHandler *handler;
+  g_http_handler_lock.readLock();
   for (vector<IHttpRequestHandler *>::iterator it = g_http_handlers.begin(); it != g_http_handlers.end(); it++) {
     handler = *it;
     if (0 == handler->handle(spath, srequest, sresponse)) {
@@ -186,6 +189,7 @@ int process_post_request(char *path, char *request, char *response) {
       break;
     }
   }
+  g_http_handler_lock.readUnlock();
   if (strlen(response) == 0) {
     sprintf(response, "%s", "{\"errCode\":1, \"errMsg\":\"server not ready or request not supported\"}");
   }
@@ -207,7 +211,7 @@ void http_handler_post_msg(struct evhttp_request *req,void *arg) {
     LOGE(HTTP_SERVER_TAG, "not a post request");
     return;
   }
-  LOGE(HTTP_SERVER_TAG, "post request handled by thread %ld", pthread_self());
+  LOGT(HTTP_SERVER_TAG, "post request handled by thread %ld", pthread_self());
   find_http_path(req, path);
   ret = get_post_request(request, req);//获取请求数据，一般是json格式的数据
   if(ret != 0) {
@@ -327,9 +331,28 @@ int http_server_start() {
 }
 
 int http_server_add_handler(IHttpRequestHandler *handler) {
+  g_http_handler_lock.writeLock();
   g_http_handlers.push_back(handler);
+  g_http_handler_lock.writeUnlock();
+  return 0;
+}
+
+int http_server_del_handler(IHttpRequestHandler *handler) {
+  g_http_handler_lock.writeLock();
+  vector<IHttpRequestHandler *>::iterator it;
+  for (it = g_http_handlers.begin(); it != g_http_handlers.end(); ++it) {
+    if (*it == handler) {
+      g_http_handlers.erase(it);
+      break;
+    }
+  }
+  g_http_handler_lock.writeUnlock();
+  return 0;
 }
 
 int http_server_clear_handler() {
+  g_http_handler_lock.writeLock();
   g_http_handlers.clear();
+  g_http_handler_lock.writeUnlock();
+  return 0;
 }

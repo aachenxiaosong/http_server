@@ -7,7 +7,6 @@ SulinkClient :: SulinkClient() {
     mName = "sulink_mqtt_client";
     mMqttClient = NULL;
     mIsConnected = false;
-    mLinkThread = new thread(linkTask, this);
 }
 
 SulinkClient :: ~SulinkClient() {
@@ -22,6 +21,15 @@ SulinkClient :: ~SulinkClient() {
     }
 }
 
+int SulinkClient :: start()
+{
+    mLinkThread = new thread(linkTask, this);
+    if (mLinkThread == NULL) {
+        LOGE(SULINK_CLIENT_TAG, "start sulink mqtt client link task failed");
+        return -1;
+    }
+    return 0;
+}
 
 int SulinkClient :: onRecvMessage(const Message& message) {
     if (mMqttClient != NULL) {

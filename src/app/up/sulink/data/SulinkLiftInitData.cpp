@@ -62,6 +62,21 @@ int SulinkLiftInitData :: mGetSpaceIdIndex(const string& space_id) {
     return -1;
 }
 
+string SulinkLiftInitData :: mGetAppId()
+{
+    return mInfo->brandInfo().appId();
+}
+
+string SulinkLiftInitData :: mGetAppSecret()
+{
+    return mInfo->brandInfo().appSecret();
+}
+
+string SulinkLiftInitData :: mGetLicense()
+{
+    return mInfo->brandInfo().licence();
+}
+
 string SulinkLiftInitData :: mGetSpaceNoBySpaceId(const string& space_id, const string& space_type) {
     int index;
     string id = space_id;
@@ -194,6 +209,21 @@ const string SulinkLiftInitData :: mToString()
 bool SulinkLiftInitData :: inited()
 {
     return (mData.mInfo != NULL);
+}
+
+string SulinkLiftInitData :: getAppId()
+{
+    return mData.mGetAppId();
+}
+
+string SulinkLiftInitData :: getAppSecret()
+{
+    return mData.mGetAppSecret();
+}
+
+string SulinkLiftInitData :: getLicense()
+{
+    return mData.mGetLicense();
 }
 
 //不直接定义mInfo成静态成员的原因是,读文件的部分需要静态初始化,所以要借助静态的mData成员

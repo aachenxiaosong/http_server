@@ -5,13 +5,13 @@
 using namespace std;
 
 class IHttpRequestHandler {
-    private:
+private:
     string mName;
-    public:
+public:
     IHttpRequestHandler(const char* name);
     virtual ~IHttpRequestHandler();
     string getName();
-    virtual int handle(string& path, string& request, string&response) = 0;
+    virtual int handle(const string& path, const string& request, string&response) = 0;
 };
 
 #endif  //   SDK_HTTP_HTTP_SERVER_I_HTTP_REQUEST_HANDLER_HPP_
