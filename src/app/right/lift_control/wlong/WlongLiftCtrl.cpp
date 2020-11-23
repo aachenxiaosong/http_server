@@ -105,7 +105,7 @@ int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string&
     return ret;
 }
 
- int WlongLiftCtrl :: aliveTest(string &message) {
+int WlongLiftCtrl :: aliveTest(string &message) {
     char request_url[128] = {0};
     char request[1024] = {0};
     WlongResponse response;
@@ -136,6 +136,139 @@ int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string&
     } else {
         LOGE(WLONG_3P_CTRL, "wlong alive test calling failed, ret = %d", ret);
         message = "calling wlong api failed";
+        ret = -1;
+    }
+    if (NULL != result) {
+        uni_free(result);
+    }
+    return ret;
+}
+
+static int _h2d(char c) {
+    if (c >= '0' && c <= '9') {
+        return c - '0';
+    }
+    if (c >= 'A' && c <= 'F') {
+        return c - 'A' + 10;
+    }
+    if (c >= 'a' && c <= 'f') {
+        return c - 'a' + 10;
+    }
+    return 0;
+}
+
+int WlongLiftCtrl :: _parse_lift_status(char *result, WlongLiftStatus& response) {
+    CJsonObject ojson(result);
+    int ivalue;
+    string svalue;
+    CJsonObject jvalue;
+    LOGT(WLONG_3P_CTRL, "parsing result: %s", result);
+    if (true != ojson.Get("code", ivalue)) {
+        LOGT(WLONG_3P_CTRL, "parse code failed for call_elevator_by_floor: %s", result);
+        return -1;
+    }
+    response.code = ivalue;
+    if (true != ojson.Get("message", svalue)) {
+        LOGT(WLONG_3P_CTRL, "parse message failed for call_elevator_by_floor: %s", result);
+        return -1;
+    }
+    response.msg = svalue;
+    if (true != ojson.Get("data", jvalue)) {
+        LOGT(WLONG_3P_CTRL, "parse data failed for call_elevator_by_floor: %s", result);
+        return -1;
+    }
+    if (true != jvalue.Get("status", svalue) || svalue.length() < 8) {
+        LOGT(WLONG_3P_CTRL, "parse status failed for call_elevator_by_floor: %s", result);
+        return -1;
+    }
+    string status = svalue;
+
+    int cur_floor = _h2d(status[2]) * 16 + _h2d(status[3]);
+    if (status[1] == '1') {
+        cur_floor *= -1;
+    }
+    response.cur_floor = cur_floor;
+    if (status[5] == '0') {
+        response.stopped = 1;
+        response.upward = 0;
+        response.status_error = 0;
+    } else if (status[5] == '1') {
+        response.stopped = 0;
+        response.upward = 0;
+        response.status_error = 0;
+    } else if (status[5] == '2') {
+        response.stopped = 0;
+        response.upward = 1;
+        response.status_error = 0;
+    } else {
+        response.stopped = 0;
+        response.upward = 0;
+        response.status_error = 1;
+    }
+    if (status[7] == '0') {
+        response.open = 0;
+        response.closed = 1;
+        response.opening = 0;
+        response.closing = 0;
+        response.door_error = 0;
+    } else if (status[7] == '1') {
+        response.open = 0;
+        response.closed = 0;
+        response.opening = 1;
+        response.closing = 0;
+        response.door_error = 0;
+    } else if (status[7] == '2') {
+        response.open = 0;
+        response.closed = 0;
+        response.opening = 0;
+        response.closing = 1;
+        response.door_error = 0;
+    } else if (status[7] == '3') {
+        response.open = 0;
+        response.closed = 0;
+        response.opening = 0;
+        response.closing = 0;
+        response.door_error = 0;
+    } else if (status[7] == '4') {
+        response.open = 1;
+        response.closed = 0;
+        response.opening = 0;
+        response.closing = 0;
+        response.door_error = 0;
+    } else {
+        response.open = 0;
+        response.closed = 0;
+        response.opening = 0;
+        response.closing = 0;
+        response.door_error = 1;
+    }
+    return 0;
+}
+
+int WlongLiftCtrl :: getElevatorStatus(int elevator_id, WlongLiftStatus& response) {
+    char request_url[128] = {0};
+    char request[1024] = {0};
+    const char *headers[1][2] = {{"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}};
+    char *result = NULL;
+    int ret;
+    snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), ELEVATOR_STATUS_PATH);
+    snprintf(request, sizeof(request), 
+             "appId=%s&appSecret=%s&licence=%s&deviceId=%d",
+             appid.c_str(), appsecret.c_str(), licence.c_str(), elevator_id);
+    LOGT(WLONG_3P_CTRL, "elevator_status url:%s, request:%s", request_url, request);
+    #if !STUB_ENABLE
+    ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
+    #else
+    ret = 0;
+    result = (char *)uni_malloc(1024);
+    sprintf(result, "%s", "{\"code\": 0, \"message\": \"OK\", \"data\":\"no data\"}");
+    #endif
+    if (0 == ret &&NULL != result &&
+        0 == _parse_lift_status(result, response)) {
+        LOGT(WLONG_3P_CTRL, "wlong elevator_status calling succeeded");
+        ret = 0;
+    } else {
+        LOGE(WLONG_3P_CTRL, "wlong elevator_status calling failed, ret = %d", ret);
         ret = -1;
     }
     if (NULL != result) {

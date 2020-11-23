@@ -117,6 +117,13 @@ LiftCtrlMessageLiftStatusReq* LiftCtrlPacker :: unpackLiftStatusReq(const string
     LiftCtrlMessageLiftStatusReq* request = new LiftCtrlMessageLiftStatusReq();
     CJsonObject jrequest(raw_data);
     int ivalue;
+    string svalue;
+    if (true != jrequest.Get("homeId", svalue)) {
+        request->retcode(-1);
+        request->msg("wrong param homeId");
+        return request;
+    }
+    request->homeId(svalue);
     if (true != jrequest.Get("elevatorId", ivalue)) {
         request->retcode(-1);
         request->msg("wrong param elevatorId");

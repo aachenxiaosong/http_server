@@ -139,6 +139,7 @@ public:
 
 class LiftCtrlMessageLiftStatusReq : public LiftCtrlMessageReq
 {
+    MEMBER(string, homeId)
     MEMBER(int, elevatorId)
 public:
     LiftCtrlMessageLiftStatusReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_LIFT_STATUS_REQ)
