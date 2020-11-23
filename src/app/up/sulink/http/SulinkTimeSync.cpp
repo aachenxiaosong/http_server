@@ -45,7 +45,7 @@ int SulinkTimeSync :: request() {
     map<string, string> params;
     long timestamp = UniUtil::timestampMs();
     T1 = timestamp;
-    params["deviceCode"] = UniUtil::deviceCode();
+    params["localTime"] = to_string(timestamp);
     headers["Content-Type"] = "application/json";
     headers["brand"] = SULINK_BRAND;
     headers["timestamp"] = timestamp;

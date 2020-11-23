@@ -33,17 +33,24 @@ SulinkHb :: ~SulinkHb() {
 int SulinkHb :: request() {
     map<string, string> headers;
     map<string, string> params;
+    string device_code = UniUtil::deviceCode();
+    double cpu_utility = UniUtil::cpuUtility();
+    double mem_utility = UniUtil::memoryUtility();
     long timestamp = UniUtil::timestampMs();
-    params["deviceCode"] = UniUtil::deviceCode();
+    params["deviceCode"] = device_code;
+    params["upTime"] = to_string(timestamp);
+    params["cpu"] = to_string(cpu_utility);
+    params["memory"] = to_string(mem_utility);
+    params["versionNumber"] = MY_VERSION;
     headers["Content-Type"] = "application/json";
     headers["brand"] = SULINK_BRAND;
     headers["timestamp"] = to_string(timestamp);
     headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     CJsonObject jcontent;
-    jcontent.Add("deviceCode", UniUtil::deviceCode());
+    jcontent.Add("deviceCode", device_code);
     jcontent.Add("upTime", timestamp);
-    jcontent.Add("cpu", UniUtil::cpuUtility());
-    jcontent.Add("memory", UniUtil::memoryUtility());
+    jcontent.Add("cpu", to_string(cpu_utility));
+    jcontent.Add("memory", to_string(mem_utility));
     jcontent.Add("versionNumber", MY_VERSION);
     string content = jcontent.ToString();
     string result;

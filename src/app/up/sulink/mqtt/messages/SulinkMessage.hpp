@@ -158,7 +158,7 @@ class SulinkMessageRecvLiftInfo : public SulinkMessage {
     MEMBER(string, errMessage)
 public:
     SulinkMessageRecvLiftInfo() : SulinkMessage(MSG_SULINK_RECV_LIFT_INFO) {
-        method("device-ubox-info");
+        method("device-ubox-lift-info");
         timestamp(0);
         errCode(0);
     }
@@ -174,7 +174,7 @@ class SulinkMessageRecvLiftInfoAck : public SulinkMessage {
     MEMBER(string, ackReqId)
     public:
     SulinkMessageRecvLiftInfoAck() : SulinkMessage(MSG_SULINK_RECV_LIFT_INFO_ACK) {
-        method("device-ubox-info-ack");
+        method("device-ubox-lift-info-ack");
         code(0);
     }
     ~SulinkMessageRecvLiftInfoAck() {}

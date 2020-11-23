@@ -4,7 +4,7 @@
 		"payloadVersion": 1,
 		"brand": "KT",
 		"timestamp": 1234567890123,
-		"method": "device-ubox-info"
+		"method": "device-ubox-lift-info"
 	},
 	"payload": {
 		"reqId": "1234567890",

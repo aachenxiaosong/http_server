@@ -458,7 +458,7 @@ IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
         return unpackRecvPassRule(raw_data);
     } else if (message_type.compare("pass-record-ack") == 0) {
         return unpackSendPassRecordAck(raw_data);
-    } else if (message_type.compare("device-ubox-info") == 0) {
+    } else if (message_type.compare("device-ubox-lift-info") == 0) {
         return unpackRecvLiftInfo(raw_data);
     }
     return NULL;
