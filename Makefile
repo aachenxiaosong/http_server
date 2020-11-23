@@ -120,14 +120,14 @@ test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test
 
 
-SRC := $(hal_src) $(utils_src) $(sdk_inc) $(app_src) $(test_src)
+SRC := $(hal_src) $(utils_src) $(sdk_src) $(app_src) $(test_src)
 INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) $(lib_inc) $(test_inc)
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))
 c_to_o = $(subst .c,.o,$1)
 cpp_to_o = $(subst .cpp,.o,$1)
-o_to_d = $(subst .o,.o.d,$1)
+o_to_d = $(subst .o,.d,$1)
 
 # compile parameters -------------
 vpath %.c $(SRC)
@@ -155,10 +155,10 @@ ifneq ($(IS_UBUNTU),)
 CFLAGS += -DIS_UBUNTU
 endif
 $(C_OBJ_FILES):$(BUILD_DIR)/%.o: %.c
-	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
+	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -MMD -MP -c -o $@ $<
 
 $(CPP_OBJ_FILES):$(BUILD_DIR)/%.o: %.cpp
-	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -Wp,-MD,$@.d -c -o $@ $<
+	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -MMD -MP -c -o $@ $<
   
 $(target): prepare $(C_OBJ_FILES) $(CPP_OBJ_FILES)
 	g++ $(CFLAGS) $(C_OBJ_FILES) $(CPP_OBJ_FILES) $(INC_FLAGS) $(LIB) -o $@
