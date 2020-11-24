@@ -8,7 +8,7 @@ extern "C" {
 
 #define CLOUD_TYPE 2
 /******************* common info of device *******************/
-#define MY_VERSION "v3.0.0"
+#define MY_VERSION "v3.1.0"
 #define NET_NAME  "enp2s0"
 #define MY_TYPE     "ELEVATOR_IPC"
 #if (CLOUD_TYPE == 0) //test

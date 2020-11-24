@@ -29,16 +29,16 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
     string default_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.defaultHomeId());
     //step3: 根据其他权限空间找到解锁层,根据设备编码找到公共楼层,解锁楼层要加上公共楼层
     string unlock_floors = "";
-    for (int i = 0; i < req.homeIds().size(); i++) {
-        if (i != 0) {
-            unlock_floors += ",";
-        }
-        unlock_floors += req.homeIds()[i];
-    }
     string pub_floors = SulinkLiftInitData :: getDevicePubFloors(req.deviceCode());
     if (pub_floors.empty() != true) {
-        unlock_floors += ",";
         unlock_floors += pub_floors;
+    }
+    for (int i = 0; i < req.homeIds().size(); i++) {
+        string unlock_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.homeIds()[i]);
+        if (unlock_floor.empty() != true) {
+            unlock_floors += ",";
+            unlock_floors += unlock_floor;
+        }
     }
     string not_found_msg = "";
     if (cluster_url.empty()) {

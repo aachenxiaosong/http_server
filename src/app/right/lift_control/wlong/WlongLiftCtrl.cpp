@@ -173,74 +173,99 @@ int WlongLiftCtrl :: _parse_lift_status(char *result, WlongLiftStatus& response)
         return -1;
     }
     response.msg = svalue;
-    if (true != ojson.Get("data", jvalue)) {
-        LOGT(WLONG_3P_CTRL, "parse data failed for call_elevator_by_floor: %s", result);
-        return -1;
-    }
-    if (true != jvalue.Get("status", svalue) || svalue.length() < 8) {
-        LOGT(WLONG_3P_CTRL, "parse status failed for call_elevator_by_floor: %s", result);
-        return -1;
-    }
-    string status = svalue;
+    if (true != ojson.Get("data", svalue))
+    {
 
-    int cur_floor = _h2d(status[2]) * 16 + _h2d(status[3]);
-    if (status[1] == '1') {
-        cur_floor *= -1;
-    }
-    response.cur_floor = cur_floor;
-    if (status[5] == '0') {
-        response.stopped = 1;
-        response.upward = 0;
-        response.status_error = 0;
-    } else if (status[5] == '1') {
-        response.stopped = 0;
-        response.upward = 0;
-        response.status_error = 0;
-    } else if (status[5] == '2') {
-        response.stopped = 0;
-        response.upward = 1;
-        response.status_error = 0;
-    } else {
-        response.stopped = 0;
-        response.upward = 0;
-        response.status_error = 1;
-    }
-    if (status[7] == '0') {
-        response.open = 0;
-        response.closed = 1;
-        response.opening = 0;
-        response.closing = 0;
-        response.door_error = 0;
-    } else if (status[7] == '1') {
-        response.open = 0;
-        response.closed = 0;
-        response.opening = 1;
-        response.closing = 0;
-        response.door_error = 0;
-    } else if (status[7] == '2') {
-        response.open = 0;
-        response.closed = 0;
-        response.opening = 0;
-        response.closing = 1;
-        response.door_error = 0;
-    } else if (status[7] == '3') {
-        response.open = 0;
-        response.closed = 0;
-        response.opening = 0;
-        response.closing = 0;
-        response.door_error = 0;
-    } else if (status[7] == '4') {
-        response.open = 1;
-        response.closed = 0;
-        response.opening = 0;
-        response.closing = 0;
-        response.door_error = 0;
-    } else {
-        response.open = 0;
-        response.closed = 0;
-        response.opening = 0;
-        response.closing = 0;
-        response.door_error = 1;
+        if (true != ojson.Get("data", jvalue))
+        {
+            LOGT(WLONG_3P_CTRL, "parse data failed for call_elevator_by_floor: %s", result);
+            return -1;
+        }
+        if (true != jvalue.Get("status", svalue) || svalue.length() < 8)
+        {
+            LOGT(WLONG_3P_CTRL, "parse status failed for call_elevator_by_floor: %s", result);
+            return -1;
+        }
+        string status = svalue;
+
+        int cur_floor = _h2d(status[2]) * 16 + _h2d(status[3]);
+        if (status[1] == '1')
+        {
+            cur_floor *= -1;
+        }
+        response.cur_floor = cur_floor;
+        if (status[5] == '0')
+        {
+            response.stopped = 1;
+            response.upward = 0;
+            response.status_error = 0;
+        }
+        else if (status[5] == '1')
+        {
+            response.stopped = 0;
+            response.upward = 0;
+            response.status_error = 0;
+        }
+        else if (status[5] == '2')
+        {
+            response.stopped = 0;
+            response.upward = 1;
+            response.status_error = 0;
+        }
+        else
+        {
+            response.stopped = 0;
+            response.upward = 0;
+            response.status_error = 1;
+        }
+        if (status[7] == '0')
+        {
+            response.open = 0;
+            response.closed = 1;
+            response.opening = 0;
+            response.closing = 0;
+            response.door_error = 0;
+        }
+        else if (status[7] == '1')
+        {
+            response.open = 0;
+            response.closed = 0;
+            response.opening = 1;
+            response.closing = 0;
+            response.door_error = 0;
+        }
+        else if (status[7] == '2')
+        {
+            response.open = 0;
+            response.closed = 0;
+            response.opening = 0;
+            response.closing = 1;
+            response.door_error = 0;
+        }
+        else if (status[7] == '3')
+        {
+            response.open = 0;
+            response.closed = 0;
+            response.opening = 0;
+            response.closing = 0;
+            response.door_error = 0;
+        }
+        else if (status[7] == '4')
+        {
+            response.open = 1;
+            response.closed = 0;
+            response.opening = 0;
+            response.closing = 0;
+            response.door_error = 0;
+        }
+        else
+        {
+            response.open = 0;
+            response.closed = 0;
+            response.opening = 0;
+            response.closing = 0;
+            response.door_error = 1;
+        }
     }
     return 0;
 }

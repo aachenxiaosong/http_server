@@ -6,6 +6,7 @@
 #include "WlongCallLiftMessageHandler.hpp"
 #include "WlongBookLiftInterMessageHandler.hpp"
 #include "WlongTakeLiftMessageHandler.hpp"
+#include "WlongLiftStatusMessageHandler.hpp"
 
 
 class LiftCtrlService {
@@ -14,6 +15,7 @@ private:
     WlongCallLiftMessageHandler mWlongCallLiftHandler;
     WlongBookLiftInterMessageHandler mWlongBookLiftInterHandler;
     WlongTakeLiftMessageHandler mWlongTakeLiftHandler;
+    WlongLiftStatusMessageHandler mWlongLiftStatusHandler;
     LiftCtrlRequestHandler mWlongHandler;
 public:
     enum LiftVenderType {

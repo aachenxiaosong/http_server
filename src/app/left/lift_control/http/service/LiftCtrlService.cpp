@@ -7,6 +7,7 @@ LiftCtrlService :: LiftCtrlService()
     mWlongHandler.addMessageHandler(&mWlongCallLiftHandler);
     mWlongHandler.addMessageHandler(&mWlongBookLiftInterHandler);
     mWlongHandler.addMessageHandler(&mWlongTakeLiftHandler);
+    mWlongHandler.addMessageHandler(&mWlongLiftStatusHandler);
     mVenderType = LIFT_VENDER_NONE;
 }
 
