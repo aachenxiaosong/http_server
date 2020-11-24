@@ -26,17 +26,19 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
     string license = SulinkLiftInitData :: getLicense();
     //step2: 根据默认空间获取群控器的ip和端口;并找到到达楼层
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.defaultHomeId());
-    string default_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.defaultHomeId());
+    string open_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.defaultHomeId());
     //step3: 根据其他权限空间找到解锁层,根据设备编码找到公共楼层,解锁楼层要加上公共楼层
     string unlock_floors = "";
     string pub_floors = SulinkLiftInitData :: getDevicePubFloors(req.deviceCode());
     if (pub_floors.empty() != true) {
         unlock_floors += pub_floors;
     }
-    for (int i = 0; i < req.homeIds().size(); i++) {
-        string unlock_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.homeIds()[i]);
+    for (int i = 0; i < req.authorizedHomeIds().size(); i++) {
+        string unlock_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.authorizedHomeIds()[i]);
         if (unlock_floor.empty() != true) {
-            unlock_floors += ",";
+            if (unlock_floors.empty() != true) {
+                unlock_floors += ",";
+            }
             unlock_floors += unlock_floor;
         }
     }
@@ -44,7 +46,7 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
     if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.defaultHomeId();
     }
-    if (default_floor.empty()) {
+    if (open_floor.empty()) {
         not_found_msg = "default floor not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {
@@ -58,7 +60,7 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
     //step5: 调用wlong乘梯接口
     WlongResponse wl_response;
     WlongLiftCtrl wlong_lift_ctrl(cluster_url, app_id, app_secret, license);
-    int ret = wlong_lift_ctrl.callElevatorByFoor(lift_id, default_floor, unlock_floors, wl_response);
+    int ret = wlong_lift_ctrl.callElevatorByFoor(lift_id, open_floor, unlock_floors, wl_response);
     if (ret == 0) {
         LOGT(WLONG_TAKE_LIFT_MSG_HANDLER_TAG, "handle request of wlong take lift OK");
         rsp.retcode(0);

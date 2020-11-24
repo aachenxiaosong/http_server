@@ -70,10 +70,16 @@ public:
 
 class LiftCtrlMessageBookLiftReq : public LiftCtrlMessageReq
 {
-    MEMBER(string, homeId)
+    MEMBER(string, defaultHomeId)
+    PMEMBER(vector<string>, authorizedHomeIds)
+    MEMBER(string, mode)
     MEMBER(string, deviceCode)
     MEMBER(int, unlockTime)
 public:
+    const string MODE_OPEN = "open";
+    const string MODE_UNLOCK = "unlock";
+    const string MODE_ALL = "all";
+    const string MODE_NONE = "none";
     LiftCtrlMessageBookLiftReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_BOOK_LIFT_REQ)
     {
         unlockTime(LIFT_CTRL_DEFAULT_TIMEOUT);
@@ -119,7 +125,7 @@ public:
 class LiftCtrlMessageTakeLiftReq : public LiftCtrlMessageReq
 {
     MEMBER(string, defaultHomeId)
-    PMEMBER(vector<string>, homeIds)
+    PMEMBER(vector<string>, authorizedHomeIds)
     MEMBER(string, deviceCode)
 public:
     LiftCtrlMessageTakeLiftReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_TAKE_LIFT_REQ)

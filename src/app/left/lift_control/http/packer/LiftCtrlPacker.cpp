@@ -36,14 +36,41 @@ LiftCtrlMessageBookLiftReq* LiftCtrlPacker :: unpackBookLiftReq(const string& ra
 {
     LiftCtrlMessageBookLiftReq* request = new LiftCtrlMessageBookLiftReq();
     CJsonObject jrequest(raw_data);
+    CJsonObject jvalue;
     string svalue;
     int ivalue;
-    if (true != jrequest.Get("homeId", svalue)) {
+    if (true != jrequest.Get("defaultHomeId", svalue)) {
         request->retcode(-1);
-        request->msg("wrong param homeId");
+        request->msg("wrong param defaultHomeId");
         return request;
     }
-    request->homeId(svalue);
+    request->defaultHomeId(svalue);
+
+    if (true == jrequest.Get("authorizedHomeIds", jvalue))
+    {
+        if (true != jvalue.IsArray())
+        {
+            request->retcode(-1);
+            request->msg("wrong param authorizedHomeIds");
+            return request;
+        }
+        for (int i = 0; i < jvalue.GetArraySize(); i++)
+        {
+            string home_id;
+            jvalue.Get(i, home_id);
+            request->authorizedHomeIds().push_back(home_id);
+        }
+    }
+
+     if (true != jrequest.Get("mode", svalue) ||
+         (svalue.compare(request->MODE_OPEN) != 0 && svalue.compare(request->MODE_UNLOCK) != 0 &&
+          svalue.compare(request->MODE_ALL) != 0 && svalue.compare(request->MODE_NONE) != 0) ) {
+        request->retcode(-1);
+        request->msg("wrong param mode");
+        return request;
+    }
+    request->mode(svalue);
+    
     if (true == jrequest.Get("deviceCode", svalue)) {
         request->deviceCode(svalue);
     }
@@ -96,17 +123,17 @@ LiftCtrlMessageTakeLiftReq* LiftCtrlPacker :: unpackTakeLiftReq(const string& ra
         return request;
     }
     request->deviceCode(svalue);
-    if (true == jrequest.Get("homeIds", jvalue)) {
+    if (true == jrequest.Get("authorizedHomeIds", jvalue)) {
         if (true != jvalue.IsArray())
         {
             request->retcode(-1);
-            request->msg("wrong param homeIds");
+            request->msg("wrong param authorizedHomeIds");
             return request;
         }
         for (int i = 0; i < jvalue.GetArraySize(); i++) {
             string home_id;
             jvalue.Get(i, home_id);
-            request->homeIds().push_back(home_id);
+            request->authorizedHomeIds().push_back(home_id);
         }
     } 
     return request;

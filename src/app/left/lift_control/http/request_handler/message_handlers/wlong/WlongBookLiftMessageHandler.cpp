@@ -18,25 +18,36 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     if (request.type() != MSG_LIFT_CTRL_BOOK_LIFT_REQ) {
         return NULL;
     }
-    const LiftCtrlMessageBookLiftReq& req = dynamic_cast<const LiftCtrlMessageBookLiftReq&>(request);
+    LiftCtrlMessageBookLiftReq& req = (LiftCtrlMessageBookLiftReq &)request;
     LiftCtrlMessageBookLiftRsp rsp;
     //step1: 获取基本参数:appId,appSecret,license
     string app_id = SulinkLiftInitData :: getAppId();
     string app_secret = SulinkLiftInitData :: getAppSecret();
     string license = SulinkLiftInitData :: getLicense();
-    //step2: 根据homeId获取群控器id,并找到对应的ip和端口;并找到到达楼层
-    string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.homeId());
-    string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.homeId());
-    string to_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.homeId());
+    //step2: 根据defaultHomeId获取群控器id,并找到对应的ip和端口;并找到点亮和解锁楼层
+    string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.defaultHomeId());
+    string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.defaultHomeId());
+    string open_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.defaultHomeId());
+    string unlock_floors = open_floor;//for wlong, no open floor supported, so add it to unlock list
+    for (int i = 0; i < req.authorizedHomeIds().size(); i++) {
+        string unlock_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.authorizedHomeIds()[i]);
+        if (unlock_floor.empty() != true) {
+            /* if (unlock_floors.empty() != true) {
+                unlock_floors += ",";
+            }*/
+            unlock_floors += ",";
+            unlock_floors += unlock_floor;
+        }
+    }
     string not_found_msg = "";
     if (cluster_id.empty()) {
-        not_found_msg = "cluster id not found for home id " + req.homeId();
+        not_found_msg = "cluster id not found for home id " + req.defaultHomeId();
     }
     if (cluster_url.empty()) {
-        not_found_msg = "cluster url not found for home id " + req.homeId();
+        not_found_msg = "cluster url not found for home id " + req.defaultHomeId();
     }
-    if (to_floor.empty()) {
-        not_found_msg = "dest floor not found for home id " + req.homeId();
+    if (open_floor.empty()) {
+        not_found_msg = "dest floor not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {
         rsp.retcode(-1);
@@ -57,7 +68,11 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     WlongResponse wl_response;
     WlongLiftCtrl wlong_lift_ctrl(cluster_url, app_id, app_secret, license);
     string up_down = WLONG_UP;
-    int ret = wlong_lift_ctrl.bookingElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
+    //no unlock
+    if (req.mode().compare(req.MODE_NONE) == 0 || req.mode().compare(req.MODE_OPEN) == 0) {
+        unlock_floors = "";
+    }
+    int ret = wlong_lift_ctrl.bookingElevator(i_cluster_id, from_floor, up_down, unlock_floors, req.unlockTime(), wl_response);
     if (ret == 0) {
         LOGT(WLONG_BOOK_LIFT_MSG_HANDLER_TAG, "handle request of wlong book lift OK");
         rsp.retcode(0);
