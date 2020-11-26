@@ -55,7 +55,7 @@ LiftCtrlMessageRsp* WlongCallLiftMessageHandler :: handle(const LiftCtrlMessageR
     if (req.upDown().compare("up")) {
         up_down = WLONG_UP;
     }
-    int ret = wlong_lift_ctrl.bookingElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
+    int ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
     if (ret == 0) {
         LOGT(WLONG_CALL_LIFT_MSG_HANDLER_TAG, "handle request of wlong call lift OK");
         rsp.retcode(0);

@@ -68,11 +68,27 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     WlongResponse wl_response;
     WlongLiftCtrl wlong_lift_ctrl(cluster_url, app_id, app_secret, license);
     string up_down = WLONG_UP;
-    //no unlock
-    if (req.mode().compare(req.MODE_NONE) == 0 || req.mode().compare(req.MODE_OPEN) == 0) {
+    int ret;
+    if (req.mode().compare(req.MODE_NONE) == 0)
+    {
         unlock_floors = "";
+        ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, unlock_floors, req.unlockTime(), wl_response);
     }
-    int ret = wlong_lift_ctrl.bookingElevator(i_cluster_id, from_floor, up_down, unlock_floors, req.unlockTime(), wl_response);
+    else if (req.mode().compare(req.MODE_OPEN) == 0)
+    {
+        ret = wlong_lift_ctrl.reserveElevator(i_cluster_id, from_floor, open_floor, wl_response);
+    }
+    else if (req.mode().compare(req.MODE_UNLOCK) == 0)
+    {
+        ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, unlock_floors, req.unlockTime(), wl_response);
+    }
+    else if (req.mode().compare(req.MODE_ALL) == 0)
+    {
+        ret = 0;
+        wl_response.code = -1;
+        wl_response.msg = "mode not supported";
+        wl_response.data = "";
+    }   
     if (ret == 0) {
         LOGT(WLONG_BOOK_LIFT_MSG_HANDLER_TAG, "handle request of wlong book lift OK");
         rsp.retcode(0);

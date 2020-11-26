@@ -58,7 +58,7 @@ LiftCtrlMessageRsp* WlongBookLiftInterMessageHandler :: handle(const LiftCtrlMes
     if (from_floor.compare(to_floor) > 0) {
         up_down = WLONG_DN;//down
     }
-    int ret = wlong_lift_ctrl.bookingElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
+    int ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
     if (ret == 0) {
         LOGT(WLONG_BOOK_LIFT_INTER_MSG_HANDLER_TAG, "handle request of wlong book lift internal OK");
         rsp.retcode(0);

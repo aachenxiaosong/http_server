@@ -73,7 +73,7 @@ int WlongLiftCtrl :: callElevatorByFoor(int lift_id, string& open_floors, string
     return ret;
 }
 
-int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string& updown, string& open_floors, int open_time, WlongResponse& response) {
+int WlongLiftCtrl :: bookElevator(int cluster_id, string& from_floor, string& updown, string& unlock_floors, int unlock_time, WlongResponse& response) {
     char request_url[128] = {0};
     char request[1024] = {0};
     const char *headers[1][2] = {{"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}};
@@ -82,7 +82,7 @@ int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string&
     snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), BOOKING_ELEVATOR_PATH);
     snprintf(request, sizeof(request), 
              "appId=%s&appSecret=%s&licence=%s&deviceId=%d&fromFloor=%s&upDown=%s&openFloor=%s&openTime=%d",
-             appid.c_str(), appsecret.c_str(), licence.c_str(), cluster_id, from_floor.c_str(), updown.c_str(), open_floors.c_str(), open_time);
+             appid.c_str(), appsecret.c_str(), licence.c_str(), cluster_id, from_floor.c_str(), updown.c_str(), unlock_floors.c_str(), unlock_time);
     LOGT(WLONG_3P_CTRL, "booking_elevator url:%s, request:%s", request_url, request);
     #if !STUB_ENABLE
     ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
@@ -104,6 +104,39 @@ int WlongLiftCtrl :: bookingElevator(int cluster_id, string& from_floor, string&
     }
     return ret;
 }
+
+int WlongLiftCtrl :: reserveElevator(int cluster_id, string& from_floor, string& open_floor, WlongResponse& response) {
+    char request_url[128] = {0};
+    char request[1024] = {0};
+    const char *headers[1][2] = {{"Content-Type", "application/x-www-form-urlencoded;charset=UTF-8"}};
+    char *result = NULL;
+    int ret;
+    snprintf(request_url, sizeof(request_url), "%s%s", url.c_str(), RESERVE_ELEVATOR_PATH);
+    snprintf(request, sizeof(request), 
+             "appId=%s&appSecret=%s&licence=%s&deviceId=%d&fromFloor=%s&toFloor=%s&vipTime=%d",
+             appid.c_str(), appsecret.c_str(), licence.c_str(), cluster_id, from_floor.c_str(), open_floor.c_str(), 0);
+    LOGT(WLONG_3P_CTRL, "reserve_elevator url:%s, request:%s", request_url, request);
+    #if !STUB_ENABLE
+    ret = HttpPostWithHeadersTimeout(request_url, request, headers, 1, 5, &result);
+    #else
+    ret = 0;
+    result = (char *)uni_malloc(1024);
+    sprintf(result, "%s", "{\"code\": 0, \"message\": \"OK\", \"data\":\"no data\"}");
+    #endif
+    if (0 == ret &&NULL != result &&
+        0 == _parse_result(result, response)) {
+        LOGT(WLONG_3P_CTRL, "wlong reserve_elevator calling succeeded");
+        ret = 0;
+    } else {
+        LOGE(WLONG_3P_CTRL, "wlong reserve_elevator calling failed, ret = %d", ret);
+        ret = -1;
+    }
+    if (NULL != result) {
+        uni_free(result);
+    }
+    return ret;
+}
+
 
 int WlongLiftCtrl :: aliveTest(string &message) {
     char request_url[128] = {0};
