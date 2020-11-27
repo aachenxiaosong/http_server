@@ -19,6 +19,8 @@ int WlongHttpService :: registerHttpHandler() {
     http_server_add_handler(handler);
     handler = &mBookLift1Handler;
     http_server_add_handler(handler);
+    handler = &mBookLift2Handler;
+    http_server_add_handler(handler);
     handler = &mTakeLiftHandler;
     http_server_add_handler(handler);
     return 0;
