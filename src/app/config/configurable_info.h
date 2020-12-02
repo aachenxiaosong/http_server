@@ -8,7 +8,7 @@ extern "C" {
 
 #define CLOUD_TYPE 2
 /******************* common info of device *******************/
-#define MY_VERSION "v3.1.1"
+#define MY_VERSION "v3.1.2"
 #define NET_NAME  "enp2s0"
 #define MY_TYPE     "ELEVATOR_IPC"
 #if (CLOUD_TYPE == 0) //test
@@ -46,16 +46,16 @@ extern "C" {
 
 #define CLOUD_UC_TS_URL  "http://uc.hivoice.cn/timestamp.jsp"
 /***************************** sulink ***********************/
-#if 1
+#if 0
 #define SULINK_ACCESS_KEY           "847a82be3eff4060b8f4c4f3e0ed27da"
 #define SULINK_SECRET_KEY           "7c3d1867d911450db784496e382dbfbb"
 #define SULINK_BRAND                "xilaideng"
-#define SULINK_PAYLOAD_VERSION      1
 #else
 #define SULINK_ACCESS_KEY           "shimao62ae1634e0b32d0"
 #define SULINK_SECRET_KEY           "f6339f4974cac548080ecdeca4037489"
 #define SULINK_BRAND                "yzs"
 #endif
+#define SULINK_PAYLOAD_VERSION      1
 #define SULINK_SERVER               "https://test-api.shimaoiot.com/"
 #define SULINK_DEVICE_REGISTER_URL  SULINK_SERVER"api/sulink/v2/device/register"
 #define SULINK_HB_URL               SULINK_SERVER"device-monitor/v2/hb/up"
