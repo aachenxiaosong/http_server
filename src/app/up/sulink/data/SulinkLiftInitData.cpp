@@ -17,8 +17,8 @@ SulinkLiftInitData :: SulinkLiftInitData()
     {
         SulinkPacker packer;
         mInfo = dynamic_cast<SulinkMessageRecvLiftInfo *>(packer.unpack(raw_data));
+        LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config: \n%s", mToString().c_str());
         mUpdateSpaceIdIndexMap();
-        cout << toString() << endl;
     }
 };
 SulinkLiftInitData :: ~SulinkLiftInitData()
@@ -36,6 +36,7 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
         delete mInfo;
     }
     mInfo = new SulinkMessageRecvLiftInfo(info);
+    LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info updated: \n%s", mToString().c_str());
     SulinkPacker packer;
     ofstream ofs(SULINK_LIFT_INIT_DATA_FILE);
     string* sinfo = packer.pack(info);
