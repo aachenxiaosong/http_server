@@ -19,6 +19,7 @@
                 "${workspaceFolder}/src/msg_center_subscriber/info",
                 "${workspaceFolder}/src/msg_center_subscriber/handlers/rili",
                 "${workspaceFolder}/src/msg_center_subscriber/handlers/wlong",
+                "${workspaceFolder}/lib/poco/inc",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/x86_64-redhat-linux",
                 "/usr/lib/gcc/x86_64-redhat-linux/4.8.5/../../../../include/c++/4.8.5/backward",

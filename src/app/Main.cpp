@@ -19,7 +19,7 @@ static int _common_init() {
 
 
 int main() {
-#if 0
+#if 1
     extern void AppTest();
     AppTest();
     while(1) {
@@ -46,7 +46,7 @@ int main() {
     sulink.init();
     //lift control
     LiftCtrl lift_ctrl;
-    lift_ctrl.start();  
+    lift_ctrl.start();
     while(1) {
         sleep(100);
     }

@@ -114,7 +114,8 @@ app_inc := src/app \
            src/app/down/child_device/dechang/tcp/message_handlers
 
 lib_inc := lib/libevent/inc \
-           lib/mqtt/inc
+           lib/mqtt/inc \
+           lib/poco/inc
 
 test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test
@@ -143,7 +144,7 @@ CPP_OBJ_FILES := $(call cpp_to_o,$(CPP_FILES))
 CPP_OBJ_FILES := $(call change_file_location, $(CPP_OBJ_FILES), $(BUILD_DIR))
 DEP_FILES := $(call o_to_d,$(C_OBJ_FILES) $(CPP_OBJ_FILES))
 
-LIB := -Llib/libevent -Llib/mqtt -Llib/poco -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lcurl -lm -lpthread
+LIB := -Llib/libevent -Llib/mqtt -Llib/poco -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lPocoUtil -lcurl -lm -lpthread
 
 ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)

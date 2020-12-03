@@ -10,10 +10,11 @@
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
+#include "UniLog.hpp"
 
 using namespace std;
 
-#define TEST_NUM 7
+#define TEST_NUM 8
 
 Dechang dechang;
 
@@ -138,5 +139,8 @@ void AppTest() {
         cout << "device pub floor: " << SulinkLiftInitData::getDevicePubFloors("hf0000123") << endl;
         cout << "device lift id: " << SulinkLiftInitData::getDeviceLiftId("hf0000123") << endl;
     }
+#elif (TEST_NUM == 8)
+    Poco::Logger& logger = UniLog::getLogger("test_tag");
+    LOGT1(logger, "12345678901234567890123456789012345678901234567890123456789012345678901234567890");
 #endif
 }
