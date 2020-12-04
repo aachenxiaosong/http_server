@@ -79,12 +79,6 @@ extern "C" {
 #include "uni_types.h"
 #include "uni_sys_hal.h"
 
-#define EVENT_TASK            "event_task"
-#define LSR_TASK              "lsr_task"
-#define ASR_TASK              "asr_task"
-#define PLAYBACK_TASK         "playback_task"
-#define PLAYLIST_TASK         "playlist_task"
-#define THPOOL_TASK           "thpool_task_"
 #define UNI_CROW_VERSION      "v3.0.0--2020020411"
 
 typedef enum {
@@ -133,35 +127,23 @@ typedef enum {
 static inline void *uni_malloc(size_t size) {
   return malloc(size);
 }
-#define uni_calloc(n, size)              uni_hal_calloc(n, size)
+#define uni_calloc(n, size)              calloc(n, size)
 static inline void uni_free(void *ptr) {
   free(ptr);
 }
 
-#define uni_strtol(nptr, endptr, base)   uni_hal_strtol(nptr, endptr, base)
-#define uni_strtof(nptr, endptr)         uni_hal_strtof(nptr, endptr)
-#define uni_strtoll(nptr, endptr, base)  uni_hal_strtoll(nptr, endptr, base)
-#define uni_strtod(nptr, endptr)         uni_hal_strtod(nptr, endptr)
+#define uni_strtol(nptr, endptr, base)   strtol(nptr, endptr, base)
+#define uni_strtof(nptr, endptr)         strtof(nptr, endptr)
+#define uni_strtoll(nptr, endptr, base)  strtoll(nptr, endptr, base)
+#define uni_strtod(nptr, endptr)         strtod(nptr, endptr)
 
 #define UNI_SEEK_SET                     (0)
 #define UNI_SEEK_CUR                     (1)
 #define UNI_SEEK_END                     (2)
 
-#define uni_usleep(times)                uni_hal_usleep(times)
-#define uni_msleep(times)                uni_hal_msleep(times)
-#define uni_sleep(times)                 uni_hal_sleep(times)
-
-#define uni_open                         uni_hal_fopen
-#define uni_read                         uni_hal_fread
-#define uni_write                        uni_hal_fwrite
-#define uni_lseek                        uni_hal_lseek
-#define uni_close                        uni_hal_fclose
-#define uni_unlink                       uni_hal_unlink
-
-#define UNI_O_CREAT                      O_CREAT
-#define UNI_O_WRONLY                     O_WRONLY
-#define UNI_O_RDONLY                     O_RDONLY
-#define UNI_O_RDWR                       O_RDWR
+#define uni_usleep(times)                usleep(times)
+#define uni_msleep(times)                usleep(1000 * (times))
+#define uni_sleep(times)                 sleep(times)
 
 #define uni_memset(ptr, data, size)      memset(ptr, data, size)
 #define uni_memcpy(dest, src, size)      memcpy(dest, src, size)
@@ -200,31 +182,6 @@ typedef void* uni_mutex_t;
 #define uni_pthread_mutex_destroy(uni_mutex)   uni_hal_mutex_destroy(uni_mutex)
 #define uni_pthread_mutex_lock(uni_mutex)      uni_hal_mutex_lock(uni_mutex)
 #define uni_pthread_mutex_unlock(uni_mutex)    uni_hal_mutex_unlock(uni_mutex)
-
-#define uni_socket(domain, type, protocol)     socket(domain, type, protocol)
-#define uni_setsockopt(s, lvl, name, arg, len) setsockopt(s, lvl, name, arg, len)
-#define uni_connect(socket, addr, addrlen)     connect(socket, addr, addrlen)
-#define uni_bind(socket, addr, addrlen)        bind(socket, addr, addrlen)
-#define uni_listen(socket, backlog)            listen(socket, backlog)
-#define uni_accept(socket, addr, addrlen)      accept(socket, addr, addrlen)
-#define uni_send(socket, buf, len, flags)      send(socket, buf, len, flags)
-#define uni_sendto(socket, buf, len, \
-                   flags, dest_addr, addrlen)  sendto(socket, buf, len, flags,\
-                                                      dest_addr, addrlen)
-#define uni_recv(socket, buf, len, flags)      recv(socket, buf, len, flags)
-#define uni_recvfrom(socket, buf, len, \
-                     flags, src_addr, \
-                     addrlen) \                recvfrom(socket, buf, len, \
-                                                        flags, src_addr, \
-                                                        addrlen)
-#define uni_socket_close(fd)                   close(fd)
-#define uni_select                             select
-#define uni_fd_set                             fd_set
-
-typedef struct {
-  void *data;
-  int length;
-} FixLengthData;
 
 #ifdef __cplusplus
 }

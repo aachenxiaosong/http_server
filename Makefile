@@ -10,7 +10,6 @@ utils_src := src/utils/data_buf/src \
              src/utils/encrypt/src \
              src/utils/hash/src \
              src/utils/http/src \
-             src/utils/interruptable_sleep/src \
              src/utils/list/src \
              src/utils/log/src \
              src/utils/uuid/src \
@@ -18,7 +17,6 @@ utils_src := src/utils/data_buf/src \
              src/utils/md5sum/src \
              src/utils/memcheck/src \
              src/utils/system_resource/src \
-             src/utils/timer/src \
              src/utils/time_tick/src \
              src/utils/rwlock
 utils_inc := src/utils/uni_util/inc \
@@ -28,7 +26,6 @@ utils_inc := src/utils/uni_util/inc \
              src/utils/encrypt/inc \
              src/utils/hash/inc \
              src/utils/http/inc \
-             src/utils/interruptable_sleep/inc \
              src/utils/list/inc \
              src/utils/log/inc \
              src/utils/uuid/inc \
@@ -36,7 +33,6 @@ utils_inc := src/utils/uni_util/inc \
              src/utils/md5sum/inc \
              src/utils/memcheck/inc \
              src/utils/system_resource/inc \
-             src/utils/timer/inc \
              src/utils/time_tick/inc \
              src/utils/rwlock
 
