@@ -151,9 +151,9 @@ ifneq ($(DEP_FILES),)
 endif
 
 CFLAGS := -g -std=c++11
-IS_UBUNTU=$(shell uname -a | grep ubuntu)
-ifneq ($(IS_UBUNTU),)
-CFLAGS += -DIS_UBUNTU
+IS_VMWARE=$(shell ifconfig | gren ens33)
+ifneq ($(IS_VMWARE),)
+CFLAGS += -DIS_VMWARE
 endif
 $(C_OBJ_FILES):$(BUILD_DIR)/%.o: %.c
 	g++ $(CFLAGS) $(INC_FLAGS) $(LIB) -MMD -MP -c -o $@ $<

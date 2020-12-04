@@ -28,7 +28,7 @@
 #define DEVICE_TAG "device"
 
 static int _get_mac_address(char *address, uni_s32 len) {
-#ifdef IS_UBUNTU
+#ifdef IS_VMWARE
 #if 1
   snprintf(address, len, "%s", "7ccbe2e29774");
 #else
