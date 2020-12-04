@@ -1,4 +1,4 @@
-target := http_server
+target := uni_gateway 
 all: $(target) 
 
 hal_src := src/hal/src
