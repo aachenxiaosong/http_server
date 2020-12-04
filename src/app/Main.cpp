@@ -1,6 +1,5 @@
 #include "uni_iot.h"
 #include "serial.h"
-#include "uni_timer.h"
 #include "HttpServer.hpp"
 #include "Sulink.hpp"
 #include "LiftCtrl.hpp"
@@ -11,11 +10,6 @@
 static int _common_init() {
     srand(time(0));
     UniLog::init();
-        LOGE(MAIN_TAG, "log init OK");
-    if (E_OK != TimerInitialize()) {
-        LOGE(MAIN_TAG, "timer init failed");
-        return -1;
-    }
     return 0;
 }
 

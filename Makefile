@@ -4,14 +4,10 @@ all: $(target)
 hal_src := src/hal/src
 hal_inc := src/hal/inc
 
-utils_src := src/utils/bitmap/src \
+utils_src := src/utils/data_buf/src \
              src/utils/json/src \
-             src/utils/data_buf/src \
              src/utils/device/src \
              src/utils/encrypt/src \
-             src/utils/event/src \
-             src/utils/event_list/src \
-             src/utils/fsm/src \
              src/utils/hash/src \
              src/utils/http/src \
              src/utils/interruptable_sleep/src \
@@ -26,16 +22,12 @@ utils_src := src/utils/bitmap/src \
              src/utils/time_tick/src \
              src/utils/rwlock
 utils_inc := src/utils/uni_util/inc \
-             src/utils/bitmap/inc \
              src/utils/json/inc \
              src/utils/data_buf/inc \
              src/utils/device/inc \
              src/utils/encrypt/inc \
-             src/utils/event/inc \
-             src/utils/event_list/inc \
              src/utils/hash/inc \
              src/utils/http/inc \
-             src/utils/fsm/inc \
              src/utils/interruptable_sleep/inc \
              src/utils/list/inc \
              src/utils/log/inc \
