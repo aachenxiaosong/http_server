@@ -151,7 +151,7 @@ ifneq ($(DEP_FILES),)
 endif
 
 CFLAGS := -g -std=c++11
-IS_VMWARE=$(shell ifconfig | gren ens33)
+IS_VMWARE=$(shell ifconfig | grep ens33)
 ifneq ($(IS_VMWARE),)
 CFLAGS += -DIS_VMWARE
 endif

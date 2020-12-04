@@ -1,7 +1,7 @@
 #include "SulinkSendDeviceInfoHandler.hpp"
 #include "SulinkMessage.hpp"
 #include "MqttClient.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define SULINK_SEND_DEVICE_INFO_TAG getName().c_str()
 

@@ -1,6 +1,6 @@
 #include "LiftCtrlRequestHandler.hpp"
 #include "SulinkLiftInitData.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define LIFT_CTRL_REQ_HANDLER_TAG "lift_ctrl_req_handler"
 

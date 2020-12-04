@@ -1,7 +1,7 @@
 #include "WlongCallLiftMessageHandler.hpp"
 #include "SulinkLiftInitData.hpp"
 #include "WlongLiftCtrl.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define WLONG_CALL_LIFT_MSG_HANDLER_TAG getName().c_str()
 

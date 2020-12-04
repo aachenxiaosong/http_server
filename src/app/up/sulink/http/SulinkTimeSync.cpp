@@ -4,7 +4,7 @@
 #include "configurable_info.h"
 #include "UniUtil.hpp"
 #include "CJsonObject.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define SULINK_TIME_SYNC_TAG "sulink_time_sync_http"
 using namespace neb;

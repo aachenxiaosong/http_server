@@ -1,7 +1,7 @@
 #include "WlongBookLiftInterMessageHandler.hpp"
 #include "SulinkLiftInitData.hpp"
 #include "WlongLiftCtrl.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define WLONG_BOOK_LIFT_INTER_MSG_HANDLER_TAG "wlong_book_lift_inter_msg_handler"
 

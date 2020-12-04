@@ -1,5 +1,5 @@
 #include "DechangPacker.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 #include "string.h"
 
 #define DECHANG_PACKER_TAG getName().c_str()

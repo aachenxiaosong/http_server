@@ -1,7 +1,7 @@
 #include "SulinkSendPassRecordHandler.hpp"
 #include "SulinkMessage.hpp"
 #include "MqttClient.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 #include <unistd.h>
 
 #define SULINK_SEND_PASS_RECORD_TAG getName().c_str()

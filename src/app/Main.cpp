@@ -1,15 +1,17 @@
 #include "uni_iot.h"
-#include "uni_log.h"
 #include "serial.h"
 #include "uni_timer.h"
 #include "HttpServer.hpp"
 #include "Sulink.hpp"
 #include "LiftCtrl.hpp"
+#include "UniLog.hpp"
 
 #define MAIN_TAG "main"
 
 static int _common_init() {
     srand(time(0));
+    UniLog::init();
+        LOGE(MAIN_TAG, "log init OK");
     if (E_OK != TimerInitialize()) {
         LOGE(MAIN_TAG, "timer init failed");
         return -1;
@@ -19,7 +21,7 @@ static int _common_init() {
 
 
 int main() {
-#if 1
+#if 0
     extern void AppTest();
     AppTest();
     while(1) {

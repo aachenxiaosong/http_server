@@ -1,6 +1,6 @@
 #include "HttpClient.hpp"
 #include "uni_http.h"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define HTTP_CLIENT_TAG "http_client"
 

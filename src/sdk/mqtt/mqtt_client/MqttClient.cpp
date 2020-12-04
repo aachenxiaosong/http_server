@@ -1,6 +1,6 @@
 #include "MqttClient.hpp"
 #include <unistd.h>
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define MQTT_CLIENT_TAG mName.c_str()
 

@@ -7,6 +7,19 @@
         "string": "cpp",
         "iostream": "cpp",
         "ostream": "cpp",
-        "istream": "cpp"
+        "istream": "cpp",
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "unordered_map": "cpp",
+        "vector": "cpp",
+        "functional": "cpp",
+        "mutex": "cpp",
+        "streambuf": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "array": "cpp",
+        "utility": "cpp"
     }
 }

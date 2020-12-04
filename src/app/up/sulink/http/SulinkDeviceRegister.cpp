@@ -5,7 +5,7 @@
 #include "configurable_info.h"
 #include "UniUtil.hpp"
 #include "CJsonObject.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 using namespace neb;
 #define SULINK_DEVICE_REG_TAG "sulink_device_register_http"

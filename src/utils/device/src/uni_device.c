@@ -29,11 +29,7 @@
 
 static int _get_mac_address(char *address, uni_s32 len) {
 #ifdef IS_VMWARE
-#if 1
   snprintf(address, len, "%s", "7ccbe2e29774");
-#else
-  snprintf(address, len, "%s", "7ccbe2e29774_xiaosong1");
-#endif
   return 0;
 #else
   int sock, ret;

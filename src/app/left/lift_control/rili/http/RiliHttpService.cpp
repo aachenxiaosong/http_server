@@ -1,6 +1,6 @@
 #include "RiliHttpService.hpp"
 #include "HttpServer.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define RILI_SERVICE_TAG "rili_http_service"
 

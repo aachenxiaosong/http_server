@@ -1,7 +1,7 @@
 #include "WlongTakeLiftHttpHandler.hpp"
 #include "WlongLiftCtrl.hpp"
 #include "configurable_info.h"
-#include "uni_log.h"
+#include "UniLog.hpp"
 #include "uni_iot.h"
 
 #define WLONG_TAKE_TAG getName().c_str()

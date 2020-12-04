@@ -140,7 +140,9 @@ void AppTest() {
         cout << "device lift id: " << SulinkLiftInitData::getDeviceLiftId("hf0000123") << endl;
     }
 #elif (TEST_NUM == 8)
-    Poco::Logger& logger = UniLog::getLogger("test_tag");
-    LOGT1(logger, "12345678901234567890123456789012345678901234567890123456789012345678901234567890");
+    cout << "before test" << endl;
+    UniLog::init();
+    LOGT("test_tag", "12345678901234567890123456789012345678901234567890123456789012345678901234567890");
+    cout << "after test" << endl;
 #endif
 }

@@ -1,5 +1,5 @@
 #include "SulinkLiftInitData.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define SULINK_LIFT_INFO_DATA_TAG "sulink_lift_into_data"
 

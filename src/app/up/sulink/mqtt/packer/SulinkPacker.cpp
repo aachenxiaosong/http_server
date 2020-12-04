@@ -2,7 +2,7 @@
 #include "SulinkMessage.hpp"
 #include "SulinkTraceid.hpp"
 #include "UniUtil.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define SULINK_PACKER_TAG getName().c_str()
 

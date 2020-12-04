@@ -1,5 +1,5 @@
 #include "SulinkClient.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 
 #define SULINK_CLIENT_TAG mName.c_str()
 

@@ -1,6 +1,6 @@
 #include "DechangRecvSwipeHandler.hpp"
 #include "TcpConn.hpp"
-#include "uni_log.h"
+#include "UniLog.hpp"
 #include <string.h>
 
 #define DECHANG_RECV_SWIPE_TAG getName().c_str()

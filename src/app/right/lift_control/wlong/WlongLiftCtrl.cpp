@@ -1,6 +1,6 @@
 #include "WlongLiftCtrl.hpp"
 #include "uni_http.h"
-#include "uni_log.h"
+#include "UniLog.hpp"
 #include "configurable_info.h"
 
 #define WLONG_3P_CTRL "wlong_3p_ctrl"
