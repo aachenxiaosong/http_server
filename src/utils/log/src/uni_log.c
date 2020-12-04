@@ -147,7 +147,7 @@ static void _sync_write_process(LogLevel level, const char *tags,
     return;
   }
   _log_assemble(buffer, level, tags, function, line, fmt, args);
-  uni_printf("%s", buffer);
+  printf("%s", buffer);
   uni_free(buffer);
 }
 

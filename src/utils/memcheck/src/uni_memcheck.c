@@ -48,10 +48,10 @@ typedef struct {
 } MemCheckItem;
 
 typedef struct {
-  list_head   mem_list;
-  uni_u32     index;
-  uni_mutex_t mutex;
-  uni_u32     current_cnt;
+  list_head       mem_list;
+  uint32_t        index;
+  pthread_mutex_t mutex;
+  unsigned int    current_cnt;
 } MemCheckInf;
 
 static MemCheckInf g_memcheckinf;
@@ -71,11 +71,11 @@ static void _memcheck_print_tsk() {
   MemCheckItem *item;
   int print_cnt = 0;
   int total_size = 0;
-  uni_msleep(1000 * 30); /* wait all modules inited */
-  while (TRUE) {
+  sleep(30); /* wait all modules inited */
+  while (1) {
     print_cnt = 0;
     total_size = 0;
-    uni_pthread_mutex_lock(g_memcheckinf.mutex);
+    pthread_mutex_lock(&g_memcheckinf.mutex);
     printf("----------------heap status----------------\n");
     printf("current_cnt=%d\n", g_memcheckinf.current_cnt);
     list_for_each_entry(item, &g_memcheckinf.mem_list, MemCheckItem, link) {
@@ -87,41 +87,35 @@ static void _memcheck_print_tsk() {
     }
     printf("\n");
     printf("------[current used heap size=%d KB]-------\n", total_size / 1024);
-    uni_pthread_mutex_unlock(g_memcheckinf.mutex);
-    uni_msleep(1000 * 5);
+    pthread_mutex_unlock(&g_memcheckinf.mutex);
+    sleep(5);
   }
 }
 
 int MemCheckInit() {
-  uni_pthread_t pid;
-  struct thread_param param;
-  memset(&g_memcheckinf, 0, sizeof(MemCheckInf));
+  pthread_t pid;
   list_init(&g_memcheckinf.mem_list);
-  uni_pthread_mutex_init(&g_memcheckinf.mutex);
-  uni_memset(&param, 0, sizeof(param));
-  param.stack_size = STACK_DEFAULT_SIZE;
-  param.th_priority = OS_PRIORITY_NORMAL;
-  uni_strncpy(param.task_name, "memcheck", sizeof(param.task_name) - 1);
-  uni_pthread_create(&pid, &param, _memcheck_print_tsk, NULL);
-  uni_pthread_detach(pid);
+  pthread_mutex_init(&g_memcheckinf.mutex, NULL);
+  pthread_create(&pid, NULL, _memcheck_print_tsk, NULL);
+  pthread_detach(pid);
   return 0;
 }
 
 static void _destroy_mem_list() {
   MemCheckItem *p, *n;
   char *alloc_ptr;
-  uni_pthread_mutex_lock(g_memcheckinf.mutex);
+  pthread_mutex_lock(&g_memcheckinf.mutex);
   list_for_each_entry_safe(p, n, &g_memcheckinf.mem_list, MemCheckItem, link) {
     alloc_ptr = (char *)p - MEMCHECK_HEAD_SIZE;
     list_del(&p->link);
     free(alloc_ptr);
   }
-  uni_pthread_mutex_unlock(g_memcheckinf.mutex);
+  pthread_mutex_unlock(&g_memcheckinf.mutex);
 }
 
 void MemCheckFinal() {
   _destroy_mem_list();
-  uni_pthread_mutex_destroy(g_memcheckinf.mutex);
+  pthread_mutex_destroy(&g_memcheckinf.mutex);
   return;
 }
 
@@ -140,12 +134,12 @@ void* MemCheckMalloc(size_t size) {
   item = (MemCheckItem *)(p + MEMCHECK_HEAD_SIZE);
   item->customer_alloc_ptr = p + (MEMCHECK_HEAD_SIZE + sizeof(MemCheckItem));
   item->customer_alloc_size = size;
-  uni_pthread_mutex_lock(g_memcheckinf.mutex);
+  pthread_mutex_lock(&g_memcheckinf.mutex);
   *first_index_at_alloc_begin = ++g_memcheckinf.index;
   *last_index_at_alloc_tail = ~g_memcheckinf.index;
   g_memcheckinf.current_cnt++;
   list_add(&item->link, &g_memcheckinf.mem_list);
-  uni_pthread_mutex_unlock(g_memcheckinf.mutex);
+  pthread_mutex_unlock(&g_memcheckinf.mutex);
   return item->customer_alloc_ptr;
 }
 
@@ -162,21 +156,21 @@ void MemCheckFree(void *ptr) {
            *first_index_at_alloc_begin, *last_index_at_alloc_tail);
     return;
   }
-  uni_pthread_mutex_lock(g_memcheckinf.mutex);
+  pthread_mutex_lock(&g_memcheckinf.mutex);
   list_del(&item->link);
   g_memcheckinf.current_cnt--;
-  uni_pthread_mutex_unlock(g_memcheckinf.mutex);
+  pthread_mutex_unlock(&g_memcheckinf.mutex);
   free(first_index_at_alloc_begin);
 }
 
 #else
 
 void *MemCheckMalloc(size_t size) {
-  return uni_hal_malloc(size);
+  return uni_malloc(size);
 }
 
 void MemCheckFree(void *ptr) {
-  uni_hal_free(ptr);
+  uni_free(ptr);
 }
 
 int MemCheckInit(void) {

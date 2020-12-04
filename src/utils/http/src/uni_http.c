@@ -42,12 +42,12 @@ static size_t _get_write_data(void *buf, size_t size, size_t nmemb,
   size_t len = param->len;
   char *temp;
   temp = (char *)uni_malloc(bytes + len + 1);
-  uni_memset(temp, 0, bytes + len + 1);
+  memset(temp, 0, bytes + len + 1);
   if (len > 0) {
-    uni_memcpy(temp, result, len);
+    memcpy(temp, result, len);
     uni_free(result);
   }
-  uni_memcpy(temp + len, buf, bytes);
+  memcpy(temp + len, buf, bytes);
   *(param->result) = temp;
   param->len += bytes;
   return bytes;
@@ -58,7 +58,7 @@ static struct curl_slist *_load_headers(const char *headers[][2], int header_num
   char header[128] = {0};
   int i = 0;
   while (header_num > i) {
-    uni_snprintf(header, sizeof(header), "%s: %s", headers[i][0], headers[i][1]);
+    snprintf(header, sizeof(header), "%s: %s", headers[i][0], headers[i][1]);
     header_list = curl_slist_append(header_list, header);
     i++;
   }
@@ -66,7 +66,7 @@ static struct curl_slist *_load_headers(const char *headers[][2], int header_num
 }
 
 int HttpGetWithHeadersTimeout(const char *url, const char *headers[][2],
-                              int header_num, uni_u32 timeout,
+                              int header_num, int timeout,
                               char **result) {
   int ret = -1;
   CURLcode res;
@@ -102,7 +102,7 @@ int HttpGetWithHeadersTimeout(const char *url, const char *headers[][2],
 
 int HttpPostWithHeadersTimeout(const char *url, const char *content,
                                const char *headers[][2], int header_num,
-                               uni_u32 timeout, char **result) {
+                               int timeout, char **result) {
   int ret = -1;
   CURLcode res;
   CURL *curl;
@@ -205,7 +205,7 @@ char *HttpUrlEncode(const char *str) {
 
 int HttpsGetWithHeadersTimeout(const char *url, const char *capath,
                                const char *headers[][2], int header_num,
-                               uni_u32 timeout, char **result) {
+                               int timeout, char **result) {
   int ret = -1;
   CURLcode res;
   CURL *curl;
@@ -249,7 +249,7 @@ int HttpsGetWithHeadersTimeout(const char *url, const char *capath,
 
 int HttpsPostWithHeadersTimeout(const char *url, const char *capath, const char *content,
                                const char *headers[][2], int header_num,
-                               uni_u32 timeout, char **result) {
+                               int timeout, char **result) {
   int ret = -1;
   CURLcode res;
   CURL *curl;
@@ -298,8 +298,8 @@ int HttpsPostWithHeadersTimeout(const char *url, const char *capath, const char 
 static void _url_parse_param(char *param, cJSON *param_dict) {
   char *head = param;
   char *index = NULL;
-  if (0 == uni_strlen(head)) return;
-  if (NULL == (index = uni_strchr(head, '='))) {
+  if (0 == strlen(head)) return;
+  if (NULL == (index = strchr(head, '='))) {
     cJSON_AddStringToObject(param_dict, head, "");
     return;
   }
@@ -313,7 +313,7 @@ static void _url_parse_params(char *params, cJSON *out_dict) {
   char *index = NULL;
   cJSON *param_dict = cJSON_CreateObject();
   while (*head != '\0') {
-    if (NULL == (index = uni_strchr(head, '&'))) {
+    if (NULL == (index = strchr(head, '&'))) {
       _url_parse_param(head, param_dict);
       break;
     }
@@ -327,22 +327,22 @@ static void _url_parse_params(char *params, cJSON *out_dict) {
 
 int HttpUrlParse(const char *url, cJSON **out_dict) {
   char *url_buffer = NULL;
-  uni_s32 url_buffer_len = 0;
+  int url_buffer_len = 0;
   char *index = NULL;
-  if (NULL == url || 0 == uni_strlen(url) || NULL == out_dict) {
+  if (NULL == url || 0 == strlen(url) || NULL == out_dict) {
     LOGE(TAG, "invalid params");
     return -1;
   }
-  url_buffer_len = uni_strlen(url);
+  url_buffer_len = strlen(url);
   url_buffer = (char *)uni_malloc(url_buffer_len + 1);
   if (!url_buffer) {
     LOGE(TAG, "invalid params");
     return -1;
   }
-  uni_memset(url_buffer, 0, url_buffer_len + 1);
-  uni_strncpy(url_buffer, url, url_buffer_len);
+  memset(url_buffer, 0, url_buffer_len + 1);
+  strncpy(url_buffer, url, url_buffer_len);
   *out_dict = cJSON_CreateObject();
-  index = uni_strchr(url_buffer, '?');
+  index = strchr(url_buffer, '?');
   if (NULL == index) {
     cJSON_AddStringToObject(*out_dict, "path", url_buffer);
     goto L_END;

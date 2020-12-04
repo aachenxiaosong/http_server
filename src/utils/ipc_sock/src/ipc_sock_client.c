@@ -37,9 +37,9 @@ typedef struct IpcSockClient {
   int               sockfd;
   int               is_connected;
   int               is_running;
-  uni_sem_t         sem_stopped;
+  sem_t             sem_stopped;
   list_head         msg_list;
-  uni_mutex_t       mutex;
+  pthread_mutex_t       mutex;
 } IpcSockClient;
 
 static IpcSockClient *g_sock_client;
@@ -58,7 +58,7 @@ static void _ignore_signal_broken_pipe() {
 }
 
 static void _notify_connect() {
-  g_sock_client->is_connected = TRUE;
+  g_sock_client->is_connected = 1;
   if (NULL != g_sock_client->notify) {
     g_sock_client->notify(MSG_NOTIFY_TYPE_CONNECTED, NULL);
   }
@@ -68,7 +68,7 @@ static void _notify_disconnect() {
   if (g_sock_client->is_connected) {
     close(g_sock_client->sockfd);
     g_sock_client->sockfd = -1;
-    g_sock_client->is_connected = FALSE;
+    g_sock_client->is_connected = 0;
   }
   if (NULL != g_sock_client->notify) {
     g_sock_client->notify(MSG_NOTIFY_TYPE_DISCONNECT, NULL);
@@ -128,14 +128,14 @@ static inline int _max(int a, int b) {
 static void _write_msg_to_server(IpcSockClient *client) {
   IpcMsg *msg = NULL;
   int rc = 0;
-  uni_pthread_mutex_lock(client->mutex);
+  pthread_mutex_lock(&client->mutex);
   msg = list_get_head_entry(&client->msg_list, IpcMsg, link);
   if (NULL == msg) {
-    uni_pthread_mutex_unlock(client->mutex);
+    pthread_mutex_unlock(&client->mutex);
     return;
   }
   list_del(&msg->link);
-  uni_pthread_mutex_unlock(client->mutex);
+  pthread_mutex_unlock(&client->mutex);
   rc = IpcSockWriteMsg(client->sockfd, msg);
   if (IPC_SOCK_CODE_DISCONN == rc) {
     _notify_disconnect();
@@ -174,7 +174,7 @@ static void* _msg_process(void *arg) {
       _write_msg_to_server(client);
     }
   }
-  uni_sem_post(client->sem_stopped);
+  sem_post(&client->sem_stopped);
   return NULL;
 }
 
@@ -187,14 +187,9 @@ static void _destroy_msg_list(list_head *msg_list) {
 }
 
 static int _create_process_thread() {
-  struct thread_param param;
-  uni_pthread_t pid;
-  uni_memset(&param, 0, sizeof(param));
-  param.stack_size = STACK_DEFAULT_SIZE;
-  param.th_priority = OS_PRIORITY_NORMAL;
-  uni_strncpy(param.task_name, "sock_client", sizeof(param.task_name) - 1);
-  uni_pthread_create(&pid, &param, _msg_process, g_sock_client);
-  uni_pthread_detach(pid);
+  pthread_t pid;
+  pthread_create(&pid, NULL, _msg_process, g_sock_client);
+  pthread_detach(pid);
   return 0;
 }
 
@@ -205,8 +200,8 @@ int IpcSockClientStart(MsgCallback notify) {
   }
   memset(g_sock_client, 0, sizeof(IpcSockClient));
   list_init(&g_sock_client->msg_list);
-  uni_sem_init(&g_sock_client->sem_stopped, 0);
-  uni_pthread_mutex_init(&g_sock_client->mutex);
+  sem_init(&g_sock_client->sem_stopped, 0);
+  pthread_mutex_init(&g_sock_client->mutex, NULL);
   g_sock_client->notify = notify;
   g_sock_client->is_running = 1;
   _create_process_thread();
@@ -218,17 +213,17 @@ int IpcSockClientSend(IpcMsg *msg) {
   if (NULL == msg || !g_sock_client->is_running) {
     return -1;
   }
-  uni_pthread_mutex_lock(g_sock_client->mutex);
+  pthread_mutex_lock(&g_sock_client->mutex);
   list_add_tail(&msg->link, &g_sock_client->msg_list);
-  uni_pthread_mutex_unlock(g_sock_client->mutex);
+  pthread_mutex_unlock(&g_sock_client->mutex);
   return 0;
 }
 
 int IpcSockClientStop()  {
-  g_sock_client->is_running = FALSE;
-  uni_sem_wait(g_sock_client->sem_stopped);
-  uni_sem_destroy(g_sock_client->sem_stopped);
-  uni_pthread_mutex_destroy(g_sock_client->mutex);
+  g_sock_client->is_running = 0;
+  sem_wait(&g_sock_client->sem_stopped);
+  sem_destroy(&g_sock_client->sem_stopped);
+  pthread_mutex_destroy(&g_sock_client->mutex);
   close(g_sock_client->sockfd);
   _destroy_msg_list(&g_sock_client->msg_list);
   uni_free(g_sock_client);

@@ -36,7 +36,7 @@ extern "C" {
 #define POST_DEFAULT_TIMEOUT 20
 
 int HttpGetWithHeadersTimeout(const char *url, const char *headers[][2],
-                              int header_num, uni_u32 timeout,
+                              int header_num, int timeout,
                               char **result);
 
 #define HttpGetWithHeaders(url, headers, header_num, result) \
@@ -53,7 +53,7 @@ int HttpGetWithHeadersTimeout(const char *url, const char *headers[][2],
 
 int HttpPostWithHeadersTimeout(const char *url, const char *content,
                                const char *headers[][2], int header_num,
-                               uni_u32 timeout, char **result);
+                               int timeout, char **result);
 
 #define HttpPostWithHeaders(url, content, headers, header_num, result) \
         HttpPostWithHeadersTimeout(url, content, headers, header_num, \
@@ -70,11 +70,11 @@ char *HttpUrlEncode(const char *str);
 
 int HttpsGetWithHeadersTimeout(const char *url, const char *capath,
                                const char *headers[][2], int header_num,
-                               uni_u32 timeout, char **result);
+                               int timeout, char **result);
 
 int HttpsPostWithHeadersTimeout(const char *url,const char *capath, const char *content,
                                 const char *headers[][2], int header_num,
-                                uni_u32 timeout, char **result);
+                                int timeout, char **result);
 
 int HttpUrlParse(const char *url, cJSON **out_dict);
 

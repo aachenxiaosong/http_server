@@ -24,7 +24,7 @@
 #include "uni_time_tick.h"
 
 /* get  clock */
-uni_s32 uni_get_datetime_unix(TimerDate *date) {
+int uni_get_datetime_unix(TimerDate *date) {
   time_t timeval;
   struct tm tm;
   time(&timeval);
@@ -41,7 +41,7 @@ uni_s32 uni_get_datetime_unix(TimerDate *date) {
 }
 
 /* timestamp to clock */
-uni_s32 uni_sec_to_datetime(TimerDate *date, uni_u32 sec) {
+int uni_sec_to_datetime(TimerDate *date, uint32_t sec) {
   time_t time = sec;
   struct tm *ptm = NULL;
 
@@ -58,10 +58,10 @@ uni_s32 uni_sec_to_datetime(TimerDate *date, uni_u32 sec) {
 }
 
 /*   clock to timestamp (ms)  */
-uni_s64 uni_datetime_to_msec(TimerDate *date) {
+int64_t uni_datetime_to_msec(TimerDate *date) {
   struct tm t;
-  uni_s64 sec;
-  uni_memset(&t, 0, sizeof(struct tm));
+  int64_t sec;
+  memset(&t, 0, sizeof(struct tm));
   t.tm_year = date->year - 1900;
   t.tm_mon = date->month - 1;
   t.tm_mday = date->day;
@@ -74,10 +74,10 @@ uni_s64 uni_datetime_to_msec(TimerDate *date) {
 
 
 /*   clock to timestamp (s)  */
-uni_u32 uni_datetime_to_sec(TimerDate *date) {
+uint32_t uni_datetime_to_sec(TimerDate *date) {
   struct tm t;
-  uni_u32 sec;
-  uni_memset(&t, 0, sizeof(struct tm));
+  uint32_t sec;
+  memset(&t, 0, sizeof(struct tm));
   t.tm_year = date->year - 1900;
   t.tm_mon = date->month - 1;
   t.tm_mday = date->day;
@@ -88,14 +88,14 @@ uni_u32 uni_datetime_to_sec(TimerDate *date) {
   return sec;
 }
 
-uni_bool uni_is_leap_year(TimerDate *date) {
+int uni_is_leap_year(TimerDate *date) {
   return ((date->year % 100 != 0 && 0 == date->year % 4) ||
           (0 == date->year % 400));
 }
 
 
 /* timestamp of today 00:00:00 */
-uni_u32 uni_get_today_sec_unix() {
+uint32_t uni_get_today_sec_unix() {
   time_t timeval;
   struct tm local;
   time(&timeval);
@@ -105,25 +105,25 @@ uni_u32 uni_get_today_sec_unix() {
 }
 
 /* timestamp from 1900  (ms) */
-uni_s64 uni_get_now_msec(void) {
+int64_t uni_get_now_msec(void) {
   struct timeval t1;
   gettimeofday(&t1, NULL);
-  return ((uni_s64)t1.tv_sec * 1000 + t1.tv_usec/1000);
+  return ((int64_t)t1.tv_sec * 1000 + t1.tv_usec/1000);
 }
 
 /* timestamp from 1970  (s) */
-uni_u32 uni_get_now_sec_unix(void) {
+uint32_t uni_get_now_sec_unix(void) {
 #ifdef PLATFORM_UNIONE
   return (uni_get_now_msec() - 28803877) / 1000;
 #else
   time_t timeval;
   time(&timeval);
-  return (uni_u32)timeval;
+  return (uint32_t)timeval;
 #endif
 }
 
 /* reboot uptime  (s) */
-uni_u32 uni_get_uptime_sec_unix() {
+uint32_t uni_get_uptime_sec_unix() {
   struct sysinfo info;
   sysinfo(&info);
   return info.uptime;

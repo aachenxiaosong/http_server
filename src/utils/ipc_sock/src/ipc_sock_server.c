@@ -33,32 +33,32 @@
 #define LOOP_INTERVAL_S          (1)
 
 typedef struct IpcSockServer {
-  MsgCallback  notify;
-  uni_s32          sockfd;
-  uni_s32          clientfd;
-  uni_s32          client_connected;
-  uni_s32          is_running;
-  uni_sem_t    sem_stopped;
-  list_head    msg_list;
-  uni_mutex_t  mutex;
+  MsgCallback      notify;
+  int          sockfd;
+  int          clientfd;
+  int          client_connected;
+  int          is_running;
+  sem_t            sem_stopped;
+  list_head        msg_list;
+  pthread_mutex_t  mutex;
 } IpcSockServer;
 
 static IpcSockServer *g_sock_server;
 
 static void _ignore_signal_broken_pipe() {
   struct sigaction new_act;
-  uni_memset(&new_act, 0, sizeof(new_act));
+  memset(&new_act, 0, sizeof(new_act));
   new_act.sa_handler  = SIG_IGN;
   sigemptyset(&new_act.sa_mask);
   sigaction(SIGPIPE, &new_act, NULL);
 }
 
-static uni_s32 _start_listen() {
-  uni_s32 sockfd;
-  uni_s32 len;
+static int _start_listen() {
+  int sockfd;
+  int len;
   struct sockaddr_un server_addr;
   remove(IPC_SOCK_SOCKET);
-  uni_memset(&server_addr, 0, sizeof(struct sockaddr_un));
+  memset(&server_addr, 0, sizeof(struct sockaddr_un));
   server_addr.sun_family = AF_UNIX;
   strcpy(server_addr.sun_path, IPC_SOCK_SOCKET);
 
@@ -85,7 +85,7 @@ static void _notify_disconnect() {
   if (g_sock_server->client_connected) {
     close(g_sock_server->clientfd);
     g_sock_server->clientfd = -1;
-    g_sock_server->client_connected = FALSE;
+    g_sock_server->client_connected = 0;
   }
   if (NULL != g_sock_server->notify) {
     g_sock_server->notify(MSG_NOTIFY_TYPE_DISCONNECT, NULL);
@@ -96,7 +96,7 @@ static void _notify_connect() {
   if (NULL != g_sock_server->notify) {
     g_sock_server->notify(MSG_NOTIFY_TYPE_CONNECTED, NULL);
   }
-  g_sock_server->client_connected = TRUE;
+  g_sock_server->client_connected = 1;
 }
 
 static void _notify_data(IpcMsg *msg) {
@@ -107,7 +107,7 @@ static void _notify_data(IpcMsg *msg) {
 
 static void _read_client_msg(IpcSockServer *server) {
   IpcMsg *msg = NULL;
-  uni_s32 rc = 0;
+  int rc = 0;
   rc = IpcSockReadMsg(server->clientfd, &msg);
   if (IPC_SOCK_CODE_DISCONN == rc) {
     _notify_disconnect();
@@ -120,7 +120,7 @@ static void _read_client_msg(IpcSockServer *server) {
 }
 
 static void _accept_new_client(IpcSockServer *server) {
-  uni_s32 sockfd = accept(server->sockfd, NULL, NULL);
+  int sockfd = accept(server->sockfd, NULL, NULL);
   if (0 > sockfd) {
     LOGE(IPC_SOCK_SERVER_TAG, "accept client error: %s", strerror(errno));
     return;
@@ -131,21 +131,21 @@ static void _accept_new_client(IpcSockServer *server) {
   LOGT(IPC_SOCK_SERVER_TAG, "accept new client, id = %d", server->clientfd);
 }
 
-static inline uni_s32 _max(uni_s32 a, uni_s32 b) {
+static inline int _max(int a, int b) {
   return a > b ? a: b;
 }
 
 static void _send_msg_to_client(IpcSockServer *server) {
   IpcMsg *msg = NULL;
-  uni_s32 rc = -1;
-  uni_pthread_mutex_lock(server->mutex);
+  int rc = -1;
+  pthread_mutex_lock(&server->mutex);
   msg = list_get_head_entry(&server->msg_list, IpcMsg, link);
   if (NULL == msg) {
-    uni_pthread_mutex_unlock(server->mutex);
+    pthread_mutex_unlock(&server->mutex);
     return;
   }
   list_del(&msg->link);
-  uni_pthread_mutex_unlock(server->mutex);
+  pthread_mutex_unlock(&server->mutex);
   rc = IpcSockWriteMsg(server->clientfd, msg);
   if (IPC_SOCK_CODE_DISCONN == rc) {
     _notify_disconnect();
@@ -153,11 +153,11 @@ static void _send_msg_to_client(IpcSockServer *server) {
   IpcMsgDestroy(msg);
 }
 
-static inline uni_s32 _reset_fds(IpcSockServer *server, fd_set *rfds, fd_set *wfds) {
+static inline int _reset_fds(IpcSockServer *server, fd_set *rfds, fd_set *wfds) {
   FD_ZERO(rfds);
   FD_ZERO(wfds);
   FD_SET(server->sockfd, rfds);
-  uni_s32 max_fd = _max(server->sockfd, server->clientfd);
+  int max_fd = _max(server->sockfd, server->clientfd);
   if (!server->client_connected) {
     return max_fd;
   }
@@ -170,7 +170,7 @@ static inline uni_s32 _reset_fds(IpcSockServer *server, fd_set *rfds, fd_set *wf
 
 static void* _sock_server_process(void *arg) {
   fd_set rfds, wfds;
-  uni_s32 max_fd;
+  int max_fd;
   struct timeval tv;
   _ignore_signal_broken_pipe();
   IpcSockServer *server = (IpcSockServer *)arg;
@@ -192,19 +192,14 @@ static void* _sock_server_process(void *arg) {
       _send_msg_to_client(server);
     }
   }
-  uni_sem_post(server->sem_stopped);
+  sem_post(&server->sem_stopped);
   return NULL;
 }
 
-static uni_s32 _create_process_thread() {
-  struct thread_param param;
-  uni_pthread_t pid;
-  uni_memset(&param, 0, sizeof(param));
-  param.stack_size = STACK_DEFAULT_SIZE;
-  param.th_priority = OS_PRIORITY_NORMAL;
-  uni_strncpy(param.task_name, "sock_server", sizeof(param.task_name) - 1);
-  uni_pthread_create(&pid, &param, _sock_server_process, g_sock_server);
-  uni_pthread_detach(pid);
+static int _create_process_thread() {
+  pthread_t pid;
+  pthread_create(&pid, NULL, _sock_server_process, g_sock_server);
+  pthread_detach(pid);
   return 0;
 }
 
@@ -216,13 +211,13 @@ static void _destroy_msg_list(list_head *msg_list) {
   }
 }
 
-uni_s32 IpcSockServerStart(MsgCallback notify) {
+int IpcSockServerStart(MsgCallback notify) {
   if (NULL == (g_sock_server = uni_malloc(sizeof(IpcSockServer)))) {
     return -1;
   }
-  uni_memset(g_sock_server, 0, sizeof(IpcSockServer));
+  memset(g_sock_server, 0, sizeof(IpcSockServer));
   list_init(&g_sock_server->msg_list);
-  uni_pthread_mutex_init(&g_sock_server->mutex);
+  pthread_mutex_init(&g_sock_server->mutex, NULL);
   g_sock_server->notify = notify;
   if (0 != _start_listen()) {
     LOGE(IPC_SOCK_SERVER_TAG, "start client failed");
@@ -235,21 +230,21 @@ uni_s32 IpcSockServerStart(MsgCallback notify) {
   return 0;
 }
 
-uni_s32 IpcSockServerSend(IpcMsg *msg) {
+int IpcSockServerSend(IpcMsg *msg) {
   if (NULL == msg || !g_sock_server->is_running) {
     return -1;
   }
-  uni_pthread_mutex_lock(g_sock_server->mutex);
+  pthread_mutex_lock(&g_sock_server->mutex);
   list_add_tail(&msg->link, &g_sock_server->msg_list);
-  uni_pthread_mutex_unlock(g_sock_server->mutex);
+  pthread_mutex_unlock(&g_sock_server->mutex);
   return 0;
 }
 
-uni_s32 IpcSockServerStop()  {
-  g_sock_server->is_running = FALSE;
-  uni_sem_wait(g_sock_server->sem_stopped);
-  uni_sem_destroy(g_sock_server->sem_stopped);
-  uni_pthread_mutex_destroy(g_sock_server->mutex);
+int IpcSockServerStop()  {
+  g_sock_server->is_running = 0;
+  sem_wait(&g_sock_server->sem_stopped);
+  sem_destroy(&g_sock_server->sem_stopped);
+  pthread_mutex_destroy(&g_sock_server->mutex);
   close(g_sock_server->sockfd);
   _notify_disconnect();
   _destroy_msg_list(&g_sock_server->msg_list);

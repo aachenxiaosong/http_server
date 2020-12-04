@@ -1,14 +1,10 @@
 target := uni_gateway 
 all: $(target) 
 
-hal_src := src/hal/src
-hal_inc := src/hal/inc
-
 utils_src := src/utils/data_buf/src \
              src/utils/json/src \
              src/utils/device/src \
              src/utils/encrypt/src \
-             src/utils/hash/src \
              src/utils/http/src \
              src/utils/list/src \
              src/utils/log/src \
@@ -24,7 +20,6 @@ utils_inc := src/utils/uni_util/inc \
              src/utils/data_buf/inc \
              src/utils/device/inc \
              src/utils/encrypt/inc \
-             src/utils/hash/inc \
              src/utils/http/inc \
              src/utils/list/inc \
              src/utils/log/inc \
@@ -109,8 +104,8 @@ test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test
 
 
-SRC := $(hal_src) $(utils_src) $(sdk_src) $(app_src) $(test_src)
-INC := $(hal_inc) $(utils_inc) $(sdk_inc) $(app_inc) $(lib_inc) $(test_inc)
+SRC := $(utils_src) $(sdk_src) $(app_src) $(test_src)
+INC := $(utils_inc) $(sdk_inc) $(app_inc) $(lib_inc) $(test_inc)
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))

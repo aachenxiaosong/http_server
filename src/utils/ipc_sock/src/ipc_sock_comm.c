@@ -28,10 +28,10 @@
 
 #define SOCK_COMM_TAG   "sock_comm"
 
-static inline uni_s32 _read_socket(uni_s32 sockfd, char *buf, uni_s32 size) {
-  uni_s32 read_size = 0;
-  uni_s32 expected_size = size;
-  uni_s32 rc = -1;
+static inline int _read_socket(int sockfd, char *buf, int size) {
+  int read_size = 0;
+  int expected_size = size;
+  int rc = -1;
   while (read_size != size && 0 < expected_size) {
     rc = read(sockfd, &buf[read_size], expected_size);
     if (0 >= rc) {
@@ -44,10 +44,10 @@ static inline uni_s32 _read_socket(uni_s32 sockfd, char *buf, uni_s32 size) {
   return 0;
 }
 
-static inline uni_s32 _write_socket(uni_s32 sockfd, char *buf, uni_s32 size) {
-  uni_s32 write_size = 0;
-  uni_s32 expected_size = size;
-  uni_s32 rc = -1;
+static inline int _write_socket(int sockfd, char *buf, int size) {
+  int write_size = 0;
+  int expected_size = size;
+  int rc = -1;
 
   while (write_size != size && 0 < expected_size) {
     errno = 0;
@@ -62,12 +62,12 @@ static inline uni_s32 _write_socket(uni_s32 sockfd, char *buf, uni_s32 size) {
   return 0;
 }
 
-uni_s32 IpcSockReadMsg(uni_s32 sockfd, IpcMsg **msg) {
+int IpcSockReadMsg(int sockfd, IpcMsg **msg) {
   char *data = NULL;
-  uni_s32 header_size = sizeof(PayloadHeader);
-  uni_s32 rc = IPC_SOCK_CODE_OK;
+  int header_size = sizeof(PayloadHeader);
+  int rc = IPC_SOCK_CODE_OK;
   PayloadHeader header;
-  uni_memset(&header, 0, header_size);
+  memset(&header, 0, header_size);
   *msg = NULL;
 
   if (0 != _read_socket(sockfd, (char *)&header, (int)header_size)) {
@@ -80,7 +80,7 @@ uni_s32 IpcSockReadMsg(uni_s32 sockfd, IpcMsg **msg) {
   if (NULL == (data = uni_malloc(header.size + 1))) {
     return IPC_SOCK_CODE_MALLOC;
   }
-  uni_memset(data, 0, header.size + 1);
+  memset(data, 0, header.size + 1);
   if (0 == _read_socket(sockfd, data, header.size)) {
     LOGT(SOCK_COMM_TAG, "receive msg: %s", data);
     *msg = IpcMsgCreate(data, header.size);
@@ -91,12 +91,12 @@ uni_s32 IpcSockReadMsg(uni_s32 sockfd, IpcMsg **msg) {
   return rc;
 }
 
-uni_s32 IpcSockWriteMsg(uni_s32 sockfd, IpcMsg *msg) {
-  uni_s32 data_size = msg->header.size;
+int IpcSockWriteMsg(int sockfd, IpcMsg *msg) {
+  int data_size = msg->header.size;
   msg->header.size = htonl(msg->header.size);
   char *t = uni_malloc(data_size + 1);
   if (NULL != t) {
-    uni_memset(t, 0, data_size + 1);
+    memset(t, 0, data_size + 1);
     memcpy(t, msg->data, data_size);
     LOGT(SOCK_COMM_TAG, "send msg: %s", t);
     uni_free(t);

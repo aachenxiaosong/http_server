@@ -26,7 +26,7 @@
 #include "uni_log.h"
 #define MSG_TAG                  "ipc_msg"
 
-void _set_msg_header(IpcMsg *msg, uni_s32 size) {
+void _set_msg_header(IpcMsg *msg, int size) {
   msg->header.magic[0] = 'I';
   msg->header.magic[1] = 'P';
   msg->header.magic[2] = 'C';
@@ -37,14 +37,14 @@ void _set_msg_header(IpcMsg *msg, uni_s32 size) {
   msg->header.size = size;
 }
 
-IpcMsg* IpcMsgCreate(char *buf, uni_s32 size) {
+IpcMsg* IpcMsgCreate(char *buf, int size) {
   IpcMsg *msg = NULL;
   if (NULL == (msg = uni_malloc(sizeof(IpcMsg)))) {
     return NULL;
   }
-  uni_memset(msg, 0, sizeof(IpcMsg));
+  memset(msg, 0, sizeof(IpcMsg));
   if (NULL != buf && NULL != (msg->data = uni_malloc(size))) {
-    uni_memcpy(msg->data, buf, size);
+    memcpy(msg->data, buf, size);
   } else {
     LOGW(MSG_TAG, "msg data lost!!!");
   }
@@ -52,7 +52,7 @@ IpcMsg* IpcMsgCreate(char *buf, uni_s32 size) {
   return msg;
 }
 
-uni_s32 IpcMsgDestroy(IpcMsg *msg)  {
+int IpcMsgDestroy(IpcMsg *msg)  {
   if (NULL == msg) {
     return -1;
   }

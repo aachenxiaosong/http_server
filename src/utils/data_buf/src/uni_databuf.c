@@ -88,11 +88,11 @@ static int _read_internal(DataBufHandle handle, char *buf, int size,
   pos = (data_buf->tail + size + data_buf->size) % data_buf->size;
   if (_read_attr_setted(attr)) {
     if (pos >= data_buf->tail) {
-      uni_memcpy(buf, data_buf->buf + data_buf->tail, size);
+      memcpy(buf, data_buf->buf + data_buf->tail, size);
     } else {
       int remain = (data_buf->size - data_buf->tail);
-      uni_memcpy(buf, data_buf->buf + data_buf->tail, remain);
-      uni_memcpy(buf + remain, data_buf->buf, size - remain);
+      memcpy(buf, data_buf->buf + data_buf->tail, remain);
+      memcpy(buf + remain, data_buf->buf, size - remain);
     }
   }
   if (_sync_attr_setted(attr)) {
@@ -108,11 +108,11 @@ static int _write_internal(DataBufHandle handle, const char *buf, int size,
   pos = (data_buf->head + size) % data_buf->size;
   if (_write_attr_setted(attr)) {
     if (pos >= data_buf->head) {
-      uni_memcpy(data_buf->buf + data_buf->head, buf, size);
+      memcpy(data_buf->buf + data_buf->head, buf, size);
     } else {
       int remain = (data_buf->size - data_buf->head);
-      uni_memcpy(data_buf->buf + data_buf->head, buf, remain);
-      uni_memcpy(data_buf->buf, buf + remain, size - remain);
+      memcpy(data_buf->buf + data_buf->head, buf, remain);
+      memcpy(data_buf->buf, buf + remain, size - remain);
     }
   }
   if (_sync_attr_setted(attr)) {

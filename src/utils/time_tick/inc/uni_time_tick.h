@@ -28,25 +28,25 @@
 
 
 typedef struct {
-  uni_s32 year;
-  uni_s32 month;
-  uni_s32 day;
-  uni_s32 hour;
-  uni_s32 minute;
-  uni_s32 second;
-  uni_s32 wday;
+  int year;
+  int month;
+  int day;
+  int hour;
+  int minute;
+  int second;
+  int wday;
 } TimerDate;
 
-uni_s32 uni_get_datetime_unix(TimerDate *date);
-uni_s32 uni_sec_to_datetime(TimerDate *date, uni_u32 sec);
-uni_s64 uni_datetime_to_msec(TimerDate *date);
-uni_u32 uni_datetime_to_sec(TimerDate *date);
-uni_bool uni_is_leap_year(TimerDate *date);
-uni_u32 uni_get_today_sec_unix();
-uni_s64 uni_get_now_msec(void);
-uni_u32 uni_get_now_sec_unix(void);
-uni_u32 uni_get_uptime_sec_unix();
-long uni_get_clock_time_ms(void);
+int      uni_get_datetime_unix(TimerDate *date);
+int      uni_sec_to_datetime(TimerDate *date, uint32_t sec);
+int64_t  uni_datetime_to_msec(TimerDate *date);
+uint32_t uni_datetime_to_sec(TimerDate *date);
+int      uni_is_leap_year(TimerDate *date);
+uint32_t uni_get_today_sec_unix();
+int64_t  uni_get_now_msec(void);
+uint32_t uni_get_now_sec_unix(void);
+uint32_t uni_get_uptime_sec_unix();
+long     uni_get_clock_time_ms(void);
 
 
 

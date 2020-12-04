@@ -27,7 +27,7 @@
 
 #define DEVICE_TAG "device"
 
-static int _get_mac_address(char *address, uni_s32 len) {
+static int _get_mac_address(char *address, int len) {
 #ifdef IS_VMWARE
   snprintf(address, len, "%s", "7ccbe2e29774");
   return 0;
@@ -61,7 +61,7 @@ static int _get_mac_address(char *address, uni_s32 len) {
 
 const char* DeviceGetMac(void) {
   static char mac[64] = {0};
-  if (uni_strlen(mac) > 0) {
+  if (strlen(mac) > 0) {
     return mac;
   }
   if (0 != _get_mac_address(mac, sizeof(mac))) {
