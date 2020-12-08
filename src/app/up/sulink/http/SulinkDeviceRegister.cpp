@@ -4,6 +4,7 @@
 #include "HttpClient.hpp"
 #include "configurable_info.h"
 #include "UniDeviceInfo.hpp"
+#include "SulinkConfigData.hpp"
 #include "UniUtil.hpp"
 #include "CJsonObject.hpp"
 #include "UniLog.hpp"
@@ -76,12 +77,12 @@ int SulinkDeviceRegister :: request()
     long timestamp = unisound::UniUtil::timestampMs();
     params["deviceCode"] = unisound::UniDeviceInfo::getUdid();
     headers["Content-Type"] = "application/json";
-    headers["brand"] = SULINK_BRAND;
+    headers["brand"] = SulinkConfigData::getBrand();
     headers["timestamp"] = to_string(timestamp);
     headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     string content = "{\"deviceCode\":\"" + unisound::UniDeviceInfo::getUdid() + "\"}";
     string result;
-    int rc = HttpClient::post(SULINK_DEVICE_REGISTER_URL, content, result, headers);
+    int rc = HttpClient::post(SulinkConfigData::getUrlDeviceRegister(), content, result, headers);
     if (rc != 0) {
         LOGE(SULINK_DEVICE_REG_TAG, "request failed");
     } else {

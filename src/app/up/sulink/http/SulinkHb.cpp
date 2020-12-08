@@ -1,5 +1,6 @@
 #include "SulinkHb.hpp"
 #include "SulinkSignature.hpp"
+#include "SulinkConfigData.hpp"
 #include "HttpClient.hpp"
 #include "configurable_info.h"
 #include "UniDeviceInfo.hpp"
@@ -42,9 +43,9 @@ int SulinkHb :: request() {
     params["upTime"] = to_string(timestamp);
     params["cpu"] = to_string(cpu_utility);
     params["memory"] = to_string(mem_utility);
-    params["versionNumber"] = MY_VERSION;
+    params["versionNumber"] = unisound::UniDeviceInfo::getAppVersion();
     headers["Content-Type"] = "application/json";
-    headers["brand"] = SULINK_BRAND;
+    headers["brand"] = SulinkConfigData::getBrand();
     headers["timestamp"] = to_string(timestamp);
     headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     CJsonObject jcontent;
@@ -52,10 +53,10 @@ int SulinkHb :: request() {
     jcontent.Add("upTime", timestamp);
     jcontent.Add("cpu", to_string(cpu_utility));
     jcontent.Add("memory", to_string(mem_utility));
-    jcontent.Add("versionNumber", MY_VERSION);
+    jcontent.Add("versionNumber", unisound::UniDeviceInfo::getAppVersion());
     string content = jcontent.ToString();
     string result;
-    int rc = HttpClient::post(SULINK_HB_URL, content, result, headers);
+    int rc = HttpClient::post(SulinkConfigData::getUrlHb(), content, result, headers);
     if (rc != 0 || result.empty()) {
         LOGE(SULINK_HB_TAG, "request failed");
     } else {

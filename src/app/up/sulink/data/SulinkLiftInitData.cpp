@@ -1,4 +1,5 @@
 #include "SulinkLiftInitData.hpp"
+#include "UniConfig.hpp"
 #include "UniLog.hpp"
 
 #define SULINK_LIFT_INFO_DATA_TAG "sulink_lift_into_data"
@@ -7,7 +8,7 @@ SulinkLiftInitData SulinkLiftInitData::mData;
 
 SulinkLiftInitData :: SulinkLiftInitData()
 {
-    ifstream ifs(SULINK_LIFT_INIT_DATA_FILE);
+    ifstream ifs(unisound::UniConfig::getString("liftcontrl.data.init"));
     ostringstream oss;
     oss << ifs.rdbuf();
     string raw_data = oss.str();
@@ -38,7 +39,7 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
     mInfo = new SulinkMessageRecvLiftInfo(info);
     LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info updated: \n%s", mToString().c_str());
     SulinkPacker packer;
-    ofstream ofs(SULINK_LIFT_INIT_DATA_FILE);
+    ofstream ofs(unisound::UniConfig::getString("liftcontrl.data.init"));
     string* sinfo = packer.pack(info);
     istringstream iss(*sinfo);
     ofs << iss.rdbuf();

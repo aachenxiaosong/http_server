@@ -4,6 +4,7 @@
 #include "configurable_info.h"
 #include "UniUtil.hpp"
 #include "UrlCodec.hpp"
+#include "SulinkConfigData.hpp"
 #include <string>
 #include <map>
 #include <algorithm>
@@ -23,7 +24,7 @@ public:
             new_params.insert(pair<string, string>(cit->first, cit->second));
         }
         //2, add accesskey, timestamp, sort in ascending order(map does this by default)
-        new_params["AccessKey"] = SULINK_ACCESS_KEY;
+        new_params["AccessKey"] = SulinkConfigData::getAccessKey();
         new_params["Timestamp"] = timestamp;
         //3, transform to string, format: key1=value1&key2=value2
         string param_str;
@@ -34,7 +35,7 @@ public:
             //param_str.append(it->second + "&");
         }
         //4, add secret_key at last
-        param_str.append("SecretKey=" + string(SULINK_SECRET_KEY));
+        param_str.append("SecretKey=" + string(SulinkConfigData::getSecretKey()));
         //5, md5(capital)
         md5 =  unisound::UniUtil::md5(param_str);
         transform(md5.begin(), md5.end(), md5.begin(), ::toupper);

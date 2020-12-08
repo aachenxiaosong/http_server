@@ -10,8 +10,6 @@
 
 using namespace std;
 
-#define SULINK_LIFT_INIT_DATA_FILE "data/lift_init_info.txt"
-
 //TODO: 数据共享需要解耦一下
 class SulinkLiftInitData {
 private:

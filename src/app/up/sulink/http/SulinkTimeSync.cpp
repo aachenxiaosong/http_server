@@ -1,5 +1,6 @@
 #include "SulinkTimeSync.hpp"
 #include "SulinkSignature.hpp"
+#include "SulinkConfigData.hpp"
 #include "HttpClient.hpp"
 #include "configurable_info.h"
 #include "UniUtil.hpp"
@@ -47,14 +48,14 @@ int SulinkTimeSync :: request() {
     T1 = timestamp;
     params["localTime"] = to_string(timestamp);
     headers["Content-Type"] = "application/json";
-    headers["brand"] = SULINK_BRAND;
+    headers["brand"] = SulinkConfigData::getBrand();
     headers["timestamp"] = timestamp;
     headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     CJsonObject jcontent;
     jcontent.Add("localTime", timestamp);
     string content = jcontent.ToString();
     string result;
-    int rc = HttpClient::post(SULINK_TIME_SYNC_URL, content, result, headers);
+    int rc = HttpClient::post(SulinkConfigData::getUrlTimeSync(), content, result, headers);
     if (rc != 0 || result.empty()) {
         LOGE(SULINK_TIME_SYNC_TAG, "request failed");
     } else {

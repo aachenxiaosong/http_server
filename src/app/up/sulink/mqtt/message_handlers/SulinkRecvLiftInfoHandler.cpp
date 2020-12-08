@@ -1,6 +1,7 @@
 #include "SulinkRecvLiftInfoHandler.hpp"
 #include "SulinkLiftInitData.hpp"
 #include "SulinkTraceid.hpp"
+#include "SulinkConfigData.hpp"
 #include "MqttClient.hpp"
 #include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
@@ -26,8 +27,8 @@ int SulinkRecvLiftInfoHandler :: handle(const Message &message) {
     long timestamp = unisound::UniUtil::timestampMs();
     ack.topic("pub/lift");
     ack.traceId(SulinkTraceid::build(to_string(timestamp)));
-    ack.payloadVersion(SULINK_PAYLOAD_VERSION);
-    ack.brand(SULINK_BRAND);
+    ack.payloadVersion(SulinkConfigData::getPayloadVersion());
+    ack.brand(SulinkConfigData::getBrand());
     ack.timestamp(timestamp);
     ack.reqId(msg.reqId());
     ack.ackReqId(unisound::UniUtil::uuid());

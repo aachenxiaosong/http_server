@@ -72,7 +72,7 @@ std::string unisound::UniDeviceInfo ::getUdid()
 std::string unisound::UniDeviceInfo ::getType()
 {
     if (mType.empty() == true) {
-        mType = UniConfig::getString("devie.type");
+        mType = UniConfig::getString("device.type");
     }
     return mType;
 }
@@ -80,7 +80,7 @@ std::string unisound::UniDeviceInfo ::getType()
 std::string unisound::UniDeviceInfo ::getNetName()
 {
     if (mNetName.empty() == true) {
-        mNetName = UniConfig::getString("devie.netname");
+        mNetName = UniConfig::getString("device.netname");
     }
     return mNetName;
 }
@@ -88,7 +88,7 @@ std::string unisound::UniDeviceInfo ::getNetName()
 std::string unisound::UniDeviceInfo ::getAppVersion()
 {
     if (mAppVersion.empty() == true) {
-        mAppVersion = UniConfig::getString("devie.version.app");
+        mAppVersion = UniConfig::getString("device.version.app");
     }
     return mAppVersion;
 }
