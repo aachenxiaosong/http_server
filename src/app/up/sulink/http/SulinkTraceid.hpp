@@ -2,6 +2,7 @@
 #define APP_UP_SULINK_HTTP_SULINK_TRACEID_HPP_
 
 #include "configurable_info.h"
+#include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
 #include <string>
 #include <map>
@@ -13,7 +14,7 @@ class SulinkTraceid {
 public:
     static string build(const string& timestamp) {
         string trace_id;
-        string device_code = UniUtil::deviceCode();
+        string device_code = unisound::UniDeviceInfo::getUdid();
         string uuid = UniUtil::uuid();
         string trace_id_str = timestamp + device_code + uuid.substr(uuid.length() - 7, uuid.length());
         string trace_id_md5 =  UniUtil::md5(trace_id_str);

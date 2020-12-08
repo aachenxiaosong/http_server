@@ -1,5 +1,6 @@
 #include "SulinkClient.hpp"
 #include "UniLog.hpp"
+#include "uni_iot.h"
 
 #define SULINK_CLIENT_TAG mName.c_str()
 

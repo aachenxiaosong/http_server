@@ -2,6 +2,7 @@
 #include "SulinkSignature.hpp"
 #include "HttpClient.hpp"
 #include "configurable_info.h"
+#include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
 #include "CJsonObject.hpp"
 #include "UniLog.hpp"
@@ -33,9 +34,9 @@ SulinkHb :: ~SulinkHb() {
 int SulinkHb :: request() {
     map<string, string> headers;
     map<string, string> params;
-    string device_code = UniUtil::deviceCode();
-    double cpu_utility = UniUtil::cpuUtility();
-    double mem_utility = UniUtil::memoryUtility();
+    string device_code = unisound::UniDeviceInfo::getUdid();
+    double cpu_utility = unisound::UniDeviceInfo::getCpuUtility();
+    double mem_utility = unisound::UniDeviceInfo::getMemUtility();
     long timestamp = UniUtil::timestampMs();
     params["deviceCode"] = device_code;
     params["upTime"] = to_string(timestamp);

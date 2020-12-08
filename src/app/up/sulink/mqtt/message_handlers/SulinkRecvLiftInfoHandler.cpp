@@ -2,6 +2,7 @@
 #include "SulinkLiftInitData.hpp"
 #include "SulinkTraceid.hpp"
 #include "MqttClient.hpp"
+#include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
 #include "configurable_info.h"
 #include "UniLog.hpp"
@@ -30,7 +31,7 @@ int SulinkRecvLiftInfoHandler :: handle(const Message &message) {
     ack.timestamp(timestamp);
     ack.reqId(msg.reqId());
     ack.ackReqId(UniUtil::uuid());
-    ack.deviceCode(UniUtil::deviceCode());
+    ack.deviceCode(unisound::UniDeviceInfo::getUdid());
     ack.code(msg.errCode());
     ack.message(msg.errMessage());
     if (msg.errCode() == 0) {

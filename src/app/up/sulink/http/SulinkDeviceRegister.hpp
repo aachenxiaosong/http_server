@@ -2,7 +2,6 @@
 #define APP_UP_SULINK_HTTP_SULINK_DEVICE_REGISTER_HPP_
 
 #include "MqttClientParam.hpp"
-#include "uni_device.h"
 
 class SulinkDeviceRegister {
 private:

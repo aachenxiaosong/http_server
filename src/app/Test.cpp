@@ -7,6 +7,7 @@
 #include "SulinkHb.hpp"
 #include "SulinkTimeSync.hpp"
 #include "SulinkLiftInitData.hpp"
+#include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
@@ -75,7 +76,7 @@ void AppTest() {
     SulinkMessageSendDeviceInfo message;
     long timestamp = UniUtil::timestampMs();
     message.appKey(SULINK_ACCESS_KEY);
-    message.deviceSn(UniUtil::deviceCode());
+    message.deviceSn(unisound::UniDeviceInfo::getUdid());
     message.brand(SULINK_BRAND);
     message.deviceType("边缘网关");
     message.appVersion(MY_VERSION);
@@ -102,7 +103,7 @@ void AppTest() {
     long timestamp = UniUtil::timestampMs();
     message.brand(SULINK_BRAND);
     message.code("12345678");//学号
-    message.deviceCode(UniUtil::deviceCode());
+    message.deviceCode(unisound::UniDeviceInfo::getUdid());
     message.extData("");
     message.passPhoto("");
     message.passResult(0);
