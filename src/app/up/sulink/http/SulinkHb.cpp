@@ -37,7 +37,7 @@ int SulinkHb :: request() {
     string device_code = unisound::UniDeviceInfo::getUdid();
     double cpu_utility = unisound::UniDeviceInfo::getCpuUtility();
     double mem_utility = unisound::UniDeviceInfo::getMemUtility();
-    long timestamp = UniUtil::timestampMs();
+    long timestamp = unisound::UniUtil::timestampMs();
     params["deviceCode"] = device_code;
     params["upTime"] = to_string(timestamp);
     params["cpu"] = to_string(cpu_utility);

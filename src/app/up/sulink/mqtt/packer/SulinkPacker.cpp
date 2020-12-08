@@ -13,7 +13,7 @@ SulinkPacker :: ~SulinkPacker() {}
 
 string* SulinkPacker :: packSendDeviceInfo(const SulinkMessageSendDeviceInfo& message) {
     CJsonObject jheader;
-    //long timestamp = UniUtil::timestampMsL();
+    //long timestamp = unisound::UniUtil::timestampMsL();
     //jheader.Add("traceId", SulinkTraceid::build(to_string(timestamp)));
     jheader.Add("traceId", message.traceId());
     jheader.Add("payloadVersion", message.payloadVersion());

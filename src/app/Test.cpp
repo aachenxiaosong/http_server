@@ -74,7 +74,7 @@ void AppTest() {
 #elif (TEST_NUM == 3)
     SulinkClient sulink_client;
     SulinkMessageSendDeviceInfo message;
-    long timestamp = UniUtil::timestampMs();
+    long timestamp = unisound::UniUtil::timestampMs();
     message.appKey(SULINK_ACCESS_KEY);
     message.deviceSn(unisound::UniDeviceInfo::getUdid());
     message.brand(SULINK_BRAND);
@@ -100,7 +100,7 @@ void AppTest() {
 #elif (TEST_NUM == 6)
     SulinkClient sulink_client;
     SulinkMessageSendPassRecord message;
-    long timestamp = UniUtil::timestampMs();
+    long timestamp = unisound::UniUtil::timestampMs();
     message.brand(SULINK_BRAND);
     message.code("12345678");//学号
     message.deviceCode(unisound::UniDeviceInfo::getUdid());

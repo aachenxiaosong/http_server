@@ -36,14 +36,14 @@ int SulinkTimeSync :: parseResult(const string& result) {
         LOGE(SULINK_TIME_SYNC_TAG, "parse T2 or T3 failed");
         return -1;
     }
-    T4 = UniUtil::timestampMs();
+    T4 = unisound::UniUtil::timestampMs();
     return calculateLocalTime();
 }
 
 int SulinkTimeSync :: request() {
     map<string, string> headers;
     map<string, string> params;
-    long timestamp = UniUtil::timestampMs();
+    long timestamp = unisound::UniUtil::timestampMs();
     T1 = timestamp;
     params["localTime"] = to_string(timestamp);
     headers["Content-Type"] = "application/json";

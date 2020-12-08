@@ -36,7 +36,7 @@ public:
         //4, add secret_key at last
         param_str.append("SecretKey=" + string(SULINK_SECRET_KEY));
         //5, md5(capital)
-        md5 =  UniUtil::md5(param_str);
+        md5 =  unisound::UniUtil::md5(param_str);
         transform(md5.begin(), md5.end(), md5.begin(), ::toupper);
         
         return md5;

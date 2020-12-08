@@ -23,14 +23,14 @@ int SulinkRecvLiftInfoHandler :: handle(const Message &message) {
     }
     const SulinkMessageRecvLiftInfo& msg = dynamic_cast<const SulinkMessageRecvLiftInfo&>(message);
     SulinkMessageRecvLiftInfoAck ack;
-    long timestamp = UniUtil::timestampMs();
+    long timestamp = unisound::UniUtil::timestampMs();
     ack.topic("pub/lift");
     ack.traceId(SulinkTraceid::build(to_string(timestamp)));
     ack.payloadVersion(SULINK_PAYLOAD_VERSION);
     ack.brand(SULINK_BRAND);
     ack.timestamp(timestamp);
     ack.reqId(msg.reqId());
-    ack.ackReqId(UniUtil::uuid());
+    ack.ackReqId(unisound::UniUtil::uuid());
     ack.deviceCode(unisound::UniDeviceInfo::getUdid());
     ack.code(msg.errCode());
     ack.message(msg.errMessage());

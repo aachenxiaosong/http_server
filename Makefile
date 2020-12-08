@@ -1,21 +1,19 @@
 target := uni_gateway 
 all: $(target) 
 
-utils_src := src/utils/data_buf/src \
+utils_src := src/utils/util/src \
              src/utils/config/src \
              src/utils/json/src \
+             src/utils/data_buf/src \
              src/utils/device_info/src \
              src/utils/encrypt/src \
              src/utils/http/src \
              src/utils/list/src \
              src/utils/log/src \
-             src/utils/uuid/src \
              src/utils/uart/src \
-             src/utils/md5sum/src \
              src/utils/memcheck/src \
-             src/utils/time_tick/src \
              src/utils/rwlock
-utils_inc := src/utils/uni_util/inc \
+utils_inc := src/utils/util/inc \
              src/utils/config/inc \
              src/utils/json/inc \
              src/utils/data_buf/inc \
@@ -24,11 +22,8 @@ utils_inc := src/utils/uni_util/inc \
              src/utils/http/inc \
              src/utils/list/inc \
              src/utils/log/inc \
-             src/utils/uuid/inc \
              src/utils/uart/inc \
-             src/utils/md5sum/inc \
              src/utils/memcheck/inc \
-             src/utils/time_tick/inc \
              src/utils/rwlock
 
 sdk_src := src/sdk/http/http_server \

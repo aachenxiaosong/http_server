@@ -73,7 +73,7 @@ int SulinkDeviceRegister :: request()
 {
     map<string, string> headers;
     map<string, string> params;
-    long timestamp = UniUtil::timestampMs();
+    long timestamp = unisound::UniUtil::timestampMs();
     params["deviceCode"] = unisound::UniDeviceInfo::getUdid();
     headers["Content-Type"] = "application/json";
     headers["brand"] = SULINK_BRAND;

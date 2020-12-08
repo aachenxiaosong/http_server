@@ -15,9 +15,9 @@ public:
     static string build(const string& timestamp) {
         string trace_id;
         string device_code = unisound::UniDeviceInfo::getUdid();
-        string uuid = UniUtil::uuid();
+        string uuid = unisound::UniUtil::uuid();
         string trace_id_str = timestamp + device_code + uuid.substr(uuid.length() - 7, uuid.length());
-        string trace_id_md5 =  UniUtil::md5(trace_id_str);
+        string trace_id_md5 =  unisound::UniUtil::md5(trace_id_str);
         transform(trace_id_md5.begin(), trace_id_md5.end(), trace_id_md5.begin(), ::toupper);
         trace_id = trace_id_md5;
         return trace_id;
