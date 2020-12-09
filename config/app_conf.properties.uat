@@ -1,0 +1,19 @@
+;device info
+device.version.app = v3.1.2
+device.type = ELEVATOR_IPC
+device.netname = enp2s0
+
+;sulink
+sulink.could.type = uat ;test, uat, product
+sulink.accesskey = shimao62ae1634e0b32d0
+sulink.secretkey = f6339f4974cac548080ecdeca4037489
+sulink.brand = yzs
+sulink.payloadversion = 1
+sulink.server_domain = https://uat-api.shimaoiot.com/
+sulink.url.deviceregister = api/sulink/v2/device/register
+sulink.url.hb = device-monitor/v2/hb/up
+sulink.url.timesync = api/sulink/v2/time/sync
+
+;liftcontrol
+liftcontrl.data.init = data/lift_init_info.txt
+liftcontrl.httpserver.url = http://101.231.106.182:8081
