@@ -82,7 +82,7 @@ int SulinkDeviceRegister :: request()
     headers["signature"] = SulinkSignature::build(params, to_string(timestamp));
     string content = "{\"deviceCode\":\"" + unisound::UniDeviceInfo::getUdid() + "\"}";
     string result;
-    int rc = HttpClient::post(SulinkConfigData::getUrlDeviceRegister(), content, result, headers);
+    int rc = HttpClient::postHttps(SulinkConfigData::getUrlDeviceRegister(), content, result, headers);
     if (rc != 0) {
         LOGE(SULINK_DEVICE_REG_TAG, "request failed");
     } else {
