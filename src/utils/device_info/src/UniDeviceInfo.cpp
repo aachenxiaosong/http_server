@@ -58,7 +58,7 @@ std::string unisound::UniDeviceInfo ::getUdid()
 #else
     if (mUdid.empty() == true)
     {
-        if (mMac.empty() != true)
+        if (getMac().empty() != true)
         {
             mUdid = mMac;
             mUdid.erase(2, 1).erase(4, 1).erase(6, 1).erase(8, 1).erase(10, 1);

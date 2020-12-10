@@ -1,3 +1,10 @@
+v3.2.1
+1. feature
+  1.1 implement http(s) with poco
+  1.2 put http thread num and port into config file
+2. bugfix
+  2.1 fix issue of geting udid failure
+
 v3.2.0
 1. feature
   1.1 remove useless files, including files in utils and hal 

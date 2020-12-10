@@ -14,11 +14,7 @@
 #include "event2/util.h"
 #include "event2/listener.h"
 
-// #include "call_lift.h"
-// #include "exter_visit.h"
-// #include "inter_visit.h"
-// #include "get_home.h"
-// #include "lift_status.h"
+#include "UniConfig.hpp"
 #include "UniLog.hpp"
 #include "uni_iot.h"
 #include <vector>
@@ -29,15 +25,14 @@
 
 #define BUF_MAX              (1024 * 16)
 #define HTTP_SERVER_TAG      "http_server"
-#define HTTP_SERVER_PORT     8080
-#define HTTP_SERVER_NTHREADS 5
+#define SERVER_MAX_THREAD_NUM 100
 
 typedef struct httpd_info {
   struct event_base *base;
   struct evhttp *httpd;
 } httpd_info;
-pthread_t g_threads[HTTP_SERVER_NTHREADS];
-httpd_info g_info_arr[HTTP_SERVER_NTHREADS];
+pthread_t g_threads[SERVER_MAX_THREAD_NUM];
+httpd_info g_info_arr[SERVER_MAX_THREAD_NUM];
 
 vector<IHttpRequestHandler *> g_http_handlers;
 RwLock g_http_handler_lock;
@@ -283,7 +278,7 @@ int bind_socket() {
   memset(&addr,0,sizeof(addr));
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = INADDR_ANY;
-  addr.sin_port = htons(HTTP_SERVER_PORT);
+  addr.sin_port = htons(unisound::UniConfig::getInt("httpserver.port"));
   ret = bind(server_socket, (struct sockaddr*)&addr, sizeof(struct sockaddr));
   if(ret<0) {
     LOGE(HTTP_SERVER_TAG, "bind failed");
@@ -304,7 +299,11 @@ int http_server_start() {
     LOGE(HTTP_SERVER_TAG, "bind socket failed");
     return -1;
   }
-  for(i = 0; i< HTTP_SERVER_NTHREADS; i++) {
+  int thread_num = unisound::UniConfig::getInt("httpsrever.thread_num");
+  if (thread_num > SERVER_MAX_THREAD_NUM) {
+    thread_num = SERVER_MAX_THREAD_NUM;
+  }
+  for(i = 0; i< thread_num; i++) {
     pinfo = &g_info_arr[i];
     pinfo->base = event_base_new();
     if (pinfo->base == NULL) {
