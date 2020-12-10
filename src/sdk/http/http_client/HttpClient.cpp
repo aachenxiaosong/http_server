@@ -174,19 +174,16 @@ int HttpClient::get(const string& url, string& result,
 }
 
 int HttpClient::postHttps(const string& url, const string& content, string &result,
-                          const map<string, string>& headers, int timeout)
+                          const map<string, string>& headers, int timeout)  
 {
     int ret = -1;
     try {
         SSLManager::InvalidCertificateHandlerPtr handlerPtr(new AcceptCertificateHandler(false));
         Context::Ptr context = new Context(Context::CLIENT_USE, "");
-        SSLManager::instance().initializeClient(nullptr, handlerPtr, context);
         URI uri(url);
-        Context::Ptr m_context = new Context(Context::CLIENT_USE, "", "", "", Context::VERIFY_NONE, 9, false);
-        HTTPSClientSession session(context);
-        session.setHost(uri.getHost());
-        session.setPort(uri.getPort());
+        HTTPSClientSession session(uri.getHost(), uri.getPort(), context);
         HTTPRequest request(HTTPRequest::HTTP_POST, uri.getPathAndQuery());
+        request.setContentLength(content.length());
         string s_headers("");
         for (auto i : headers) {
             request.set(i.first, i.second);
@@ -197,7 +194,6 @@ int HttpClient::postHttps(const string& url, const string& content, string &resu
             Timespan time_span(timeout, 0);
             session.setTimeout(time_span);
         }
-
         //request.setContentLength(content.length());
         session.sendRequest(request) << content;
         LOGT(HTTP_CLIENT_TAG, "post request sent -----\nurl:%s\nheaders:%s\ncontent:%s\ntimeout:%d\n",

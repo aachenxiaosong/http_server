@@ -56,7 +56,7 @@ int SulinkHb :: request() {
     jcontent.Add("versionNumber", unisound::UniDeviceInfo::getAppVersion());
     string content = jcontent.ToString();
     string result;
-    int rc = HttpClient::post(SulinkConfigData::getUrlHb(), content, result, headers);
+    int rc = HttpClient::postHttps(SulinkConfigData::getUrlHb(), content, result, headers);
     if (rc != 0 || result.empty()) {
         LOGE(SULINK_HB_TAG, "request failed");
     } else {
