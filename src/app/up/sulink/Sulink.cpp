@@ -1,5 +1,6 @@
 #include "Sulink.hpp"
-
+#include "SulinkLiftInitData.hpp"
+#include <iostream>
 
 int Sulink :: init()
 {
@@ -9,5 +10,6 @@ int Sulink :: init()
     if (mMqttClient.start() != 0) {
         return -1;
     }
+    SulinkLiftInitData::loadFromConfig();
     return 0;
 }

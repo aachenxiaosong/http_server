@@ -16,20 +16,54 @@ unisound::Config :: Config(const string &path)
 
 string unisound::Config :: getString(const string &key)
 {
-    //do not check NULL of mConf, just let it crash
-    return mConf->getString(key);
+    string ret;
+    try {
+        ret = mConf->getString(key);
+    } catch (Poco::NotFoundException& e) {
+        LOGW(CONFIG_TAG, "config of %s(string) not found", key.c_str());
+    }
+    return ret;
 }
-bool unisound::Config :: getBool(const string &key)
+bool unisound::Config ::getBool(const string &key)
 {
-    return mConf->getBool(key);
+    bool ret = 0;
+    try
+    {
+        ret = mConf->getBool(key);
+    }
+    catch (Poco::NotFoundException &e)
+    {
+        LOGW(CONFIG_TAG, "config of %s(bool) not found", key.c_str());
+    }
+    return ret;
 }
+
 int unisound::Config :: getInt(const string &key)
 {
-    return mConf->getInt(key);
+    int ret = 0;
+    try
+    {
+        ret = mConf->getInt(key);
+    }
+    catch (Poco::NotFoundException &e)
+    {
+        LOGW(CONFIG_TAG, "config of %s(int) not found", key.c_str());
+    }
+    return ret;
 }
+
 double unisound::Config :: getDouble(const string &key)
 {
-    return mConf->getDouble(key);
+    double ret = 0.0;
+    try
+    {
+        ret = mConf->getDouble(key);
+    }
+    catch (Poco::NotFoundException &e)
+    {
+        LOGW(CONFIG_TAG, "config of %s(double) not found", key.c_str());
+    }
+    return ret;
 }
 
 unisound::Config unisound::UniConfig :: mConfig("config/app_conf.properties");

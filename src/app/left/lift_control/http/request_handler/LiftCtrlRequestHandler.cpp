@@ -2,7 +2,7 @@
 #include "SulinkLiftInitData.hpp"
 #include "UniLog.hpp"
 
-#define LIFT_CTRL_REQ_HANDLER_TAG "lift_ctrl_req_handler"
+#define LIFT_CTRL_REQ_HANDLER_TAG getName().c_str()
 
 int LiftCtrlRequestHandler :: addMessageHandler(ILiftCtrlMessageHandler *handler) {
     mMessageHandlers.push_back(handler);
@@ -28,8 +28,10 @@ int LiftCtrlRequestHandler :: handle(const string& path, const string& request, 
     //step 1: check init info
     if (SulinkLiftInitData::inited() != true) {
         response = failureResponse(-1, "request rejected for init info is absent");
+        LOGE(LIFT_CTRL_REQ_HANDLER_TAG, "request %s is rejected for init info is absent", path.c_str());
         return 0;
     }
+    LOGT(LIFT_CTRL_REQ_HANDLER_TAG, "request %s is handled", path.c_str());
     //step 2: unpack
     LiftCtrlMessageReq *m_req = mPacker.unpack(path, request);
     if (m_req == NULL) {
@@ -48,9 +50,9 @@ int LiftCtrlRequestHandler :: handle(const string& path, const string& request, 
         for (int i = 0; i < mMessageHandlers.size(); i++)
         {
             m_rsp = mMessageHandlers[i]->handle(*m_req);
+    LOGT(LIFT_CTRL_REQ_HANDLER_TAG, "msg handler: %s", mMessageHandlers[i]->getName().c_str());
             if (NULL != m_rsp)
             {
-                LOGT(LIFT_CTRL_REQ_HANDLER_TAG, "request is handled by %s", mMessageHandlers[i]->getName().c_str());
                 string *rsp = mPacker.pack(*m_rsp);
                 if (NULL != rsp)
                 {

@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/src",
-                "${workspaceFolder}/src/http_server",
+                "${workspaceFolder}/src/app/up/sulink/data",
                 "${workspaceFolder}/src/http_client",
                 "${workspaceFolder}/src/http_service",
                 "${workspaceFolder}/src/http_service/handlers/base",

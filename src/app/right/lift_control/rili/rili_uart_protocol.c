@@ -41,7 +41,7 @@ static void _printf_frame(unsigned char *frame, int len) {
   printf("\n");
 }
 
-static int _tcp_send(unsigned char *request, int request_len, unsigned char *response, int *response_len) {
+static int _tcp_send(const char* ip, int port, unsigned char *request, int request_len, unsigned char *response, int *response_len) {
   int sockfd;
   struct sockaddr_in server_addr;
 
@@ -51,8 +51,8 @@ static int _tcp_send(unsigned char *request, int request_len, unsigned char *res
     return -1;
   }
   server_addr.sin_family = PF_INET;
-  server_addr.sin_port = htons(8234);
-  server_addr.sin_addr.s_addr = inet_addr("192.168.1.200");
+  server_addr.sin_port = htons(port);
+  server_addr.sin_addr.s_addr = inet_addr(ip);
   if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr))  == -1)
   {
     LOGE(RILI_UART_PROT, "connect failed");
@@ -288,7 +288,7 @@ int _parse_frame_for_lift_status(void *response, unsigned char frame[RESPONSE_FR
   return 0;
 }
 
-int rili_protocol_send(int event_type, void *request, void *response) {
+int rili_protocol_send(const char* ip, int port, int event_type, void *request, void *response) {
   int (* request_assemble) (void *, unsigned char [REQUEST_FRAME_LEN], unsigned char);
   int (* response_parse) (void *, unsigned char [RESPONSE_FRAME_LEN], unsigned char);
   unsigned char request_frame[REQUEST_FRAME_LEN] = {0};
@@ -340,7 +340,7 @@ int rili_protocol_send(int event_type, void *request, void *response) {
     return -1;
   }
   #else
-  if (0 != _tcp_send(request_frame, REQUEST_FRAME_LEN, response_frame, &recv_len)) {
+  if (0 != _tcp_send(ip, port,  request_frame, REQUEST_FRAME_LEN, response_frame, &recv_len)) {
     LOGE(RILI_UART_PROT, "failed at step3: tcp send failed");
     return -1;
   }

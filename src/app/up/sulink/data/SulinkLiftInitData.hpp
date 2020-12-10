@@ -18,11 +18,13 @@ private:
     map<string, int> mSpaceIdIndexMap;
     SulinkLiftInitData();
     ~SulinkLiftInitData();
+    int mLoadFromConfig();
     void mUpdateInfo(const SulinkMessageRecvLiftInfo& info);
     void mUpdateSpaceIdIndexMap();
     string mGetAppId();
     string mGetAppSecret();
     string mGetLicense();
+    string mGetBrandCode();
     int mGetSpaceIdIndex(const string& space_id);
     string mGetSpaceNoBySpaceId(const string& space_id, const string& space_type);
     string mGetClusterIdBySpaceId(const string& space_id);
@@ -36,11 +38,13 @@ private:
     const string mToString();
 public:
     //不直接定义mInfo成静态成员的原因是,读文件的部分需要静态初始化,所以要借助静态的mData成员
+    static int loadFromConfig();
     static bool inited();
     static void updateInfo(const SulinkMessageRecvLiftInfo& info);
     static string getAppId();
     static string getAppSecret();
     static string getLicense();
+    static string getBrandCode();
     static string getHomeNoBySpaceId(const string& space_id);
     static string getUnitNoBySpaceId(const string& space_id);
     static string getBuildingNoBySpaceId(const string& space_id);

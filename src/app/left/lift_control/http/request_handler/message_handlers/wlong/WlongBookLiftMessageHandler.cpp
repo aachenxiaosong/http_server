@@ -74,15 +74,17 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
         unlock_floors = "";
         ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, unlock_floors, req.unlockTime(), wl_response);
     }
-    else if (req.mode().compare(req.MODE_OPEN) == 0)
+    else if (req.mode().compare(req.MODE_OPEN) == 0 ||
+              (req.mode().compare(req.MODE_ALL) == 0 && req.authorizedHomeIds().size() == 0))
     {
         ret = wlong_lift_ctrl.reserveElevator(i_cluster_id, from_floor, open_floor, wl_response);
     }
-    else if (req.mode().compare(req.MODE_UNLOCK) == 0)
+    else if (req.mode().compare(req.MODE_UNLOCK) == 0 ||
+               req.mode().compare(req.MODE_ALL) == 0 && req.defaultHomeId().empty() == true)
     {
         ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, unlock_floors, req.unlockTime(), wl_response);
     }
-    else if (req.mode().compare(req.MODE_ALL) == 0)
+    else
     {
         ret = 0;
         wl_response.code = -1;

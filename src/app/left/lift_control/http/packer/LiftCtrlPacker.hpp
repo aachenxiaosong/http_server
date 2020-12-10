@@ -1,5 +1,4 @@
-#ifndef LEFT_LIFT_CONTROL_HTTP_PACKER_LIFT_CTRL_PACKER_HPP_
-#define LEFT_LIFT_CONTROL_HTTP_PACKER_LIFT_CTRL_PACKER_HPP_
+#pragma once
 
 #include "LiftCtrlMessage.hpp"
 
@@ -25,5 +24,3 @@ public:
     //return string need to be released by app
     string* pack(const LiftCtrlMessageRsp &message);
 };
-
-#endif // LEFT_LIFT_CONTROL_HTTP_PACKER_LIFT_CTRL_PACKER_HPP_

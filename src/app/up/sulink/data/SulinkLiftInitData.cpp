@@ -8,7 +8,21 @@ SulinkLiftInitData SulinkLiftInitData::mData;
 
 SulinkLiftInitData :: SulinkLiftInitData()
 {
-    ifstream ifs(unisound::UniConfig::getString("liftcontrl.data.init"));
+    mInfo = NULL;
+};
+SulinkLiftInitData :: ~SulinkLiftInitData()
+{
+    if (mInfo != NULL)
+    {
+        delete mInfo;
+    }
+};
+
+int SulinkLiftInitData :: mLoadFromConfig()
+{
+    int ret = -1;
+    string config_path = unisound::UniConfig::getString("liftcontrl.data.init");
+    ifstream ifs(config_path);
     ostringstream oss;
     oss << ifs.rdbuf();
     string raw_data = oss.str();
@@ -18,17 +32,18 @@ SulinkLiftInitData :: SulinkLiftInitData()
     {
         SulinkPacker packer;
         mInfo = dynamic_cast<SulinkMessageRecvLiftInfo *>(packer.unpack(raw_data));
-        LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config: \n%s", mToString().c_str());
-        mUpdateSpaceIdIndexMap();
+        if (mInfo != NULL) {
+            ret = 0;
+            LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config %s: \n%s", config_path.c_str(), mToString().c_str());
+            mUpdateSpaceIdIndexMap();
+        }
+    } 
+    if (mInfo == NULL) {
+        LOGW(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config %s failed\n", config_path.c_str());
     }
-};
-SulinkLiftInitData :: ~SulinkLiftInitData()
-{
-    if (mInfo != NULL)
-    {
-        delete mInfo;
-    }
-};
+    return ret;
+}
+
 
 void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
 {
@@ -66,20 +81,44 @@ int SulinkLiftInitData :: mGetSpaceIdIndex(const string& space_id) {
 
 string SulinkLiftInitData :: mGetAppId()
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get app id failed for lift not inited");
+        return "";
+    }
     return mInfo->brandInfo().appId();
 }
 
 string SulinkLiftInitData :: mGetAppSecret()
 {
+     if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get app secret failed for lift not inited");
+        return "";
+    }
     return mInfo->brandInfo().appSecret();
 }
 
 string SulinkLiftInitData :: mGetLicense()
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get license failed for lift not inited");
+        return "";
+    }
     return mInfo->brandInfo().licence();
+}
+string SulinkLiftInitData ::mGetBrandCode()
+{
+     if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get brand code failed for lift not inited");
+        return "";
+    }
+    return mInfo->brandInfo().brandCode();
 }
 
 string SulinkLiftInitData :: mGetSpaceNoBySpaceId(const string& space_id, const string& space_type) {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get space no failed for lift not inited");
+        return "";
+    }
     int index;
     string id = space_id;
     string no = "";
@@ -96,6 +135,10 @@ string SulinkLiftInitData :: mGetSpaceNoBySpaceId(const string& space_id, const 
 }
 
 string SulinkLiftInitData :: mGetClusterIdBySpaceId(const string& space_id) {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get cluster id failed for lift not inited");
+        return "";
+    }
     int index;
     string cluster_id = "";
     if ((index = mGetSpaceIdIndex(space_id)) >= 0) {
@@ -106,6 +149,10 @@ string SulinkLiftInitData :: mGetClusterIdBySpaceId(const string& space_id) {
 }
 
 string SulinkLiftInitData :: mGetClusterUrlBySpaceId(const string& space_id) {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get cluster url failed for lift not inited");
+        return "";
+    }
     int index;
     string cluster_id = mGetClusterIdBySpaceId(space_id);
     string cluster_url = "";
@@ -125,6 +172,10 @@ string SulinkLiftInitData :: mGetClusterUrlBySpaceId(const string& space_id) {
 }
 
 string SulinkLiftInitData :: mGetFloorNoBySpaceId(const string& space_id) {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get floor no failed for lift not inited");
+        return "";
+    }
     int index;
     string floor = "";
     if ((index = mGetSpaceIdIndex(space_id)) >= 0) {
@@ -136,6 +187,10 @@ string SulinkLiftInitData :: mGetFloorNoBySpaceId(const string& space_id) {
 
 string SulinkLiftInitData ::mGetDeviceFloorNo(const string &device_code)
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get floor no failed for lift not inited");
+        return "";
+    }
     string floor = "";
     for (int i = 0; i < mInfo->accessDevices().size(); i++) {
         if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
@@ -148,6 +203,10 @@ string SulinkLiftInitData ::mGetDeviceFloorNo(const string &device_code)
 
 string SulinkLiftInitData :: mGetDeviceHallNo(const string &device_code)
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get hall no failed for lift not inited");
+        return "";
+    }
     string hall = "";
     for (int i = 0; i < mInfo->accessDevices().size(); i++) {
         if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
@@ -160,6 +219,10 @@ string SulinkLiftInitData :: mGetDeviceHallNo(const string &device_code)
 
 int SulinkLiftInitData :: mGetDeviceWorkMode(const string& device_code)
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get device work mode failed for lift not inited");
+        return 0;
+    }
     int work_mode = -1;
     for (int i = 0; i < mInfo->accessDevices().size(); i++) {
         if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
@@ -172,6 +235,10 @@ int SulinkLiftInitData :: mGetDeviceWorkMode(const string& device_code)
     
 string SulinkLiftInitData :: mGetDevicePubFloors(const string& device_code)
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get device pub floor failed for lift not inited");
+        return "";
+    }
     string pub_floors = "";
     for (int i = 0; i < mInfo->accessDevices().size(); i++) {
         if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
@@ -184,6 +251,10 @@ string SulinkLiftInitData :: mGetDevicePubFloors(const string& device_code)
 
 string SulinkLiftInitData :: mGetDeviceLiftId(const string& device_code)
 {
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get device lift id failed for lift not inited");
+        return "";
+    }
     string lift_id = "";
     for (int i = 0; i < mInfo->accessDevices().size(); i++) {
         if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
@@ -228,7 +299,16 @@ string SulinkLiftInitData :: getLicense()
     return mData.mGetLicense();
 }
 
+string SulinkLiftInitData ::getBrandCode()
+{
+    return mData.mGetBrandCode();
+}
 //不直接定义mInfo成静态成员的原因是,读文件的部分需要静态初始化,所以要借助静态的mData成员
+int SulinkLiftInitData :: loadFromConfig()
+{
+   return  mData.mLoadFromConfig();
+}
+
 void SulinkLiftInitData :: updateInfo(const SulinkMessageRecvLiftInfo &info)
 {
     return mData.mUpdateInfo(info);

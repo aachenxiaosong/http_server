@@ -64,7 +64,7 @@ typedef struct {
   int current_level;
 } RiliResponseLiftStatus;
 
-int rili_protocol_send(int event_type, void *request, void *response);
+int rili_protocol_send(const char* ip, int port, int event_type, void *request, void *response);
 
 #ifdef __cplusplus
 }

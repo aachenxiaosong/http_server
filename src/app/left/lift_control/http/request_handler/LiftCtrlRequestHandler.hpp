@@ -1,5 +1,4 @@
-#ifndef LEFT_LIFT_CONTROL_HTTP_REQUEST_HANDLER_LIFT_CTRL_REQUEST_HANDLER_H_
-#define LEFT_LIFT_CONTROL_HTTP_REQUEST_HANDLER_LIFT_CTRL_REQUEST_HANDLER_H_
+#pragma once
 
 #include "ILiftCtrlMessageHandler.hpp"
 #include "IHttpRequestHandler.hpp"
@@ -14,7 +13,7 @@ private:
     vector<ILiftCtrlMessageHandler *> mMessageHandlers;
     LiftCtrlPacker mPacker;
 public:
-    LiftCtrlRequestHandler() : IHttpRequestHandler("lift_ctrl_http_handler") {}
+    LiftCtrlRequestHandler(const char *name) : IHttpRequestHandler(name) {}
     ~LiftCtrlRequestHandler() {
         mMessageHandlers.clear();
     }
@@ -23,5 +22,3 @@ public:
 private:
     string failureResponse(int ret_code, string msg);
 };
-
-#endif  //  LEFT_LIFT_CONTROL_HTTP_REQUEST_HANDLER_LIFT_CTRL_REQUEST_HANDLER_H_

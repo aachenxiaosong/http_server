@@ -1,5 +1,4 @@
-#ifndef LEFT_LIFT_CONTROL_HTTP_REQUEST_HANDLER_MESSAGE_HANDLERS_I_LIFT_CTRL_MESSAGE_HANDLER_H_
-#define LEFT_LIFT_CONTROL_HTTP_REQUEST_HANDLER_MESSAGE_HANDLERS_I_LIFT_CTRL_MESSAGE_HANDLER_H_
+#pragma once
 
 #include "LiftCtrlMessage.hpp"
 #include <string>
@@ -19,5 +18,3 @@ public:
     //return message need to be released by caller
     virtual LiftCtrlMessageRsp* handle(const LiftCtrlMessageReq &request) = 0;
 };
-
-#endif  //  LEFT_LIFT_CONTROL_HTTP_REQUEST_HANDLER_MESSAGE_HANDLERS_I_LIFT_CTRL_MESSAGE_HANDLER_H_

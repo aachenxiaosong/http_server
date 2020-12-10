@@ -24,11 +24,11 @@ LiftCtrlMessageRsp* WlongBookLiftInterMessageHandler :: handle(const LiftCtrlMes
     string app_id = SulinkLiftInitData :: getAppId();
     string app_secret = SulinkLiftInitData :: getAppSecret();
     string license = SulinkLiftInitData :: getLicense();
-    //step2: 根据homeId获取群控器id,并找到对应的ip和端口;并找到到达楼层
+    //step2: 根据dHomeId获取群控器id,并找到对应的ip和端口;并找到到达楼层
     string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.dHomeId());
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.dHomeId());
     string to_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.dHomeId());
-    //step3: 根据deviceCode找到出发楼层
+    //step3: 根据sHomeId找到出发楼层
     string from_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.sHomeId());
     string not_found_msg = "";
     if (cluster_id.empty()) {

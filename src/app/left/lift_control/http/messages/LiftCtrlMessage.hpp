@@ -1,5 +1,4 @@
-#ifndef LEFT_LIFT_CONTROL_HTTP_MESSAGES_LIFT_CTRL_MESSAGE_HPP_
-#define LEFT_LIFT_CONTROL_HTTP_MESSAGES_LIFT_CTRL_MESSAGE_HPP_
+#pragma once
 
 #include "Message.hpp"
 #include "MessageType.hpp"
@@ -166,4 +165,3 @@ public:
     {}
 };
 
-#endif  //  LEFT_LIFT_CONTROL_HTTP_MESSAGES_LIFT_CTRL_MESSAGE_HPP_

@@ -9,7 +9,7 @@ RiliBookLiftHttpHandler :: RiliBookLiftHttpHandler() : IBookLiftHttpHandler("ril
 }
 
 int RiliBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject& jresponse) {
-    /*string book_type;
+    string book_type;
     int ivalue;
     string svalue;
     CJsonObject jbuilding;
@@ -115,6 +115,6 @@ int RiliBookLiftHttpHandler :: handleRequest(CJsonObject& jrequest, CJsonObject&
         jresponse.Add("errMsg", "request of Rili 3p interface failed");
         jresponse.Add("ackCode", 0);
         jresponse.Add("elevatorId", -1);
-    }*/
+    }
     return 0;
 }

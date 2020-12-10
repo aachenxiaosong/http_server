@@ -1,5 +1,4 @@
-#ifndef LEFT_LIFT_CONTROL_SERVICE_LIFT_CTRL_SERVICE_HPP_
-#define LEFT_LIFT_CONTROL_SERVICE_LIFT_CTRL_SERVICE_HPP_
+#pragma once
 
 #include "LiftCtrlRequestHandler.hpp"
 #include "WlongBookLiftMessageHandler.hpp"
@@ -7,20 +6,34 @@
 #include "WlongBookLiftInterMessageHandler.hpp"
 #include "WlongTakeLiftMessageHandler.hpp"
 #include "WlongLiftStatusMessageHandler.hpp"
+#include "RiliBookLiftMessageHandler.hpp"
+#include "RiliCallLiftMessageHandler.hpp"
+#include "RiliBookLiftInterMessageHandler.hpp"
+#include "RiliTakeLiftMessageHandler.hpp"
+#include "RiliLiftStatusMessageHandler.hpp"
 
 
 class LiftCtrlService {
 private:
+   //wanglong message handlers
     WlongBookLiftMessageHandler mWlongBookLiftHandler;
     WlongCallLiftMessageHandler mWlongCallLiftHandler;
     WlongBookLiftInterMessageHandler mWlongBookLiftInterHandler;
     WlongTakeLiftMessageHandler mWlongTakeLiftHandler;
     WlongLiftStatusMessageHandler mWlongLiftStatusHandler;
     LiftCtrlRequestHandler mWlongHandler;
+    //rili message handlers
+    RiliBookLiftMessageHandler mRiliBookLiftHandler;
+    RiliCallLiftMessageHandler mRiliCallLiftHandler;
+    RiliBookLiftInterMessageHandler mRiliBookLiftInterHandler;
+    RiliTakeLiftMessageHandler mRiliTakeLiftHandler;
+    RiliLiftStatusMessageHandler mRiliLiftStatusHandler;
+    LiftCtrlRequestHandler mRiliHandler;
 public:
     enum LiftVenderType {
         LIFT_VENDER_NONE = 0,
-        LIFT_VENDER_WLONG
+        LIFT_VENDER_WLONG,
+        LIFT_VENDER_RILI,
     };
     LiftVenderType mVenderType;
 private:
@@ -30,5 +43,3 @@ public:
     ~LiftCtrlService();
     int chooseLiftVender(LiftVenderType vender_type);
 };
-
-#endif  //  LEFT_LIFT_CONTROL_SERVICE_LIFT_CTRL_SERVICE_HPP_
