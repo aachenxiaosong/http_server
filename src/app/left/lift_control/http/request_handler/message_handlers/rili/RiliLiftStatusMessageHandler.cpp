@@ -1,6 +1,8 @@
 #include "RiliLiftStatusMessageHandler.hpp"
 #include "SulinkLiftInitData.hpp"
+#include "rili_uart_protocol.h"
 #include "UniLog.hpp"
+#include "Poco/URI.h"
 
 #define RILI_LIFT_STATUS_MSG_HANDLER_TAG getName().c_str()
 
@@ -14,67 +16,60 @@ RiliLiftStatusMessageHandler :: ~RiliLiftStatusMessageHandler()
 
 LiftCtrlMessageRsp* RiliLiftStatusMessageHandler :: handle(const LiftCtrlMessageReq &request)
 {
-    #if 1
-    return NULL;
-    #else
     if (request.type() != MSG_LIFT_CTRL_LIFT_STATUS_REQ) {
         return NULL;
     }
-    LiftCtrlMessageLiftStatusReq& req = (LiftCtrlMessageLiftStatusReq&)request;
+    const LiftCtrlMessageLiftStatusReq& req = dynamic_cast<const LiftCtrlMessageLiftStatusReq&>(request);
     LiftCtrlMessageLiftStatusRsp rsp;
-    //step1: 获取基本参数:appId,appSecret,license
-    string app_id = SulinkLiftInitData :: getAppId();
-    string app_secret = SulinkLiftInitData :: getAppSecret();
-    string license = SulinkLiftInitData :: getLicense();
+    //step1: 获取homeId获取楼栋
+    string building_num = SulinkLiftInitData::getBuildingNoBySpaceId(req.homeId());
+    //step2: 根据homeId获取群控器的ip和端口
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.homeId());
     string not_found_msg = "";
+    if (building_num.empty()) {
+        not_found_msg = "building number not found for home id " + req.homeId();
+    }
     if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
         rsp.retcode(-1);
         rsp.msg(not_found_msg);
+        
         return new LiftCtrlMessageLiftStatusRsp(rsp);
     }
-    //step2: 调用rili乘梯接口
-    RiliLiftStatus wl_lift_status;
-    RiliLiftCtrl rili_lift_ctrl(cluster_url, app_id, app_secret, license);
-    int ret = rili_lift_ctrl.getElevatorStatus(req.elevatorId(), wl_lift_status);
+    //step2: 调用rili电梯状态接口
+    int ret = 0;
+    RiliRequestLiftStatus request_lift_status;
+    RiliResponseLiftStatus response_lift_status;
+    Poco::URI uri(cluster_url);
+    request_lift_status.building_num = atoi(building_num.c_str());
+    request_lift_status.lift_num = req.elevatorId();
+    ret = rili_protocol_send(uri.getHost().c_str(), uri.getPort(), RILI_EVENT_LIFT_STATUS, &(request_lift_status), &(response_lift_status));
     if (ret == 0) {
-        LOGT(RILI_LIFT_STATUS_MSG_HANDLER_TAG, "handle request of rili lift status OK");
+        LOGT(RILI_LIFT_STATUS_MSG_HANDLER_TAG, "handle request of rili lfit status OK");
         rsp.retcode(0);
-        rsp.msg(wl_lift_status.msg);
-        if (wl_lift_status.code == 0) {
-            rsp.curFloor(to_string(wl_lift_status.cur_floor));
-            if (wl_lift_status.upward) {
-                rsp.direction("up");
-            } else {
-                rsp.direction("down");
-            }
-            if (wl_lift_status.status_error) {
-                rsp.movingStatus("error");
-            } else if (wl_lift_status.stopped) {
-                rsp.movingStatus("stopped");
-            } else {
-                rsp.movingStatus("moving");
-            }
-            if (wl_lift_status.open) {
-                rsp.doorStatus("open");
-            } else if (wl_lift_status.closed) {
-                rsp.doorStatus("closed");
-            } else if (wl_lift_status.opening) {
-                rsp.doorStatus("opening");
-            } else if (wl_lift_status.closing) {
-                rsp.doorStatus("closing");
-            } else {
-                rsp.doorStatus("error");
-            }
+        rsp.msg("OK");
+        rsp.curFloor(to_string(response_lift_status.current_level));
+        if (response_lift_status.lift_status == 1 || response_lift_status.lift_status == 5) {
+            rsp.direction("up");
+        } else if (response_lift_status.lift_status == 4) {
+            rsp.movingStatus("error");
+        } else {
+            rsp.direction("down");
+        }
+        rsp.doorStatus("unsupported");
+        if (response_lift_status.lift_status == 1&& response_lift_status.lift_status == 2) {
+            rsp.movingStatus("moving");
+        } else if (response_lift_status.lift_status == 4) {
+            rsp.movingStatus("error");
+        } else {
+            rsp.movingStatus("stopped");
         }
     } else {
-        LOGT(RILI_LIFT_STATUS_MSG_HANDLER_TAG, "handle request of rili lift status failed");
+        LOGT(RILI_LIFT_STATUS_MSG_HANDLER_TAG, "handle request of rili lfit status failed");
         rsp.retcode(-1);
-        rsp.msg("calling WangLong interface error");
+        rsp.msg("calling Rili interface error");
     }
     return new LiftCtrlMessageLiftStatusRsp(rsp);
-    #endif
 }

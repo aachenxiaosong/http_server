@@ -1,6 +1,8 @@
 #include "RiliCallLiftMessageHandler.hpp"
 #include "SulinkLiftInitData.hpp"
+#include "rili_uart_protocol.h"
 #include "UniLog.hpp"
+#include "Poco/URI.h"
 
 #define RILI_CALL_LIFT_MSG_HANDLER_TAG getName().c_str()
 
@@ -14,33 +16,26 @@ RiliCallLiftMessageHandler :: ~RiliCallLiftMessageHandler()
 
 LiftCtrlMessageRsp* RiliCallLiftMessageHandler :: handle(const LiftCtrlMessageReq &request)
 {
-    #if 1
-    return NULL;
-    #else
     if (request.type() != MSG_LIFT_CTRL_CALL_LIFT_REQ) {
         return NULL;
     }
     const LiftCtrlMessageCallLiftReq& req = dynamic_cast<const LiftCtrlMessageCallLiftReq&>(request);
     LiftCtrlMessageCallLiftRsp rsp;
-    //step1: 获取基本参数:appId,appSecret,license
-    string app_id = SulinkLiftInitData :: getAppId();
-    string app_secret = SulinkLiftInitData :: getAppSecret();
-    string license = SulinkLiftInitData :: getLicense();
-    //step2: 根据homeId获取群控器id,并找到对应的ip和端口;并找到到达楼层
-    string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.homeId());
+    //step1: 获取homeId获取楼栋
+    string building_num = SulinkLiftInitData::getBuildingNoBySpaceId(req.homeId());
+    //step2: 根据homeId获取群控器的ip和端口;并找到目的房间的房间号
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.homeId());
-    string to_floor = "";
-    //step3: 根据homeId找到出发楼层
-    string from_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.homeId());
+    string home_num = SulinkLiftInitData :: getHomeNoBySpaceId(req.homeId());
+    
     string not_found_msg = "";
-    if (cluster_id.empty()) {
-        not_found_msg = "cluster id not found for home id " + req.homeId();
+    if (building_num.empty()) {
+        not_found_msg = "building number not found for home id " + req.homeId();
     }
     if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.homeId();
     }
-    if (from_floor.empty()) {
-        not_found_msg = "from floor not found for home id " + req.homeId();
+    if (home_num.empty()) {
+        not_found_msg = "home number not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
         rsp.retcode(-1);
@@ -49,32 +44,30 @@ LiftCtrlMessageRsp* RiliCallLiftMessageHandler :: handle(const LiftCtrlMessageRe
         rsp.elevatorId(-1);
         return new LiftCtrlMessageCallLiftRsp(rsp);
     }
-    int i_cluster_id = atoi(cluster_id.c_str());
-    //step4: 调用rili远程呼梯接口
-    RiliResponse wl_response;
-    RiliLiftCtrl rili_lift_ctrl(cluster_url, app_id, app_secret, license);
-    string up_down = RILI_DN;
-    if (req.upDown().compare("up")) {
-        up_down = RILI_UP;
-    }
-    int ret = rili_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
+    //step3: 调用rili召梯接口
+    int ret = 0;
+    RiliRequestCallLift request_call_lift;
+    RiliResponseCallLift response_call_lift;
+    Poco::URI uri(cluster_url);
+    request_call_lift.building_num = atoi(building_num.c_str());
+    snprintf(request_call_lift.room, sizeof(request_call_lift.room), "%s", home_num.c_str());
+    ret = rili_protocol_send(uri.getHost().c_str(), uri.getPort(), RILI_EVENT_CALL_LIFT, &(request_call_lift), &(response_call_lift));
     if (ret == 0) {
         LOGT(RILI_CALL_LIFT_MSG_HANDLER_TAG, "handle request of rili call lift OK");
         rsp.retcode(0);
-        rsp.msg(wl_response.msg);
-        if (wl_response.code == 0) {
-            rsp.ackCode(1);
+        if (response_call_lift.ack_code == 1) {
+            rsp.msg("OK");
         } else {
-            rsp.ackCode(0);
+            rsp.msg("request rejected by Rili lift ctrl system");
         }
+        rsp.ackCode(response_call_lift.ack_code);
         rsp.elevatorId(-1);
     } else {
         LOGT(RILI_CALL_LIFT_MSG_HANDLER_TAG, "handle request of rili call lift failed");
         rsp.retcode(-1);
-        rsp.msg("calling WangLong interface error");
+        rsp.msg("calling Rili interface error");
         rsp.ackCode(0);
         rsp.elevatorId(-1);
     }
     return new LiftCtrlMessageCallLiftRsp(rsp);
-    #endif
 }

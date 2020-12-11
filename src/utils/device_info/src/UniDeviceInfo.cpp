@@ -60,8 +60,9 @@ std::string unisound::UniDeviceInfo ::getUdid()
     {
         if (getMac().empty() != true)
         {
-            mUdid = mMac;
-            mUdid.erase(2, 1).erase(4, 1).erase(6, 1).erase(8, 1).erase(10, 1);
+            string udid = mMac;
+            udid.erase(2, 1).erase(4, 1).erase(6, 1).erase(8, 1).erase(10, 1);
+            mUdid = udid;
             LOGT(DEVICE_INFO_TAG, "get device udid %s", mUdid.c_str());
         }
     }

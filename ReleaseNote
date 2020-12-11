@@ -1,3 +1,9 @@
+v3.2.2
+1. feature
+  1.1 support for rili
+2. bugfix
+  2.1 fix bug of get udid error
+
 v3.2.1
 1. feature
   1.1 implement http(s) with poco

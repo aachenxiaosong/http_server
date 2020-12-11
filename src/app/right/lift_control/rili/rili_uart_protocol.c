@@ -50,6 +50,9 @@ static int _tcp_send(const char* ip, int port, unsigned char *request, int reque
     LOGE(RILI_UART_PROT, "get socket failed");
     return -1;
   }
+  struct timeval timeout = {3, 0}; //3s
+  setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
+  setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
   server_addr.sin_family = PF_INET;
   server_addr.sin_port = htons(port);
   server_addr.sin_addr.s_addr = inet_addr(ip);
@@ -58,9 +61,6 @@ static int _tcp_send(const char* ip, int port, unsigned char *request, int reque
     LOGE(RILI_UART_PROT, "connect failed");
     return -1;
   }
-  struct timeval timeout = {3, 0}; //3s
-  setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout, sizeof(timeout));
-  setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof(timeout));
   send(sockfd, request, request_len, 0);
   if ((*response_len = recv(sockfd, response, *response_len, 0)) == -1)
   {

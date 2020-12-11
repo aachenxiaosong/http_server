@@ -21,9 +21,8 @@ LiftCtrlMessageRsp* RiliBookLiftInterMessageHandler :: handle(const LiftCtrlMess
     }
     const LiftCtrlMessageBookLiftInterReq& req = dynamic_cast<const LiftCtrlMessageBookLiftInterReq&>(request);
     LiftCtrlMessageBookLiftInterRsp rsp;
-    //step1: 获取dHomeId获取楼栋，单元
+    //step1: 获取dHomeId获取楼栋
     string building_num = SulinkLiftInitData::getBuildingNoBySpaceId(req.dHomeId());
-    string unit_num = SulinkLiftInitData::getUnitNoBySpaceId(req.dHomeId());
     //step2: 根据dHomeId获取群控器的ip和端口;并找到目的房间的房间号
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.dHomeId());
     string dhome_num = SulinkLiftInitData :: getHomeNoBySpaceId(req.dHomeId());
@@ -32,9 +31,6 @@ LiftCtrlMessageRsp* RiliBookLiftInterMessageHandler :: handle(const LiftCtrlMess
     string not_found_msg = "";
     if (building_num.empty()) {
         not_found_msg = "building number not found for home id " + req.dHomeId();
-    }
-     if (unit_num.empty()) {
-        not_found_msg = "unit number not found for home id " + req.dHomeId();
     }
     if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.dHomeId();
