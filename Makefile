@@ -31,7 +31,8 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
-           src/sdk/mqtt/mqtt_client
+           src/sdk/mqtt/mqtt_client \
+           src/sdk/mq
 
 sdk_inc := src/sdk/http/http_server \
            src/sdk/http/http_client \
@@ -44,7 +45,7 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/message \
            src/sdk/message/message_type \
            src/sdk/message/message_handler \
-           src/sdk/message/message_dispatcher
+           src/sdk/mq
 
 app_src := src/app \
            src/app/left/lift_control \
@@ -93,7 +94,8 @@ app_inc := src/app \
 
 lib_inc := lib/libevent/inc \
            lib/mqtt/inc \
-           lib/poco/inc
+           lib/poco/inc \
+           lib/zmq/inc
 
 test_src := src/sdk/tcp/test
 test_inc := src/sdk/tcp/test
@@ -122,7 +124,7 @@ CPP_OBJ_FILES := $(call cpp_to_o,$(CPP_FILES))
 CPP_OBJ_FILES := $(call change_file_location, $(CPP_OBJ_FILES), $(BUILD_DIR))
 DEP_FILES := $(call o_to_d,$(C_OBJ_FILES) $(CPP_OBJ_FILES))
 
-LIB := -Llib/libevent -Llib/mqtt -Llib/poco -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lPocoNetSSL -lPocoNet -lPocoCrypto -lPocoUtil -lPocoXML -lPocoJSON -lcurl -lssl -lcrypto -lm -lpthread
+LIB := -Llib/libevent -Llib/mqtt -Llib/poco -Llib/zmq -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lPocoNetSSL -lPocoNet -lPocoCrypto -lPocoUtil -lPocoXML -lPocoJSON -lzmq -lcurl -lssl -lcrypto -lm -lpthread
 
 ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)

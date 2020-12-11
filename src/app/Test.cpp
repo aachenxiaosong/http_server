@@ -7,15 +7,17 @@
 #include "SulinkHb.hpp"
 #include "SulinkTimeSync.hpp"
 #include "SulinkLiftInitData.hpp"
+#include "Mq.hpp"
 #include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
+#include <future>
 #include "UniLog.hpp"
 
 using namespace std;
 
-#define TEST_NUM 8
+#define TEST_NUM 9
 
 Dechang dechang;
 
@@ -56,6 +58,24 @@ static void _send_del_all_card() {
         sleep(5);
     }
 }
+
+struct MqTest {
+    int i;
+    string s;
+};
+
+static void _mq_recv_task(void *arg)
+{
+    vector<MqTopicType> topic_types;
+    topic_types.push_back(MQ_TOPIC_FIRST);
+    topic_types.push_back(MQ_TOPIC_LAST);
+    Mq mq("recv_mq", topic_types);
+    MqData data = mq.recv();
+    //cout << "recv msg: " << (const char *)data.content() << endl;
+    MqTest *test = (MqTest *)data.content();
+    cout << "recv msg: " << test->i << " " << test->s << endl;
+}
+
 
 void AppTest() {
 #if (TEST_NUM == 0)
@@ -145,5 +165,16 @@ void AppTest() {
     UniLog::init();
     LOGT("test_tag", "12345678901234567890123456789012345678901234567890123456789012345678901234567890");
     cout << "after test" << endl;
+#elif (TEST_NUM == 9)
+    auto th = async(std::launch::async, _mq_recv_task, (void *)NULL);
+    sleep(1);
+    Mq mq("send_mq");
+    //MqData data(MQ_TOPIC_FIRST, (void *)("i am content"), strlen("i am content") + 1);
+    MqTest test;
+    test.i = 10;
+    test.s = "test";
+    MqData data(MQ_TOPIC_FIRST, (void *)(&test), sizeof(test));
+    mq.send(data);
+    th.wait();
 #endif
 }

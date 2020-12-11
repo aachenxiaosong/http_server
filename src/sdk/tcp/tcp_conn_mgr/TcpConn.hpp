@@ -1,7 +1,6 @@
 #ifndef SDK_TCP_TCP_CONN_MGR_TCP_CONN_HPP_
 #define SDK_TCP_TCP_CONN_MGR_TCP_CONN_HPP_
 
-#include "MessageDispatcher.hpp"
 #include "ITcpMessageHandler.hpp"
 #include "ITcpPacker.hpp"
 #include "RwLock.hpp"

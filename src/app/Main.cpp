@@ -15,6 +15,11 @@ static int _common_init() {
 
 
 int main() {
+    //基础模块初始化
+    if (0 != _common_init()) {
+        LOGE(MAIN_TAG, "common init failed");
+        return -1;
+    }
 #if 0
     extern void AppTest();
     AppTest();
@@ -22,11 +27,6 @@ int main() {
         sleep(100);
     }
 #else
-    //基础模块初始化
-    if (0 != _common_init()) {
-        LOGE(MAIN_TAG, "common init failed");
-        return -1;
-    }
     //串口
     if (0 != serial_init()) {
         LOGE(MAIN_TAG, "uart init failed");

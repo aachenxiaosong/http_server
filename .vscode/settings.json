@@ -45,6 +45,7 @@
         "cfenv": "cpp",
         "cinttypes": "cpp",
         "type_traits": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "iomanip": "cpp"
     }
 }

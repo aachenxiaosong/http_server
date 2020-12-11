@@ -1,5 +1,4 @@
-#ifndef SDK_MESSAGE_MESSAGE_HPP_
-#define SDK_MESSAGE_MESSAGE_HPP_
+#pragma once
 
 #include <MessageType.hpp>
 
@@ -22,5 +21,3 @@ public:
     }
     virtual ~Message() {}
 };
-
-#endif  //  SDK_MESSAGE_MESSAGE_HPP_
