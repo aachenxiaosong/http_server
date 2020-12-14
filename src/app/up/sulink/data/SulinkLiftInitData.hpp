@@ -3,6 +3,7 @@
 
 #include "SulinkMessage.hpp"
 #include "SulinkPacker.hpp"
+#include "Mq.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -16,6 +17,7 @@ private:
     static SulinkLiftInitData mData;
     SulinkMessageRecvLiftInfo *mInfo;
     map<string, int> mSpaceIdIndexMap;
+    Mq mMq;
     SulinkLiftInitData();
     ~SulinkLiftInitData();
     int mLoadFromConfig();

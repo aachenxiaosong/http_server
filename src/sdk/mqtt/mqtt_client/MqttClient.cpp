@@ -82,7 +82,7 @@ int MqttClient :: send(const Message &message) {
     return rc;
 }
 
-int MqttClient :: onRecv(const Message& message) {
+/* int MqttClient :: onRecv(const Message& message) {
     int message_handled_ok = -1;
     IMqttMessageHandler *i_handler = NULL;
     vector<IMqttMessageHandler *>::iterator it;
@@ -96,7 +96,7 @@ int MqttClient :: onRecv(const Message& message) {
         }
     }
     return message_handled_ok;
-}
+}*/
 
 string MqttClient :: findPubTopic(const string& topic_key) {
     vector<string>::iterator it;

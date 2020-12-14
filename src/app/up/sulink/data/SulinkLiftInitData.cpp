@@ -1,4 +1,5 @@
 #include "SulinkLiftInitData.hpp"
+#include "LiftCtrlMessage.hpp"
 #include "UniConfig.hpp"
 #include "UniLog.hpp"
 
@@ -6,7 +7,7 @@
 
 SulinkLiftInitData SulinkLiftInitData::mData;
 
-SulinkLiftInitData :: SulinkLiftInitData()
+SulinkLiftInitData :: SulinkLiftInitData() : mMq("sulink_lift_init_data_mq")
 {
     mInfo = NULL;
 };
@@ -36,6 +37,17 @@ int SulinkLiftInitData :: mLoadFromConfig()
             ret = 0;
             LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config %s: \n%s", config_path.c_str(), mToString().c_str());
             mUpdateSpaceIdIndexMap();
+            //inform lift ctrl
+            LiftCtrlMessageBrandChange msg;
+            if (mGetBrandCode().compare("1") == 0) {
+                msg.brand(msg.BRAND_WLONG);
+            } else if (mGetBrandCode().compare("2") == 0) {
+                msg.brand(msg.BRAND_RILI);
+            } else {
+                msg.brand(msg.BRAND_INVALID);
+            }
+            MqData data(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE, (void *)&msg, sizeof(msg));
+            mMq.send(data);
         }
     } 
     if (mInfo == NULL) {
@@ -61,6 +73,22 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
     ofs.close();
     delete sinfo;
     mUpdateSpaceIdIndexMap();
+    //inform lift ctrl
+    LiftCtrlMessageBrandChange msg;
+    if (mGetBrandCode().compare("1") == 0)
+    {
+        msg.brand(msg.BRAND_WLONG);
+    }
+    else if (mGetBrandCode().compare("2") == 0)
+    {
+        msg.brand(msg.BRAND_RILI);
+    }
+    else
+    {
+        msg.brand(msg.BRAND_INVALID);
+    }
+    MqData data(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE, (void *)&msg, sizeof(msg));
+    mMq.send(data);
 }
 
 void SulinkLiftInitData :: mUpdateSpaceIdIndexMap() {

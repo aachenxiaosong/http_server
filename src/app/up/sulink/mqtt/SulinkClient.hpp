@@ -28,7 +28,7 @@ public:
     SulinkClient();
     ~SulinkClient();
     int start();
-    int onRecvMessage(const Message& message);
+    //int onRecvMessage(const Message& message);
 };
 
 #endif  //  APP_UP_SULINK_MQTT_SULINK_CLIENT_HPP_

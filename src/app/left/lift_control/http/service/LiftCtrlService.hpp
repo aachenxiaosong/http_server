@@ -11,10 +11,15 @@
 #include "RiliBookLiftInterMessageHandler.hpp"
 #include "RiliTakeLiftMessageHandler.hpp"
 #include "RiliLiftStatusMessageHandler.hpp"
+#include "Mq.hpp"
+#include <thread>
 
 
 class LiftCtrlService {
 private:
+    Mq *mMq;
+    thread *mMqThread;
+    bool mMqThreadRunning;
    //wanglong message handlers
     WlongBookLiftMessageHandler mWlongBookLiftHandler;
     WlongCallLiftMessageHandler mWlongCallLiftHandler;
@@ -38,6 +43,7 @@ public:
     LiftVenderType mVenderType;
 private:
     LiftCtrlRequestHandler* getHandler(LiftVenderType vender_type);
+    static void mqRecvTask(void *arg);
 public:
     LiftCtrlService();
     ~LiftCtrlService();

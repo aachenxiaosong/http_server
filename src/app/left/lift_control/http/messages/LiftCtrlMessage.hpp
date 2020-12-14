@@ -164,4 +164,19 @@ public:
     ~LiftCtrlMessageLiftStatusRsp()
     {}
 };
+//from mq
+class LiftCtrlMessageBrandChange : public Message
+{
+    MEMBER(string, brand)
+public:
+    const string BRAND_WLONG = "wlong";
+    const string BRAND_RILI = "rili";
+    const string BRAND_INVALID = "";
+public:
+    LiftCtrlMessageBrandChange() : Message(MSG_LIFT_CTRL_BRAND_CHANGE)
+    {
+        brand(BRAND_INVALID);
+    }
+    ~LiftCtrlMessageBrandChange() {}
+};
 
