@@ -21,7 +21,7 @@
 
 #include "IHttpRequestHandler.hpp"
 #include "HttpServer.hpp"
-#include "RwLock.hpp"
+#include "UniRwLock.hpp"
 
 #define BUF_MAX              (1024 * 16)
 #define HTTP_SERVER_TAG      "http_server"
@@ -35,7 +35,7 @@ pthread_t g_threads[SERVER_MAX_THREAD_NUM];
 httpd_info g_info_arr[SERVER_MAX_THREAD_NUM];
 
 vector<IHttpRequestHandler *> g_http_handlers;
-RwLock g_http_handler_lock;
+UniRwLock g_http_handler_lock;
 
 //解析http url中的path
 static int find_http_path(struct evhttp_request *req, char *result) {

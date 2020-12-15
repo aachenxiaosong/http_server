@@ -1,6 +1,7 @@
 #include "SulinkLiftInitData.hpp"
 #include "LiftCtrlMessage.hpp"
 #include "UniConfig.hpp"
+#include "UniSerialization.hpp"
 #include "UniLog.hpp"
 
 #define SULINK_LIFT_INFO_DATA_TAG "sulink_lift_into_data"
@@ -46,7 +47,8 @@ int SulinkLiftInitData :: mLoadFromConfig()
             } else {
                 msg.brand(msg.BRAND_INVALID);
             }
-            MqData data(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE, (void *)&msg, sizeof(msg));
+            string content = unisound::UniSerialization<LiftCtrlMessageBrandChange>::seri(msg);
+            MqData data(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE, (void *)content.c_str(), content.length() + 1);
             mMq.send(data);
         }
     } 
@@ -87,7 +89,8 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
     {
         msg.brand(msg.BRAND_INVALID);
     }
-    MqData data(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE, (void *)&msg, sizeof(msg));
+    string content = unisound::UniSerialization<LiftCtrlMessageBrandChange>::seri(msg); 
+    MqData data(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE, (void *)content.c_str(), content.length() + 1);
     mMq.send(data);
 }
 

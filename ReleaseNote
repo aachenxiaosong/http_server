@@ -1,3 +1,10 @@
+v3.2.4
+1. feature
+  1.1 add boost lib
+  1.2 add serialization
+2. bugfix
+  2.1 fix bug of topic name log issue
+
 v3.2.3
 1. feature
   1.1 add mq(zmq)

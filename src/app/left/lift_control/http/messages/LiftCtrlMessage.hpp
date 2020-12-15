@@ -168,6 +168,9 @@ public:
 class LiftCtrlMessageBrandChange : public Message
 {
     MEMBER(string, brand)
+SERI_BEGIN
+    SERI(brand)
+SERI_END
 public:
     const string BRAND_WLONG = "wlong";
     const string BRAND_RILI = "rili";

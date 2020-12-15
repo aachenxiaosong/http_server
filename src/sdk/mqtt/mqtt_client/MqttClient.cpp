@@ -154,15 +154,13 @@ void MqttClient :: delivered(void *context, MQTTClient_deliveryToken dt) {
     MqttClient *mqtt_client = (MqttClient *)context;
     LOGT(MQTT_CLIENT_TAG1, "data[%d] is confirmed", dt);
 }
-
 int MqttClient :: messageArrived(void *context, char *topicName, int topicLen,
                                  MQTTClient_message *message) {
     //int message_handled_ok = -1;
     MqttClient *mqtt_client = (MqttClient *)context;
     IMqttMessageHandler *i_handler = NULL;
-    string stopic(topicName, topicLen);
     string sdata((const char *)message->payload, message->payloadlen);
-    LOGT(MQTT_CLIENT_TAG1, "message arrived, topic %s data %s", stopic.c_str(), sdata.c_str());
+    LOGT(MQTT_CLIENT_TAG1, "message arrived, topic:%s data:%s", topicName, sdata.c_str());
     if (mqtt_client->mPacker) {
         IMqttMessage *mqtt_message = mqtt_client->mPacker->unpack(sdata);
         if (mqtt_message)

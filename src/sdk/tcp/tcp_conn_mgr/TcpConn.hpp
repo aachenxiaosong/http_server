@@ -3,7 +3,7 @@
 
 #include "ITcpMessageHandler.hpp"
 #include "ITcpPacker.hpp"
-#include "RwLock.hpp"
+#include "UniRwLock.hpp"
 #include <stdint.h>
 #include <string>
 
@@ -21,7 +21,7 @@ private:
 private:
     vector <ITcpMessageHandler *> mHandlers;
     ITcpPacker *mPacker;
-    RwLock mReceiverLock;
+    UniRwLock mReceiverLock;
 
 public:
     TcpConn(const string &ip, uint16_t port, void *socket, vector<ITcpMessageHandler *> &handlers, ITcpPacker *packer);

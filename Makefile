@@ -24,7 +24,8 @@ utils_inc := src/utils/util/inc \
              src/utils/log/inc \
              src/utils/uart/inc \
              src/utils/memcheck/inc \
-             src/utils/rwlock
+             src/utils/rwlock \
+             src/utils/serialization
 
 sdk_src := src/sdk/http/http_server \
            src/sdk/http/http_client \
@@ -125,7 +126,7 @@ CPP_OBJ_FILES := $(call cpp_to_o,$(CPP_FILES))
 CPP_OBJ_FILES := $(call change_file_location, $(CPP_OBJ_FILES), $(BUILD_DIR))
 DEP_FILES := $(call o_to_d,$(C_OBJ_FILES) $(CPP_OBJ_FILES))
 
-LIB := -Llib/libevent -Llib/mqtt -Llib/poco -Llib/boost -Llib/zmq -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lPocoNetSSL -lPocoNet -lPocoCrypto -lPocoUtil -lPocoXML -lPocoJSON -lboost_timer -lboost_system -lboost_chrono -lzmq -lcurl -lssl -lcrypto -lm -lpthread
+LIB := -Llib/libevent -Llib/mqtt -Llib/poco -Llib/boost -Llib/zmq -levent-2.2 -lpaho-mqtt3c -lPocoData -lPocoDataSQLite -lPocoFoundation -lPocoNetSSL -lPocoNet -lPocoCrypto -lPocoUtil -lPocoXML -lPocoJSON -lboost_timer -lboost_system -lboost_chrono -lboost_serialization -lzmq -lcurl -lssl -lcrypto -lm -lpthread
 
 ifneq ($(DEP_FILES),)
 -include $(DEP_FILES)

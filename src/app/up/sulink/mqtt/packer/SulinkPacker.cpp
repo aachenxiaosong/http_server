@@ -138,6 +138,7 @@ string* SulinkPacker :: packRecvLiftInfoAck(const SulinkMessageRecvLiftInfoAck& 
     jpayload.Add("deviceCode", message.deviceCode());
     jpayload.Add("reqId", message.reqId());
     jpayload.Add("ackReqId", message.ackReqId());
+    jpayload.Add("code", message.code());
     jpayload.Add("message", message.message());
     jmessage.Add("payload", jpayload);
     return new string(jmessage.ToString());

@@ -20,7 +20,7 @@ int main() {
         LOGE(MAIN_TAG, "common init failed");
         return -1;
     }
-#if 1
+#if 0
     extern void AppTest();
     AppTest();
     while(1) {

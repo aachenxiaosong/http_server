@@ -1,5 +1,6 @@
 #include "LiftCtrlService.hpp"
 #include "HttpServer.hpp"
+#include "UniSerialization.hpp"
 #include "UniLog.hpp"
 
 #define LIFT_CTRL_SERVICE_TAG "lift_ctrl_service"
@@ -85,10 +86,11 @@ void LiftCtrlService :: mqRecvTask(void *arg) {
         MqData data = me->mMq->recv();
         if (data.topic_type() == MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE)
         {
-            LiftCtrlMessageBrandChange* msg = (LiftCtrlMessageBrandChange*)data.content();
-            if (msg->brand() == msg->BRAND_WLONG) {
+            string content((const char *)data.content());
+            LiftCtrlMessageBrandChange msg = unisound::UniSerialization<LiftCtrlMessageBrandChange>::deseri(content);
+            if (msg.brand() == msg.BRAND_WLONG) {
                 me->chooseLiftVender(me->LIFT_VENDER_WLONG);
-            } else if (msg->brand() == msg->BRAND_RILI) {
+            } else if (msg.brand() == msg.BRAND_RILI) {
                 me->chooseLiftVender(me->LIFT_VENDER_RILI);
             } else {
                 me->chooseLiftVender(me->LIFT_VENDER_NONE);
