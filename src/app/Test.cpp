@@ -16,7 +16,7 @@
 #include "UniLog.hpp"
 #include "boost/foreach.hpp"
 #include "boost/assign.hpp"
-#include "boost/timer.hpp"
+#include "boost/timer/timer.hpp"
 
 using namespace std;
 
@@ -180,8 +180,6 @@ void AppTest() {
     mq.send(data);
     th.wait();
 #elif (TEST_NUM == 10)
-    using namespace boost;
-    timer t;
     vector<int> v = (assign::list_of(1), 2, 3, 4, 5);
 
     BOOST_FOREACH (int x, v)
@@ -189,7 +187,6 @@ void AppTest() {
         cout << x << ",";
     }
     cout << endl;
-    cout << t.elapsed() << "s" << endl;
     cout << "hello world!" << endl;
 #endif
 }
