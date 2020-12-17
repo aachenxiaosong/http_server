@@ -32,8 +32,14 @@ int SulinkLiftInitData :: mLoadFromConfig()
     mInfo = NULL;
     if (!raw_data.empty())
     {
-        SulinkPacker packer;
-        mInfo = dynamic_cast<SulinkMessageRecvLiftInfo *>(packer.unpack(raw_data));
+        //SulinkPacker packer;
+        //mInfo = dynamic_cast<SulinkMessageRecvLiftInfo *>(packer.unpack(raw_data));
+        SulinkMessageRecvLiftInfo info = unisound::UniSerialization<SulinkMessageRecvLiftInfo>::deseri(raw_data);
+        if (info.deviceCode().empty() == false) {
+            mInfo = new SulinkMessageRecvLiftInfo(info);
+        } else {
+            LOGW(SULINK_LIFT_INFO_DATA_TAG, "deserialization for lift ctrl init info failed");
+        }
         if (mInfo != NULL) {
             ret = 0;
             LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config %s: \n%s", config_path.c_str(), mToString().c_str());
@@ -67,13 +73,15 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
     }
     mInfo = new SulinkMessageRecvLiftInfo(info);
     LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info updated: \n%s", mToString().c_str());
-    SulinkPacker packer;
+    //SulinkPacker packer;
     ofstream ofs(unisound::UniConfig::getString("liftcontrl.data.init"));
-    string* sinfo = packer.pack(info);
-    istringstream iss(*sinfo);
+    //string* sinfo = packer.pack(info);
+    //istringstream iss(*sinfo);
+    string sinfo = unisound::UniSerialization<SulinkMessageRecvLiftInfo>::seri(info);
+    istringstream iss(sinfo);
     ofs << iss.rdbuf();
     ofs.close();
-    delete sinfo;
+    //delete sinfo;
     mUpdateSpaceIdIndexMap();
     //inform lift ctrl
     LiftCtrlMessageBrandChange msg;

@@ -46,6 +46,9 @@
         "cinttypes": "cpp",
         "type_traits": "cpp",
         "typeinfo": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "future": "cpp",
+        "regex": "cpp",
+        "*.ipp": "cpp"
     }
 }

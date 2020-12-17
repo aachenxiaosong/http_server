@@ -10,6 +10,9 @@ using namespace std;
 
 class IMqttMessage : public Message {
     MEMBER(string, topic)
+    SERI_BEGIN
+    SERI(topic)
+    SERI_END
 public:
     IMqttMessage(MessageType type) : Message(type) {}
 };

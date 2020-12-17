@@ -17,6 +17,13 @@ class SulinkMessage : public IMqttMessage {
     MEMBER(string, brand)
     MEMBER(long, timestamp)
     MEMBER(string, method)
+    SERI_BEGIN
+    SERI(traceId)
+    SERI(payloadVersion)
+    SERI(brand)
+    SERI(timestamp)
+    SERI(method)
+    SERI_END
 public:
     SulinkMessage(MessageType type) : IMqttMessage(type) {
         payloadVersion(1);
@@ -104,6 +111,16 @@ class LiftInfoSpace {
     MEMBER(string, clusterControllerIds)
     MEMBER(string, floorLocation)
     MEMBER(long, timestamp)
+    SERI_BEGIN
+    SERI(id)
+    SERI(spaceName)
+    SERI(pid)
+    SERI(elevatorSpaceType)
+    SERI(elevatorSpaceNo)
+    SERI(clusterControllerIds)
+    SERI(floorLocation)
+    SERI(timestamp)
+    SERI_END
 public:
     LiftInfoSpace() {
         timestamp(0);
@@ -112,6 +129,10 @@ public:
 class LiftInfoCluster {
     MEMBER(string, controllerIp)
     MEMBER(string, controllerId)
+    SERI_BEGIN
+    SERI(controllerIp)
+    SERI(controllerId)
+    SERI_END
 };
 class LiftInfoBrand {
     MEMBER(string, brandName)
@@ -124,6 +145,16 @@ class LiftInfoBrand {
     //通信协议(默认http)
     MEMBER(string, schema)
     PMEMBER(vector<LiftInfoCluster>, clusterControllers)
+    SERI_BEGIN
+    SERI(brandName)
+    SERI(brandCode)
+    SERI(intranetUrl)
+    SERI(appId)
+    SERI(appSecret)
+    SERI(licence)
+    SERI(schema)
+    SERI(clusterControllers)
+    SERI_END
 };
 class LiftInfoAccessDevice {
     MEMBER(string, deviceCode)
@@ -139,6 +170,16 @@ class LiftInfoAccessDevice {
     //大厅号（日立电梯 工作模式3 - 工控机模式(轿厢外)必传
     MEMBER(string, hallNo)
     MEMBER(long, timestamp)
+    SERI_BEGIN
+    SERI(deviceCode)
+    SERI(workMode)
+    SERI(floorMap)
+    SERI(publicFloor)
+    SERI(curFloor)
+    SERI(liftId)
+    SERI(hallNo)
+    SERI(timestamp)
+    SERI_END
 public:
     LiftInfoAccessDevice() {
         workMode(0);
@@ -156,6 +197,17 @@ class SulinkMessageRecvLiftInfo : public SulinkMessage {
     //错误信息,用于将解析失败的情况报给handler
     MEMBER(int, errCode)
     MEMBER(string, errMessage)
+    SERI_BEGIN
+    SERI(deviceCode)
+    SERI(spaces)
+    SERI(brandInfo)
+    SERI(accessDevices)
+    SERI(timestamp)
+    SERI(extData)
+    SERI(reqId)
+    SERI(errCode)
+    SERI(errMessage)
+    SERI_END
 public:
     SulinkMessageRecvLiftInfo() : SulinkMessage(MSG_SULINK_RECV_LIFT_INFO) {
         method("device-ubox-lift-info");
@@ -178,5 +230,82 @@ class SulinkMessageRecvLiftInfoAck : public SulinkMessage {
         code(0);
     }
     ~SulinkMessageRecvLiftInfoAck() {}
+};
+//lift ctrl
+class SulinkMessageRecvLiftCtrl : public SulinkMessage {
+    MEMBER(string, reqId)
+    MEMBER(string, deviceCode)
+    //wechat
+    MEMBER(string, bookType)
+    MEMBER(string, homeId)
+    MEMBER(string, fromFloor)
+    MEMBER(string, toFloor)
+    //错误信息,用于将解析失败的情况报给handler
+    MEMBER(int, errCode)
+    MEMBER(string, errMessage)
+public:
+    SulinkMessageRecvLiftCtrl() : SulinkMessage(MSG_SULINK_RECV_LIFT_CTRL) {
+        method("device-ubox-lift-book");
+        errCode(0);
+    }
+    ~SulinkMessageRecvLiftCtrl() {}
+};
+class SulinkMessageRecvLiftCtrlAck : public SulinkMessage {
+    MEMBER(string, reqId)
+    MEMBER(string, ackReqId)
+    MEMBER(string, deviceCode)
+    MEMBER(string, upDown)
+    MEMBER(string, elevatorId)
+    MEMBER(string, curFloor)
+    //规则下发结果(0-成功 1-失败)
+    MEMBER(int, code)
+    //信息字段（错误信息等）
+    MEMBER(string, message)
+public:
+    SulinkMessageRecvLiftCtrlAck() : SulinkMessage(MSG_SULINK_RECV_LIFT_CTRL_ACK) {
+        method("device-ubox-lift-book-ack");
+        code(0);
+    }
+    ~SulinkMessageRecvLiftCtrlAck() {}
+};
+//lift status
+class SulinkMessageRecvLiftStatus : public SulinkMessage {
+    MEMBER(string, reqId)
+    MEMBER(string, deviceCode)
+    //wechat
+    MEMBER(string, homeId)
+    MEMBER(string, elevatorId)
+    //错误信息,用于将解析失败的情况报给handler
+    MEMBER(int, errCode)
+    MEMBER(string, errMessage)
+public:
+    SulinkMessageRecvLiftStatus() : SulinkMessage(MSG_SULINK_RECV_LIFT_STATUS) {
+        method("device-ubox-lift-status");
+        errCode(0);
+    }
+    ~SulinkMessageRecvLiftStatus() {}
+};
+class SulinkMessageRecvLiftStatusAck : public SulinkMessage {
+    MEMBER(string, reqId)
+    MEMBER(string, ackReqId)
+    MEMBER(string, deviceCode)
+    MEMBER(string, curFloor)
+    //up=上行 down=下行 unsupported=不支持 error=异常
+    MEMBER(string, direction)
+    //stopped=停靠 moving=运行中 unsupported=不支持 error=异常
+    MEMBER(string, movingStatus)
+    //open=开门到位 closed=关门到位 opening=开门中 closing=关门中 unsupported=不支持 error=异常
+    MEMBER(string, doorStatus)
+    //规则下发结果(0-成功 1-失败)
+    MEMBER(int, code)
+    //信息字段（错误信息等）
+    MEMBER(string, message)
+    
+    public:
+    SulinkMessageRecvLiftStatusAck() : SulinkMessage(MSG_SULINK_RECV_LIFT_STATUS_ACK) {
+        method("device-ubox-lift-status-ack");
+        code(0);
+    }
+    ~SulinkMessageRecvLiftStatusAck() {}
 };
 #endif  //  APP_UP_SULINK_MQTT_MESSAGES_SULINK_MESSAGE_HPP_

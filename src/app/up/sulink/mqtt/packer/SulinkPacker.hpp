@@ -14,11 +14,15 @@ private:
     string* packSendPassRecord(const SulinkMessageSendPassRecord& message);
     string* packRecvLiftInfo(const SulinkMessageRecvLiftInfo& message);//存储用
     string* packRecvLiftInfoAck(const SulinkMessageRecvLiftInfoAck& message);
+    string* packRecvLiftCtrlAck(const SulinkMessageRecvLiftCtrlAck& message);
+    string* packRecvLiftStatusAck(const SulinkMessageRecvLiftStatusAck& message);
     //recv
     int checkPackHeader(const string& raw_data);
     SulinkMessageRecvPassRule* unpackRecvPassRule(const string& raw_data);
     SulinkMessageSendPassRecordAck* unpackSendPassRecordAck(const string& raw_data);
     SulinkMessageRecvLiftInfo* unpackRecvLiftInfo(const string& raw_data);
+    SulinkMessageRecvLiftCtrl* unpackRecvLiftCtrl(const string& raw_data);
+    SulinkMessageRecvLiftStatus* unpackRecvLiftStatus(const string& raw_data);
 public:
     SulinkPacker();
     ~SulinkPacker();

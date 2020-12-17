@@ -144,6 +144,54 @@ string* SulinkPacker :: packRecvLiftInfoAck(const SulinkMessageRecvLiftInfoAck& 
     return new string(jmessage.ToString());
 }
 
+string* SulinkPacker :: packRecvLiftCtrlAck(const SulinkMessageRecvLiftCtrlAck& message) {
+    CJsonObject jheader;
+    jheader.Add("traceId", message.traceId());
+    jheader.Add("payloadVersion", message.payloadVersion());
+    jheader.Add("brand", message.brand());
+    jheader.Add("timestamp", message.timestamp());
+    jheader.Add("method", message.method());
+    CJsonObject jmessage;
+    jmessage.Add("header", jheader);
+    CJsonObject jpayload;
+    jpayload.Add("reqId", message.reqId());
+    jpayload.Add("ackReqId", message.ackReqId());
+    jpayload.Add("deviceCode", message.deviceCode());
+    CJsonObject jdata;
+    jdata.Add("upDown", message.upDown());
+    jdata.Add("elevatorId", message.elevatorId());
+    jdata.Add("curFloor", message.curFloor());
+    jdata.Add("code", message.code());
+    jdata.Add("message", message.message());
+    jpayload.Add("data", jdata);
+    jmessage.Add("payload", jpayload);
+    return new string(jmessage.ToString());
+}
+
+string* SulinkPacker :: packRecvLiftStatusAck(const SulinkMessageRecvLiftStatusAck& message) {
+    CJsonObject jheader;
+    jheader.Add("traceId", message.traceId());
+    jheader.Add("payloadVersion", message.payloadVersion());
+    jheader.Add("brand", message.brand());
+    jheader.Add("timestamp", message.timestamp());
+    jheader.Add("method", message.method());
+    CJsonObject jmessage;
+    jmessage.Add("header", jheader);
+    CJsonObject jpayload;
+    jpayload.Add("reqId", message.reqId());
+    jpayload.Add("ackReqId", message.ackReqId());
+    jpayload.Add("deviceCode", message.deviceCode());
+    CJsonObject jdata;
+    jdata.Add("curFloor", message.curFloor());
+    jdata.Add("direction", message.direction());
+    jdata.Add("movingStatus", message.movingStatus());
+    jdata.Add("doorStatus", message.doorStatus());
+    jdata.Add("code", message.code());
+    jdata.Add("message", message.message());
+    jpayload.Add("data", jdata);
+    jmessage.Add("payload", jpayload);
+    return new string(jmessage.ToString());
+}
 
 int SulinkPacker :: checkPackHeader(const string& raw_data) {
     CJsonObject jmessage(raw_data);
@@ -201,7 +249,6 @@ SulinkMessageRecvLiftInfo* SulinkPacker :: unpackRecvLiftInfo(const string& raw_
     string svalue;
     int ivalue;
     long lvalue;
-    string req_id;
     CJsonObject jspaces;
     CJsonObject Jbrand_info;
     CJsonObject jclusters;
@@ -448,6 +495,106 @@ L_ERROR:
 }
 
 
+SulinkMessageRecvLiftCtrl* SulinkPacker :: unpackRecvLiftCtrl(const string& raw_data) {
+    string err_message = "";
+    CJsonObject jmessage(raw_data);
+    CJsonObject jpayload;
+    CJsonObject jdata;
+    CJsonObject jvalue;
+    string svalue;
+    long lvalue;
+    SulinkMessageRecvLiftCtrl req;
+    if (jmessage.Get("payload", jpayload) != true) {
+        err_message = "parse payload failed";
+        goto L_ERROR;
+    }
+    if (jpayload.Get("reqId", svalue) != true) {
+        err_message = "parse reqId failed";
+        goto L_ERROR;
+    }
+    req.reqId(svalue);
+    if (jpayload.Get("deviceCode", svalue) != true) {
+        err_message = "parse deviceCode failed";
+        goto L_ERROR;
+    }
+    req.deviceCode(svalue);
+    if (jpayload.Get("bookType", svalue) != true) {
+        err_message = "parse bookType failed";
+        goto L_ERROR;
+    }
+    req.bookType(svalue);
+    if (jpayload.Get("bookData", jdata) != true) {
+        err_message = "parse bookData fialed";
+        goto L_ERROR;
+    }
+    if (jdata.Get("homeId", svalue) != true) {
+        err_message = "parse bookData.homeId failed";
+        goto L_ERROR;
+    }
+    req.homeId(svalue);
+    if (jdata.Get("fromFloor", svalue) != true) {
+        err_message = "parse bookData.fromFloor failed";
+        goto L_ERROR;
+    }
+    req.fromFloor(svalue);
+    if (jdata.Get("toFloor", svalue) != true) {
+        err_message = "parse bookData.toFloor failed";
+        goto L_ERROR;
+    }
+    req.toFloor(svalue);
+L_ERROR:
+    if (err_message.empty()) {
+        req.errCode(0);
+    } else {
+        LOGE(SULINK_PACKER_TAG, "%s", err_message.c_str());
+        req.errCode(-1);
+        req.errMessage(err_message);
+    }
+    return new SulinkMessageRecvLiftCtrl(req);
+}
+
+SulinkMessageRecvLiftStatus* SulinkPacker :: unpackRecvLiftStatus(const string& raw_data) {
+    string err_message = "";
+    CJsonObject jmessage(raw_data);
+    CJsonObject jpayload;
+    CJsonObject jvalue;
+    string svalue;
+    long lvalue;
+    SulinkMessageRecvLiftStatus req;
+    if (jmessage.Get("payload", jpayload) != true) {
+        err_message = "parse payload failed";
+        goto L_ERROR;
+    }
+    if (jpayload.Get("reqId", svalue) != true) {
+        err_message = "parse reqId failed";
+        goto L_ERROR;
+    }
+    req.reqId(svalue);
+    if (jpayload.Get("deviceCode", svalue) != true) {
+        err_message = "parse deviceCode failed";
+        goto L_ERROR;
+    }
+    req.deviceCode(svalue);
+    if (jpayload.Get("homeId", svalue) != true) {
+        err_message = "parse homeId failed";
+        goto L_ERROR;
+    }
+    req.homeId(svalue);
+    if (jpayload.Get("elevatorId", svalue) != true) {
+        err_message = "parse elevatorId failed";
+        goto L_ERROR;
+    }
+    req.elevatorId(svalue);
+L_ERROR:
+    if (err_message.empty()) {
+        req.errCode(0);
+    } else {
+        LOGE(SULINK_PACKER_TAG, "%s", err_message.c_str());
+        req.errCode(-1);
+        req.errMessage(err_message);
+    }
+    return new SulinkMessageRecvLiftStatus(req);
+}
 
 IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
     if (checkPackHeader(raw_data) != 0) {
@@ -461,6 +608,10 @@ IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
         return unpackSendPassRecordAck(raw_data);
     } else if (message_type.compare("device-ubox-lift-info") == 0) {
         return unpackRecvLiftInfo(raw_data);
+    } else if (message_type.compare("device-ubox-lift-ctrl") == 0) {
+        return unpackRecvLiftCtrl(raw_data);
+    } else if (message_type.compare("device-ubox-lift-status") == 0) {
+        return unpackRecvLiftStatus(raw_data);
     }
     return NULL;
 }
@@ -479,6 +630,12 @@ string* SulinkPacker :: pack(const IMqttMessage &message) {
             break;
         case MSG_SULINK_RECV_LIFT_INFO_ACK:
             data = packRecvLiftInfoAck(dynamic_cast<const SulinkMessageRecvLiftInfoAck&>(message));
+            break;
+        case MSG_SULINK_RECV_LIFT_CTRL_ACK:
+            data = packRecvLiftCtrlAck(dynamic_cast<const SulinkMessageRecvLiftCtrlAck&>(message));
+            break;
+        case MSG_SULINK_RECV_LIFT_STATUS_ACK:
+            data = packRecvLiftStatusAck(dynamic_cast<const SulinkMessageRecvLiftStatusAck&>(message));
             break;
         default:
             break;

@@ -1,5 +1,4 @@
-#ifndef APP_UP_SULINK_MQTT_MESSAGE_HNADLERS_SULINK_SEND_PASS_RECORD_HANDLER_HPP_
-#define APP_UP_SULINK_MQTT_MESSAGE_HNADLERS_SULINK_SEND_PASS_RECORD_HANDLER_HPP_
+#pragma once
 
 #include "IMqttMessageHandler.hpp"
 
@@ -11,4 +10,3 @@ public:
     ~SulinkSendPassRecordHandler();
     int handle(const Message &message);
 };
-#endif  //  APP_UP_SULINK_MQTT_MESSAGE_HNADLERS_SULINK_SEND_PASS_RECORD_HANDLER_HPP_

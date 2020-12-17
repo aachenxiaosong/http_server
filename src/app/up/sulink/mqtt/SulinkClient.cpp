@@ -32,12 +32,12 @@ int SulinkClient :: start()
     return 0;
 }
 
-/* int SulinkClient :: onRecvMessage(const Message& message) {
+int SulinkClient :: send(const Message& message) {
     if (mMqttClient != NULL) {
-        return mMqttClient->onRecv(message);
+        return mMqttClient->send(message);
     }
     return -1;
-}*/
+}
 
 #define SULINK_CLIENT_TAG1 client->mName.c_str()
 void SulinkClient :: linkTask(void *arg) {

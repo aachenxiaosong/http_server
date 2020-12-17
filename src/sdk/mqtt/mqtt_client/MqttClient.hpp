@@ -33,7 +33,7 @@ public:
     int addHandler(IMqttMessageHandler *handler);
     int send(const string& pub_topic, const string& data);
     int send(const Message& message);
-    //int onRecv(const Message& message);
+    int onRecv(const Message& message);
 private:
     string findPubTopic(const string& topic_key);
 

@@ -50,11 +50,13 @@ sdk_inc := src/sdk/http/http_server \
 
 app_src := src/app \
            src/app/left/lift_control \
-           src/app/left/lift_control/http/service \
-           src/app/left/lift_control/http/packer \
-           src/app/left/lift_control/http/request_handler \
-           src/app/left/lift_control/http/request_handler/message_handlers/rili \
-           src/app/left/lift_control/http/request_handler/message_handlers/wlong \
+           src/app/left/lift_control/service \
+           src/app/left/lift_control/service/http/packer \
+           src/app/left/lift_control/service/http/handler \
+           src/app/left/lift_control/service/mq/packer \
+           src/app/left/lift_control/service/mq/handler \
+           src/app/left/lift_control/message_handlers/rili \
+           src/app/left/lift_control/message_handlers/wlong \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/up/sulink \
@@ -71,13 +73,15 @@ app_src := src/app \
 app_inc := src/app \
            src/app/config \
            src/app/left/lift_control \
-           src/app/left/lift_control/http/service \
-           src/app/left/lift_control/http/messages \
-           src/app/left/lift_control/http/packer \
-           src/app/left/lift_control/http/request_handler \
-           src/app/left/lift_control/http/request_handler/message_handlers \
-           src/app/left/lift_control/http/request_handler/message_handlers/rili \
-           src/app/left/lift_control/http/request_handler/message_handlers/wlong \
+           src/app/left/lift_control/service \
+           src/app/left/lift_control/service/http/packer \
+           src/app/left/lift_control/service/http/handler \
+           src/app/left/lift_control/service/mq/packer \
+           src/app/left/lift_control/service/mq/handler \
+           src/app/left/lift_control/messages \
+           src/app/left/lift_control/message_handlers \
+           src/app/left/lift_control/message_handlers/rili \
+           src/app/left/lift_control/message_handlers/wlong \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/up/sulink \

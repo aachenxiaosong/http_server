@@ -9,13 +9,13 @@ using namespace boost;
 
 //for set/get
 #define MEMBER(type, name) \
-private: type m_##name; \
+protected: type m_##name; \
 public: const type& name() const{return this->m_##name;}\
 public: void name(type _arg) {this->m_##name=_arg;}\
 private:
 //for set/get of vector
 #define PMEMBER(type, name) \
-public: type m_##name; \
+protected: type m_##name; \
 public: type& name() {return this->m_##name;}\
 private:
 
@@ -32,7 +32,13 @@ private: \
 
 class Message {
     MEMBER(MessageType, type)
+    SERI_BEGIN
+    SERI(type)
+    SERI_END
 public:
+    Message() {
+        this->type(MSG_INVALID);
+    }
     Message(MessageType type) {
         this->type(type);
     }
