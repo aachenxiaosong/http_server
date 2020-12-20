@@ -173,6 +173,7 @@ SERI_END
 public:
     const string BRAND_WLONG = "wlong";
     const string BRAND_RILI = "rili";
+    const string BRAND_SLING = "sling";
     const string BRAND_INVALID = "";
 public:
     LiftCtrlMessageBrandChange() : LiftCtrlMessageReq(MSG_LIFT_CTRL_BRAND_CHANGE)

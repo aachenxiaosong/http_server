@@ -8,6 +8,7 @@
 LiftCtrlService :: LiftCtrlService() :
     mWlongHttpHandler("wlong_lift_ctrl_http_handler"),
     mRiliHttpHandler("rili_lift_ctrl_http_handler"),
+    mSlingHttpHandler("sling_lift_ctrl_http_handler"),
     mWlongMqHandler("wlong_lift_ctrl_mq_handler")
 {
     mWlongHttpHandler.addMessageHandler(&mWlongBookLiftHandler);
@@ -21,6 +22,8 @@ LiftCtrlService :: LiftCtrlService() :
     mRiliHttpHandler.addMessageHandler(&mRiliBookLiftInterHandler);
     mRiliHttpHandler.addMessageHandler(&mRiliTakeLiftHandler);
     mRiliHttpHandler.addMessageHandler(&mRiliLiftStatusHandler);
+
+    mSlingHttpHandler.addMessageHandler(&mSlingBookLiftHandler);
 
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftCtrlHandler);
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftStatusHandler);
@@ -53,6 +56,9 @@ LiftCtrlRequestHandler* LiftCtrlService :: getHttpHandler(LiftVenderType vender_
             break;
         case LIFT_VENDER_RILI:
             handler = &mRiliHttpHandler;
+            break;
+        case LIFT_VENDER_SLING:
+            handler = &mSlingHttpHandler;
             break;
         default:
             break;
@@ -112,6 +118,8 @@ void LiftCtrlService :: mqRecvTask(void *arg) {
                 me->chooseLiftVender(me->LIFT_VENDER_WLONG);
             } else if (msg.brand() == msg.BRAND_RILI) {
                 me->chooseLiftVender(me->LIFT_VENDER_RILI);
+            } else if (msg.brand() == msg.BRAND_SLING) {
+                me->chooseLiftVender(me->LIFT_VENDER_SLING);
             } else {
                 me->chooseLiftVender(me->LIFT_VENDER_NONE);
             }

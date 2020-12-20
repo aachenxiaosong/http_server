@@ -9,6 +9,8 @@ int LiftCtrl :: start()
         vender_type = LiftCtrlService::LiftVenderType::LIFT_VENDER_WLONG;
     } else if (brand_code.compare("2") == 0) {
         vender_type = LiftCtrlService::LiftVenderType::LIFT_VENDER_RILI;
+    } else if (brand_code.compare("3") == 0) {
+        vender_type = LiftCtrlService::LiftVenderType::LIFT_VENDER_SLING;
     }
     mService.chooseLiftVender(vender_type);
     return 0;
