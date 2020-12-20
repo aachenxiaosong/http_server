@@ -8,6 +8,7 @@
 #include "WlongLiftStatusMessageHandler.hpp"
 #include "LiftCtrlMqHandler.hpp"
 #include "WlongWechatCtrlMessageHandler.hpp"
+#include "WlongWechatStatusMessageHandler.hpp"
 #include "RiliBookLiftMessageHandler.hpp"
 #include "RiliCallLiftMessageHandler.hpp"
 #include "RiliBookLiftInterMessageHandler.hpp"
@@ -38,6 +39,7 @@ private:
     LiftCtrlRequestHandler mRiliHttpHandler;
     //wanglong wechat msg handler
     WlongWechatCtrlMessageHandler mWlongWechatLiftCtrlHandler;
+    WlongWechatStatusMessageHandler mWlongWechatLiftStatusHandler;
     LiftCtrlMqHandler mWlongMqHandler;
 
 public:

@@ -64,12 +64,14 @@ void SulinkClient :: linkTask(void *arg) {
     me->mRecvPassRuleHandler.setConn(me->mMqttClient);
     me->mRecvLiftInfoHandler.setConn(me->mMqttClient);
     me->mRecvLiftCtrlHandler.setConn(me->mMqttClient);
+    me->mRecvLiftStatusHandler.setConn(me->mMqttClient);
 
     me->mMqttClient->addHandler(&me->mSendDeviceInfoHandler);
     me->mMqttClient->addHandler(&me->mSendPassRecordHandler);
     me->mMqttClient->addHandler(&me->mRecvPassRuleHandler);
     me->mMqttClient->addHandler(&me->mRecvLiftInfoHandler);
     me->mMqttClient->addHandler(&me->mRecvLiftCtrlHandler);
+    me->mMqttClient->addHandler(&me->mRecvLiftStatusHandler);
     
     me->mMqttClient->connect();
     me->mIsConnected = true;
@@ -85,11 +87,11 @@ void SulinkClient :: mqRecvTask(void *arg) {
         MessageType msg_type = msg.type();
         LOGT(SULINK_CLIENT_TAG1, "recv msg, topic %d msg_type %d", data.topic_type(), msg_type);
         if (data.topic_type() == MQ_TOPIC_SULINK_LIFT_CTRL) {
+            long timestamp = unisound::UniUtil::timestampMs();
             switch (msg_type) {
                 case MSG_LIFT_CTRL_WECHAT_CTRL_ACK: {
                     LiftCtrlMessageWechatCtrlAck lift_ctrl_ack = unisound::UniSerialization<LiftCtrlMessageWechatCtrlAck>::deseri((const char *)data.content());
                     SulinkMessageRecvLiftCtrlAck sulink_ack;
-                    long timestamp = unisound::UniUtil::timestampMs();
                     sulink_ack.topic("pub/lift");
                     sulink_ack.traceId(SulinkTraceid::build(to_string(timestamp)));
                     sulink_ack.payloadVersion(SulinkConfigData::getPayloadVersion());
@@ -104,6 +106,27 @@ void SulinkClient :: mqRecvTask(void *arg) {
                     sulink_ack.elevatorId(lift_ctrl_ack.elevatorId());
                     sulink_ack.upDown(lift_ctrl_ack.upDown());
                     me->send(sulink_ack);
+                    break;
+                }
+                case MSG_LIFT_CTRL_WECHAT_STATUS_ACK: {
+                    LiftCtrlMessageWechatStatusAck lift_ctrl_ack = unisound::UniSerialization<LiftCtrlMessageWechatStatusAck>::deseri((const char *)data.content());
+                    SulinkMessageRecvLiftStatusAck sulink_ack;
+                    sulink_ack.topic("pub/lift");
+                    sulink_ack.traceId(SulinkTraceid::build(to_string(timestamp)));
+                    sulink_ack.payloadVersion(SulinkConfigData::getPayloadVersion());
+                    sulink_ack.brand(SulinkConfigData::getBrand());
+                    sulink_ack.timestamp(timestamp);
+                    sulink_ack.reqId(lift_ctrl_ack.reqId());
+                    sulink_ack.ackReqId(unisound::UniUtil::uuid());
+                    sulink_ack.deviceCode(unisound::UniDeviceInfo::getUdid());
+                    sulink_ack.code(lift_ctrl_ack.retcode());
+                    sulink_ack.message(lift_ctrl_ack.msg());
+                    sulink_ack.curFloor(lift_ctrl_ack.curFloor());
+                    sulink_ack.direction(lift_ctrl_ack.direction());
+                    sulink_ack.movingStatus(lift_ctrl_ack.movingStatus());
+                    sulink_ack.doorStatus(lift_ctrl_ack.doorStatus());
+                    me->send(sulink_ack);
+                    break;
                 }
             }
             LOGT(SULINK_CLIENT_TAG1, "msg of topic %d is handled", data.topic_type());

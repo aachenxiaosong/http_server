@@ -23,6 +23,7 @@ LiftCtrlService :: LiftCtrlService() :
     mRiliHttpHandler.addMessageHandler(&mRiliLiftStatusHandler);
 
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftCtrlHandler);
+    mWlongMqHandler.addMessageHandler(&mWlongWechatLiftStatusHandler);
 
     mVenderType = LIFT_VENDER_NONE;
 

@@ -9,7 +9,7 @@
 #include "UniLog.hpp"
 
 #define SULINK_RECV_LIFT_INFO_TAG getName().c_str()
-SulinkRecvLiftInfoHandler :: SulinkRecvLiftInfoHandler() : IMqttMessageHandler("sulink_recv_Lift_info_handler") {}
+SulinkRecvLiftInfoHandler :: SulinkRecvLiftInfoHandler() : IMqttMessageHandler("sulink_recv_lift_info_handler") {}
 
 SulinkRecvLiftInfoHandler :: ~SulinkRecvLiftInfoHandler() {}
 

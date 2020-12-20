@@ -185,14 +185,12 @@ public:
 class LiftCtrlMessageWechatCtrl : public LiftCtrlMessageReq
 {
     MEMBER(string, reqId)
-    MEMBER(string, deviceCode)
     MEMBER(string, homeId)
     MEMBER(string, fromFloor)
     MEMBER(string, toFloor)
 SERI_BEGIN
     SERI(type)
     SERI(reqId)
-    SERI(deviceCode)
     SERI(homeId)
     SERI(fromFloor)
     SERI(toFloor)
@@ -225,5 +223,48 @@ public:
     }
     ~LiftCtrlMessageWechatCtrlAck() {}
 };
+
+class LiftCtrlMessageWechatStatus : public LiftCtrlMessageReq
+{
+    MEMBER(string, reqId)
+    MEMBER(string, homeId)
+    MEMBER(string, elevatorId)
+SERI_BEGIN
+    SERI(type)
+    SERI(reqId)
+    SERI(homeId)
+    SERI(elevatorId)
+SERI_END
+public:
+    LiftCtrlMessageWechatStatus() : LiftCtrlMessageReq(MSG_LIFT_CTRL_WECHAT_STATUS)
+    {
+    }
+    ~LiftCtrlMessageWechatStatus() {}
+};
+
+class LiftCtrlMessageWechatStatusAck : public LiftCtrlMessageRsp
+{
+    MEMBER(string, reqId)
+    MEMBER(string, curFloor)
+    MEMBER(string, direction)
+    MEMBER(string, movingStatus)
+    MEMBER(string, doorStatus)
+SERI_BEGIN
+    SERI(type)
+    SERI(retcode)
+    SERI(msg)
+    SERI(reqId)
+    SERI(curFloor)
+    SERI(direction)
+    SERI(movingStatus)
+    SERI(doorStatus)
+SERI_END
+public:
+    LiftCtrlMessageWechatStatusAck() : LiftCtrlMessageRsp(MSG_LIFT_CTRL_WECHAT_STATUS_ACK)
+    {
+    }
+    ~LiftCtrlMessageWechatStatusAck() {}
+};
+
 
 

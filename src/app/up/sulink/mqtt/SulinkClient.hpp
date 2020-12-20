@@ -9,6 +9,7 @@
 #include "SulinkRecvPassRuleHandler.hpp"
 #include "SulinkRecvLiftInfoHandler.hpp"
 #include "SulinkRecvLiftCtrlHandler.hpp"
+#include "SulinkRecvLiftStatusHandler.hpp"
 #include "Mq.hpp"
 #include <thread>
 
@@ -22,6 +23,7 @@ private:
     SulinkRecvPassRuleHandler mRecvPassRuleHandler;
     SulinkRecvLiftInfoHandler mRecvLiftInfoHandler;
     SulinkRecvLiftCtrlHandler mRecvLiftCtrlHandler;
+    SulinkRecvLiftStatusHandler mRecvLiftStatusHandler;
     string mName;
     thread *mLinkThread;
     bool mIsConnected;

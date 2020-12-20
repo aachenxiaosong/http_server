@@ -25,7 +25,7 @@ int WlongWechatCtrlMessageHandler :: handle(const LiftCtrlMessageReq &request)
     string app_id = SulinkLiftInitData :: getAppId();
     string app_secret = SulinkLiftInitData :: getAppSecret();
     string license = SulinkLiftInitData :: getLicense();
-    //step2: 根据homeId获取群控器id,并找到对应的ip和端口;并找到到达楼层
+    //step2: 根据homeId获取群控器id,并找到对应的ip和端口
     string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.homeId());
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.homeId());
     //step3: 根据homeId找到出发楼层

@@ -1,5 +1,5 @@
 ;device info
-device.version.app = v3.2.5
+device.version.app = v3.2.6
 device.type = ELEVATOR_IPC
 device.netname = enp2s0
 

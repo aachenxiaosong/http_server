@@ -6,8 +6,9 @@
 class LiftCtrlMqPacker {
 private:
     LiftCtrlMessageWechatCtrl* unpackWechatCtrl(const string& raw_data);
-    string* packRsp(const LiftCtrlMessageRsp &message);
+    LiftCtrlMessageWechatStatus* unpackWechatStatus(const string& raw_data);
     string* packWechatCtrlAck(const LiftCtrlMessageWechatCtrlAck &message);
+    string* packWechatStatusAck(const LiftCtrlMessageWechatStatusAck &message);
 
 public:
     LiftCtrlMqPacker() = default;
