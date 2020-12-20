@@ -146,11 +146,20 @@ string SulinkLiftInitData :: mGetLicense()
 }
 string SulinkLiftInitData ::mGetBrandCode()
 {
-     if (mInfo == NULL) {
+    if (mInfo == NULL) {
         LOGE(SULINK_LIFT_INFO_DATA_TAG, "get brand code failed for lift not inited");
         return "";
     }
     return mInfo->brandInfo().brandCode();
+}
+
+int SulinkLiftInitData :: mGetUnlockTime()
+{
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get unlock time failed for lift not inited");
+        return -1;
+    }
+    return mInfo->unlockTime();
 }
 
 string SulinkLiftInitData :: mGetSpaceNoBySpaceId(const string& space_id, const string& space_type) {
@@ -338,10 +347,16 @@ string SulinkLiftInitData :: getLicense()
     return mData.mGetLicense();
 }
 
-string SulinkLiftInitData ::getBrandCode()
+string SulinkLiftInitData :: getBrandCode()
 {
     return mData.mGetBrandCode();
 }
+
+int SulinkLiftInitData :: getUnlockTime()
+{
+    return mData.mGetUnlockTime();
+}
+
 //不直接定义mInfo成静态成员的原因是,读文件的部分需要静态初始化,所以要借助静态的mData成员
 int SulinkLiftInitData :: loadFromConfig()
 {

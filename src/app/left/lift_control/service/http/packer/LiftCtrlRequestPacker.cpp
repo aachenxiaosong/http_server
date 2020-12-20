@@ -1,4 +1,5 @@
 #include "LiftCtrlRequestPacker.hpp"
+#include "SulinkLiftInitData.hpp"
 #include "CJsonObject.hpp"
 #include "UniLog.hpp"
 
@@ -28,6 +29,8 @@ LiftCtrlMessageCallLiftReq* LiftCtrlRequestPacker :: unpackCallLiftReq(const str
     }
     if (true == jrequest.Get("unlockTime", ivalue)) {
         request->unlockTime(ivalue);
+    } else {
+        request->unlockTime(SulinkLiftInitData::getUnlockTime());
     }
     return request;
 }
@@ -76,6 +79,8 @@ LiftCtrlMessageBookLiftReq* LiftCtrlRequestPacker :: unpackBookLiftReq(const str
     }
     if (true == jrequest.Get("unlockTime", ivalue)) {
         request->unlockTime(ivalue);
+    } else {
+        request->unlockTime(SulinkLiftInitData::getUnlockTime());
     }
     return request;
 }
@@ -100,6 +105,8 @@ LiftCtrlMessageBookLiftInterReq* LiftCtrlRequestPacker :: unpackBookLiftInterReq
     request->dHomeId(svalue);
     if (true == jrequest.Get("unlockTime", ivalue)) {
         request->unlockTime(ivalue);
+    } else {
+        request->unlockTime(SulinkLiftInitData::getUnlockTime());
     }
     return request;
 }

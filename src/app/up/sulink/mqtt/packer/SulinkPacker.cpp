@@ -75,6 +75,7 @@ string* SulinkPacker :: packRecvLiftInfo(const SulinkMessageRecvLiftInfo& messag
     CJsonObject jpayload;
     jpayload.Add("reqId", msg.reqId());
     jpayload.Add("deviceCode", msg.deviceCode());
+    jpayload.Add("unlockTime", msg.unlockTime());
     jpayload.AddEmptySubArray("spaces");
     for (int i = 0; i < msg.spaces().size(); i++) {
         CJsonObject jspace;
@@ -274,6 +275,11 @@ SulinkMessageRecvLiftInfo* SulinkPacker :: unpackRecvLiftInfo(const string& raw_
         goto L_ERROR;
     }
     info.deviceCode(svalue);
+    if (jpayload.Get("unlockTime", ivalue) != true) {
+        err_message = "parse unlockTime failed";
+        goto L_ERROR;
+    }
+    info.unlockTime(ivalue);
     if (jpayload.Get("spaces", jspaces) != true) {
         //LOGE(SULINK_PACKER_TAG, "parse spaces failed");
         //return NULL;
@@ -608,7 +614,7 @@ IMqttMessage* SulinkPacker :: unpack(const string& raw_data) {
         return unpackSendPassRecordAck(raw_data);
     } else if (message_type.compare("device-ubox-lift-info") == 0) {
         return unpackRecvLiftInfo(raw_data);
-    } else if (message_type.compare("device-ubox-lift-ctrl") == 0) {
+    } else if (message_type.compare("device-ubox-lift-book") == 0) {
         return unpackRecvLiftCtrl(raw_data);
     } else if (message_type.compare("device-ubox-lift-status") == 0) {
         return unpackRecvLiftStatus(raw_data);

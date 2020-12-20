@@ -9,7 +9,6 @@ using namespace std;
 
 #define LIFT_CTRL_UP    "up"
 #define LIFT_CTRL_DOWN  "down"
-#define LIFT_CTRL_DEFAULT_TIMEOUT 300
 
 class LiftCtrlMessage : public Message
 {
@@ -50,7 +49,7 @@ class LiftCtrlMessageCallLiftReq : public LiftCtrlMessageReq
 public:
     LiftCtrlMessageCallLiftReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_CALL_LIFT_REQ)
     {
-        unlockTime(LIFT_CTRL_DEFAULT_TIMEOUT);
+        unlockTime(0);
         upDown(LIFT_CTRL_DOWN);
     }
     ~LiftCtrlMessageCallLiftReq()
@@ -81,7 +80,7 @@ public:
     const string MODE_NONE = "none";
     LiftCtrlMessageBookLiftReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_BOOK_LIFT_REQ)
     {
-        unlockTime(LIFT_CTRL_DEFAULT_TIMEOUT);
+        unlockTime(0);
     }
     ~LiftCtrlMessageBookLiftReq()
     {}
@@ -105,7 +104,7 @@ class LiftCtrlMessageBookLiftInterReq : public LiftCtrlMessageReq
 public:
     LiftCtrlMessageBookLiftInterReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_BOOK_LIFT_INTER_REQ)
     {
-        unlockTime(LIFT_CTRL_DEFAULT_TIMEOUT);
+        unlockTime(0);
     }
     ~LiftCtrlMessageBookLiftInterReq()
     {}
@@ -208,26 +207,21 @@ public:
 class LiftCtrlMessageWechatCtrlAck : public LiftCtrlMessageRsp
 {
     MEMBER(string, reqId)
-    MEMBER(string, deviceCode)
     MEMBER(string, upDown)
     MEMBER(string, elevatorId)
     MEMBER(string, curFloor)
-    MEMBER(string, code)
-    MEMBER(string, message)
 SERI_BEGIN
     SERI(type)
+    SERI(retcode)
+    SERI(msg)
     SERI(reqId)
-    SERI(deviceCode)
     SERI(upDown)
     SERI(elevatorId)
     SERI(curFloor)
-    SERI(code)
-    SERI(message)
 SERI_END
 public:
     LiftCtrlMessageWechatCtrlAck() : LiftCtrlMessageRsp(MSG_LIFT_CTRL_WECHAT_CTRL_ACK)
     {
-        code(0);
     }
     ~LiftCtrlMessageWechatCtrlAck() {}
 };

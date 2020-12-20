@@ -4,7 +4,7 @@
 
 #define LIFT_CTRL_REQ_HANDLER_TAG getName().c_str()
 
-int LiftCtrlRequestHandler :: addMessageHandler(ILiftCtrlMessageHandler *handler) {
+int LiftCtrlRequestHandler :: addMessageHandler(ILiftCtrlHttpMessageHandler *handler) {
     mMessageHandlers.push_back(handler);
     return 0;
 }
@@ -50,7 +50,6 @@ int LiftCtrlRequestHandler :: handle(const string& path, const string& request, 
         for (int i = 0; i < mMessageHandlers.size(); i++)
         {
             m_rsp = mMessageHandlers[i]->handle(*m_req);
-            LOGT(LIFT_CTRL_REQ_HANDLER_TAG, "msg handler: %s", mMessageHandlers[i]->getName().c_str());
             if (NULL != m_rsp)
             {
                 string *rsp = mPacker.pack(*m_rsp);

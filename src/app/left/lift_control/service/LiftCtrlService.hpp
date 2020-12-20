@@ -6,6 +6,8 @@
 #include "WlongBookLiftInterMessageHandler.hpp"
 #include "WlongTakeLiftMessageHandler.hpp"
 #include "WlongLiftStatusMessageHandler.hpp"
+#include "LiftCtrlMqHandler.hpp"
+#include "WlongWechatCtrlMessageHandler.hpp"
 #include "RiliBookLiftMessageHandler.hpp"
 #include "RiliCallLiftMessageHandler.hpp"
 #include "RiliBookLiftInterMessageHandler.hpp"
@@ -20,20 +22,24 @@ private:
     Mq *mMq;
     thread *mMqThread;
     bool mMqThreadRunning;
-   //wanglong message handlers
+   //wanglong http message handlers
     WlongBookLiftMessageHandler mWlongBookLiftHandler;
     WlongCallLiftMessageHandler mWlongCallLiftHandler;
     WlongBookLiftInterMessageHandler mWlongBookLiftInterHandler;
     WlongTakeLiftMessageHandler mWlongTakeLiftHandler;
     WlongLiftStatusMessageHandler mWlongLiftStatusHandler;
-    LiftCtrlRequestHandler mWlongHandler;
-    //rili message handlers
+    LiftCtrlRequestHandler mWlongHttpHandler;
+    //rili http message handlers
     RiliBookLiftMessageHandler mRiliBookLiftHandler;
     RiliCallLiftMessageHandler mRiliCallLiftHandler;
     RiliBookLiftInterMessageHandler mRiliBookLiftInterHandler;
     RiliTakeLiftMessageHandler mRiliTakeLiftHandler;
     RiliLiftStatusMessageHandler mRiliLiftStatusHandler;
-    LiftCtrlRequestHandler mRiliHandler;
+    LiftCtrlRequestHandler mRiliHttpHandler;
+    //wanglong wechat msg handler
+    WlongWechatCtrlMessageHandler mWlongWechatLiftCtrlHandler;
+    LiftCtrlMqHandler mWlongMqHandler;
+
 public:
     enum LiftVenderType {
         LIFT_VENDER_NONE = 0,
@@ -42,7 +48,8 @@ public:
     };
     LiftVenderType mVenderType;
 private:
-    LiftCtrlRequestHandler* getHandler(LiftVenderType vender_type);
+    LiftCtrlRequestHandler* getHttpHandler(LiftVenderType vender_type);
+    LiftCtrlMqHandler* getMqHandler(LiftVenderType vender_type);
     static void mqRecvTask(void *arg);
 public:
     LiftCtrlService();

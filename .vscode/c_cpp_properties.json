@@ -12,6 +12,8 @@
                 "${workspaceFolder}/src/sdk/mq",
                 "${workspaceFolder}/src/app/left/lift_control/service/http/handler",
                 "${workspaceFolder}/src/app/left/lift_control/service/http/packer",
+                "${workspaceFolder}/src/app/left/lift_control/service/mq/handler",
+                "${workspaceFolder}/src/app/left/lift_control/service/mq/packer",
                 "${workspaceFolder}/src/sdk/mq",
                 "${workspaceFolder}/src/http_service/handlers/rili",
                 "${workspaceFolder}/src/http_service/handlers/wlong",

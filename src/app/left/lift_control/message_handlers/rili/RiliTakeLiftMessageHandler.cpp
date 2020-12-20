@@ -4,7 +4,7 @@
 
 #define RILI_TAKE_LIFT_MSG_HANDLER_TAG getName().c_str()
 
-RiliTakeLiftMessageHandler :: RiliTakeLiftMessageHandler() : ILiftCtrlMessageHandler("rili_take_lift_msg_handler")
+RiliTakeLiftMessageHandler :: RiliTakeLiftMessageHandler() : ILiftCtrlHttpMessageHandler("rili_take_lift_msg_handler")
 {
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ILiftCtrlMessageHandler.hpp"
+#include "ILiftCtrlHttpMessageHandler.hpp"
 
-class RiliCallLiftMessageHandler : public ILiftCtrlMessageHandler {
+class RiliCallLiftMessageHandler : public ILiftCtrlHttpMessageHandler {
 private:
 public:
     RiliCallLiftMessageHandler();

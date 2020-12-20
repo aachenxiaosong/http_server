@@ -27,6 +27,7 @@ private:
     string mGetAppSecret();
     string mGetLicense();
     string mGetBrandCode();
+    int mGetUnlockTime();
     int mGetSpaceIdIndex(const string& space_id);
     string mGetSpaceNoBySpaceId(const string& space_id, const string& space_type);
     string mGetClusterIdBySpaceId(const string& space_id);
@@ -47,6 +48,7 @@ public:
     static string getAppSecret();
     static string getLicense();
     static string getBrandCode();
+    static int getUnlockTime();
     static string getHomeNoBySpaceId(const string& space_id);
     static string getUnitNoBySpaceId(const string& space_id);
     static string getBuildingNoBySpaceId(const string& space_id);

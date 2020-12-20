@@ -5,7 +5,7 @@
 
 #define WLONG_BOOK_LIFT_MSG_HANDLER_TAG "wlong_book_lift_msg_handler"
 
-WlongBookLiftMessageHandler :: WlongBookLiftMessageHandler() : ILiftCtrlMessageHandler("wlong_book_lift_handler")
+WlongBookLiftMessageHandler :: WlongBookLiftMessageHandler() : ILiftCtrlHttpMessageHandler("wlong_book_lift_handler")
 {
 }
 

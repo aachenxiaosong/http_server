@@ -9,6 +9,7 @@
   "payload": {
     "reqId": "9c7919812d1f4a5995d95f5405eb2062",
     "deviceCode": "7ccbe2e29772",
+    "unlockTime": 255,
     "spaces": [{
       "id": "2094472",
       "spaceName": "楼栋1",

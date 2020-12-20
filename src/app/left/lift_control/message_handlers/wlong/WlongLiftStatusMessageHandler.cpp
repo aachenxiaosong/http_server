@@ -5,7 +5,7 @@
 
 #define WLONG_LIFT_STATUS_MSG_HANDLER_TAG getName().c_str()
 
-WlongLiftStatusMessageHandler :: WlongLiftStatusMessageHandler() : ILiftCtrlMessageHandler("wlong_lift_status_msg_handler")
+WlongLiftStatusMessageHandler :: WlongLiftStatusMessageHandler() : ILiftCtrlHttpMessageHandler("wlong_lift_status_msg_handler")
 {
 }
 

@@ -6,7 +6,7 @@
 
 #define RILI_BOOK_LIFT_INTER_MSG_HANDLER_TAG "rili_book_lift_inter_msg_handler"
 
-RiliBookLiftInterMessageHandler :: RiliBookLiftInterMessageHandler() : ILiftCtrlMessageHandler("rili_book_lift_inter_handler")
+RiliBookLiftInterMessageHandler :: RiliBookLiftInterMessageHandler() : ILiftCtrlHttpMessageHandler("rili_book_lift_inter_handler")
 {
 }
 

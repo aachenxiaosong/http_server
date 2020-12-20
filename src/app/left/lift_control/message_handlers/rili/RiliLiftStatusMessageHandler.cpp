@@ -6,7 +6,7 @@
 
 #define RILI_LIFT_STATUS_MSG_HANDLER_TAG getName().c_str()
 
-RiliLiftStatusMessageHandler :: RiliLiftStatusMessageHandler() : ILiftCtrlMessageHandler("rili_lift_status_msg_handler")
+RiliLiftStatusMessageHandler :: RiliLiftStatusMessageHandler() : ILiftCtrlHttpMessageHandler("rili_lift_status_msg_handler")
 {
 }
 

@@ -5,7 +5,7 @@
 
 #define WLONG_BOOK_LIFT_INTER_MSG_HANDLER_TAG "wlong_book_lift_inter_msg_handler"
 
-WlongBookLiftInterMessageHandler :: WlongBookLiftInterMessageHandler() : ILiftCtrlMessageHandler("wlong_book_lift_inter_handler")
+WlongBookLiftInterMessageHandler :: WlongBookLiftInterMessageHandler() : ILiftCtrlHttpMessageHandler("wlong_book_lift_inter_handler")
 {
 }
 

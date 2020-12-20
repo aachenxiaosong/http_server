@@ -8,6 +8,8 @@
 #include "SulinkSendPassRecordHandler.hpp"
 #include "SulinkRecvPassRuleHandler.hpp"
 #include "SulinkRecvLiftInfoHandler.hpp"
+#include "SulinkRecvLiftCtrlHandler.hpp"
+#include "Mq.hpp"
 #include <thread>
 
 class SulinkClient {
@@ -19,11 +21,16 @@ private:
     SulinkSendPassRecordHandler mSendPassRecordHandler;
     SulinkRecvPassRuleHandler mRecvPassRuleHandler;
     SulinkRecvLiftInfoHandler mRecvLiftInfoHandler;
+    SulinkRecvLiftCtrlHandler mRecvLiftCtrlHandler;
     string mName;
     thread *mLinkThread;
     bool mIsConnected;
+    Mq *mMq;
+    thread *mMqThread;
+    bool mMqThreadRunning;
 private:
     static void linkTask(void *rg);
+    static void mqRecvTask(void *arg);
 public:
     SulinkClient();
     ~SulinkClient();

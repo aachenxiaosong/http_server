@@ -6,24 +6,29 @@
 #define LIFT_CTRL_SERVICE_TAG "lift_ctrl_service"
 
 LiftCtrlService :: LiftCtrlService() :
-    mWlongHandler("wlong_lift_ctrl_http_handler"),
-    mRiliHandler("rili_lift_ctrl_http_handler")
+    mWlongHttpHandler("wlong_lift_ctrl_http_handler"),
+    mRiliHttpHandler("rili_lift_ctrl_http_handler"),
+    mWlongMqHandler("wlong_lift_ctrl_mq_handler")
 {
-    mWlongHandler.addMessageHandler(&mWlongBookLiftHandler);
-    mWlongHandler.addMessageHandler(&mWlongCallLiftHandler);
-    mWlongHandler.addMessageHandler(&mWlongBookLiftInterHandler);
-    mWlongHandler.addMessageHandler(&mWlongTakeLiftHandler);
-    mWlongHandler.addMessageHandler(&mWlongLiftStatusHandler);
+    mWlongHttpHandler.addMessageHandler(&mWlongBookLiftHandler);
+    mWlongHttpHandler.addMessageHandler(&mWlongCallLiftHandler);
+    mWlongHttpHandler.addMessageHandler(&mWlongBookLiftInterHandler);
+    mWlongHttpHandler.addMessageHandler(&mWlongTakeLiftHandler);
+    mWlongHttpHandler.addMessageHandler(&mWlongLiftStatusHandler);
 
-    mRiliHandler.addMessageHandler(&mRiliBookLiftHandler);
-    mRiliHandler.addMessageHandler(&mRiliCallLiftHandler);
-    mRiliHandler.addMessageHandler(&mRiliBookLiftInterHandler);
-    mRiliHandler.addMessageHandler(&mRiliTakeLiftHandler);
-    mRiliHandler.addMessageHandler(&mRiliLiftStatusHandler);
+    mRiliHttpHandler.addMessageHandler(&mRiliBookLiftHandler);
+    mRiliHttpHandler.addMessageHandler(&mRiliCallLiftHandler);
+    mRiliHttpHandler.addMessageHandler(&mRiliBookLiftInterHandler);
+    mRiliHttpHandler.addMessageHandler(&mRiliTakeLiftHandler);
+    mRiliHttpHandler.addMessageHandler(&mRiliLiftStatusHandler);
+
+    mWlongMqHandler.addMessageHandler(&mWlongWechatLiftCtrlHandler);
+
     mVenderType = LIFT_VENDER_NONE;
 
     vector<MqTopicType> topic_types;
     topic_types.push_back(MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE);
+    topic_types.push_back(MQ_TOPIC_LIFT_CTRL_WECHAT);
     mMq = new Mq("lift_ctrl_service_mq", topic_types);
     mMqThreadRunning = false;
     mMqThread = new thread(mqRecvTask, this);
@@ -38,21 +43,35 @@ LiftCtrlService :: ~LiftCtrlService()
     delete mMq;
 }
 
-LiftCtrlRequestHandler* LiftCtrlService :: getHandler(LiftVenderType vender_type)
+LiftCtrlRequestHandler* LiftCtrlService :: getHttpHandler(LiftVenderType vender_type)
 {
     LiftCtrlRequestHandler* handler = NULL;
     switch (vender_type) {
         case LIFT_VENDER_WLONG:
-            handler = &mWlongHandler;
+            handler = &mWlongHttpHandler;
             break;
         case LIFT_VENDER_RILI:
-            handler = &mRiliHandler;
+            handler = &mRiliHttpHandler;
             break;
         default:
             break;
     }
     return handler;
 }
+
+LiftCtrlMqHandler* LiftCtrlService :: getMqHandler(LiftVenderType vender_type)
+{
+    LiftCtrlMqHandler* handler = NULL;
+    switch (vender_type) {
+        case LIFT_VENDER_WLONG:
+            handler = &mWlongMqHandler;
+            break;
+        default:
+            break;
+    }
+    return handler;
+}
+
 
 
 int LiftCtrlService :: chooseLiftVender(LiftVenderType vender_type)
@@ -63,11 +82,11 @@ int LiftCtrlService :: chooseLiftVender(LiftVenderType vender_type)
     }
     int ret = -1;
     IHttpRequestHandler *handler = NULL;
-    handler = getHandler(mVenderType);
+    handler = getHttpHandler(mVenderType);
     if (handler != NULL) {
         http_server_del_handler(handler);
     }
-    handler = getHandler(vender_type);
+    handler = getHttpHandler(vender_type);
     if (handler != NULL) {
         LOGT(LIFT_CTRL_SERVICE_TAG, "vender type is changed from %d to %d", mVenderType, vender_type);
         http_server_add_handler(handler);
@@ -95,7 +114,20 @@ void LiftCtrlService :: mqRecvTask(void *arg) {
             } else {
                 me->chooseLiftVender(me->LIFT_VENDER_NONE);
             }
-            LOGT(LIFT_CTRL_SERVICE_TAG, "MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE is handled");
+            LOGT(LIFT_CTRL_SERVICE_TAG, "msg of topic %d is handled OK", MQ_TOPIC_LIFT_CTRL_BRAND_CHANGE);
+        } else if (data.topic_type() == MQ_TOPIC_LIFT_CTRL_WECHAT) {
+            LiftCtrlMqHandler *handler = me->getMqHandler(me->mVenderType);
+            if (handler != NULL) {
+                string request((const char *)data.content());
+                if (0 == handler->handle(data.topic_type(), request))
+                {
+                    LOGT(LIFT_CTRL_SERVICE_TAG, "msg of topic %d is handled OK", data.topic_type());
+                }
+                else
+                {
+                    LOGT(LIFT_CTRL_SERVICE_TAG, "msg of topic %d is handled failed", data.topic_type());
+                }
+            }
         }
     }
 }

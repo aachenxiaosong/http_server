@@ -5,7 +5,7 @@
 
 #define WLONG_CALL_LIFT_MSG_HANDLER_TAG getName().c_str()
 
-WlongCallLiftMessageHandler :: WlongCallLiftMessageHandler() : ILiftCtrlMessageHandler("wlong_call_lift_msg_handler")
+WlongCallLiftMessageHandler :: WlongCallLiftMessageHandler() : ILiftCtrlHttpMessageHandler("wlong_call_lift_msg_handler")
 {
 }
 

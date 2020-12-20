@@ -188,6 +188,7 @@ public:
 };
 class SulinkMessageRecvLiftInfo : public SulinkMessage {
     MEMBER(string, deviceCode)
+    MEMBER(int, unlockTime)
     PMEMBER(vector<LiftInfoSpace>, spaces)
     PMEMBER(LiftInfoBrand, brandInfo)
     PMEMBER(vector<LiftInfoAccessDevice>, accessDevices)
@@ -199,6 +200,7 @@ class SulinkMessageRecvLiftInfo : public SulinkMessage {
     MEMBER(string, errMessage)
     SERI_BEGIN
     SERI(deviceCode)
+    SERI(unlockTime)
     SERI(spaces)
     SERI(brandInfo)
     SERI(accessDevices)

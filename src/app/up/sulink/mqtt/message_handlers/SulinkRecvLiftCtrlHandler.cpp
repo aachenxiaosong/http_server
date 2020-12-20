@@ -32,7 +32,7 @@ int SulinkRecvLiftCtrlHandler :: handle(const Message &message) {
     req.fromFloor(msg.fromFloor());
     req.toFloor(msg.toFloor());
     string content = unisound::UniSerialization<LiftCtrlMessageWechatCtrl>::seri(req);
-    MqData data(MQ_TOPIC_LIFT_CTRL_WECHAT_CTRL, (void *)content.c_str(), content.length() + 1);
+    MqData data(MQ_TOPIC_LIFT_CTRL_WECHAT, (void *)content.c_str(), content.length() + 1);
     mMq.send(data);
     return 0;
 }
