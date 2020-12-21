@@ -1,4 +1,6 @@
 #pragma once
+#include "UdpServer.hpp"
+#include "UdpClient.hpp"
 #include <string>
 #include <vector>
 
@@ -67,15 +69,15 @@ struct SlingResponseAttribute {
     int elevatorNum;
 };
 
-class SlingLiftCtrl {
+class SlingLiftCtrl : public IUdpDataHandler {
 private:
-    string mIp;
-    int mPort;
-private:
-    int udpSend(unsigned char *request, int request_len, unsigned char *response, int *response_len);
-    
+    string mElsgwIp;
+    int mElsgwPort;
+    static UdpServer mUdpServer;
 public:
     SlingLiftCtrl(const string& url);
+    ~SlingLiftCtrl();
     int bookElevator(const SlingFloor& from_floor, const SlingFloor& to_floor, const SlingRequestAttribute& request, SlingResponseAttribute& response);
     int bookElevator(const SlingFloor& from_floor, const vector<SlingFloor>& to_floors, const SlingRequestAttribute& request, SlingResponseAttribute& response);
+    int handle(const char*data, int data_len);
 };

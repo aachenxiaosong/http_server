@@ -13,7 +13,7 @@
 #define REQUEST_FRAME_LEN  20
 #define RESPONSE_FRAME_LEN 10
 
-#define RILI_UART_PROT "rili_uart_proto"
+#define RILI_LIFT_CTRL_TAG "rili_lift_ctrl"
 
 static unsigned char g_request_id = 0;
 
@@ -47,7 +47,7 @@ static int _tcp_send(const char* ip, int port, unsigned char *request, int reque
 
   if ((sockfd = socket(PF_INET, SOCK_STREAM, 0)) == -1)
   {
-    LOGE(RILI_UART_PROT, "get socket failed");
+    LOGE(RILI_LIFT_CTRL_TAG, "get socket failed");
     return -1;
   }
   struct timeval timeout = {3, 0}; //3s
@@ -58,13 +58,13 @@ static int _tcp_send(const char* ip, int port, unsigned char *request, int reque
   server_addr.sin_addr.s_addr = inet_addr(ip);
   if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(struct sockaddr))  == -1)
   {
-    LOGE(RILI_UART_PROT, "connect failed");
+    LOGE(RILI_LIFT_CTRL_TAG, "connect failed");
     return -1;
   }
   send(sockfd, request, request_len, 0);
   if ((*response_len = recv(sockfd, response, *response_len, 0)) == -1)
   {
-    LOGE(RILI_UART_PROT, "recv failed");
+    LOGE(RILI_LIFT_CTRL_TAG, "recv failed");
     return -1;
   }
   close(sockfd);
@@ -98,15 +98,15 @@ int _parse_frame_for_call_lift(void *response, unsigned char frame[RESPONSE_FRAM
   _printf_frame(frame, RESPONSE_FRAME_LEN);
   if (frame[0] != 0x02 ||
       frame[RESPONSE_FRAME_LEN - 1] != 0x03) {
-    LOGE(RILI_UART_PROT, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
     return -1;
   }
   if (frame[1] != (unsigned char)(RILI_EVENT_CALL_LIFT | (request_id << 4))) {
-    LOGE(RILI_UART_PROT, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
     return -1;
   }
   if (frame[RESPONSE_FRAME_LEN - 2] != check_sum) {
-    LOGE(RILI_UART_PROT, "wrong check sum");
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong check sum");
     return -1;
   }
   response_call_lift->ack_code = frame[2];
@@ -142,15 +142,15 @@ int _parse_frame_for_exter_visit(void *response, unsigned char frame[RESPONSE_FR
   _printf_frame(frame, RESPONSE_FRAME_LEN);
   if (frame[0] != 0x02 ||
       frame[RESPONSE_FRAME_LEN - 1] != 0x03) {
-    LOGE(RILI_UART_PROT, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
     return -1;
   }
   if (frame[1] != (unsigned char)(RILI_EVENT_EXTER_VISIT | (request_id << 4))) {
-    LOGE(RILI_UART_PROT, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
     return -1;
   }
   if (frame[RESPONSE_FRAME_LEN - 2] != check_sum) {
-    LOGE(RILI_UART_PROT, "wrong check sum");
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong check sum");
     return -1;
   }
   response_exter_visit->ack_code = frame[2];
@@ -188,15 +188,15 @@ int _parse_frame_for_inter_visit(void *response, unsigned char frame[RESPONSE_FR
   _printf_frame(frame, RESPONSE_FRAME_LEN);
   if (frame[0] != 0x02 ||
       frame[RESPONSE_FRAME_LEN - 1] != 0x03) {
-    LOGE(RILI_UART_PROT, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
     return -1;
   }
   if (frame[1] != (unsigned char)(RILI_EVENT_INTER_VISIT | (request_id << 4))) {
-    LOGE(RILI_UART_PROT, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
     return -1;
   }
   if (frame[RESPONSE_FRAME_LEN - 2] != check_sum) {
-    LOGE(RILI_UART_PROT, "wrong check sum");
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong check sum");
     return -1;
   }
   response_inter_visit->ack_code = frame[2];
@@ -232,15 +232,15 @@ int _parse_frame_for_get_home(void *response, unsigned char frame[RESPONSE_FRAME
   _printf_frame(frame, RESPONSE_FRAME_LEN);
   if (frame[0] != 0x02 ||
       frame[RESPONSE_FRAME_LEN - 1] != 0x03) {
-    LOGE(RILI_UART_PROT, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
     return -1;
   }
   if (frame[1] != (unsigned char)(RILI_EVENT_GET_HOME | (request_id << 4))) {
-    LOGE(RILI_UART_PROT, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
     return -1;
   }
   if (frame[RESPONSE_FRAME_LEN - 2] != check_sum) {
-    LOGE(RILI_UART_PROT, "wrong check sum");
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong check sum");
     return -1;
   }
   response_get_home->ack_code = frame[2];
@@ -271,15 +271,15 @@ int _parse_frame_for_lift_status(void *response, unsigned char frame[RESPONSE_FR
   _printf_frame(frame, RESPONSE_FRAME_LEN);
   if (frame[0] != 0x02 ||
       frame[RESPONSE_FRAME_LEN - 1] != 0x03) {
-    LOGE(RILI_UART_PROT, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong header 0x%x or tail 0x%x", frame[0], frame[RESPONSE_FRAME_LEN - 1]);
     return -1;
   }
   if (frame[1] != (unsigned char)(RILI_EVENT_LIFT_STATUS | (request_id << 4))) {
-    LOGE(RILI_UART_PROT, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong event type or request id, frame %d request id %d", frame[1], request_id);
     return -1;
   }
   if (frame[RESPONSE_FRAME_LEN - 2] != check_sum) {
-    LOGE(RILI_UART_PROT, "wrong check sum");
+    LOGE(RILI_LIFT_CTRL_TAG, "wrong check sum");
     return -1;
   }
   response_lift_status->lift_num = frame[2];
@@ -317,18 +317,18 @@ int rili_protocol_send(const char* ip, int port, int event_type, void *request, 
       response_parse = _parse_frame_for_lift_status;
       break;
     default:
-      LOGE(RILI_UART_PROT, "wrong event type");
+      LOGE(RILI_LIFT_CTRL_TAG, "wrong event type");
       return -1;
   }
   request_id = _get_request_id();
   if (0 != request_assemble(request, request_frame, request_id)) {
-    LOGE(RILI_UART_PROT, "failed at step1: assemble request");
+    LOGE(RILI_LIFT_CTRL_TAG, "failed at step1: assemble request");
     return -1;
   }
   #if 0
   int try_count = WAIT_ACK_TIMEOUT / 50;
   if (0 != serial_send(request_frame, REQUEST_FRAME_LEN)) {
-    LOGE(RILI_UART_PROT, "failed at step2: serial send request");
+    LOGE(RILI_LIFT_CTRL_TAG, "failed at step2: serial send request");
     return -1;
   }
   while (try_count > 0 && 0 != serial_recv(response_frame, &recv_len)) {
@@ -336,17 +336,17 @@ int rili_protocol_send(const char* ip, int port, int event_type, void *request, 
     usleep(50 * 1000);
   }
   if (try_count <= 0) {
-    LOGE(RILI_UART_PROT, "failed at step3: serial recv response");
+    LOGE(RILI_LIFT_CTRL_TAG, "failed at step3: serial recv response");
     return -1;
   }
   #else
   if (0 != _tcp_send(ip, port,  request_frame, REQUEST_FRAME_LEN, response_frame, &recv_len)) {
-    LOGE(RILI_UART_PROT, "failed at step3: tcp send failed");
+    LOGE(RILI_LIFT_CTRL_TAG, "failed at step3: tcp send failed");
     return -1;
   }
   #endif
   if (0 != response_parse(response, response_frame, request_id)) {
-    LOGE(RILI_UART_PROT, "failed at step4: parse response");
+    LOGE(RILI_LIFT_CTRL_TAG, "failed at step4: parse response");
     return -1;
   }
   return 0;

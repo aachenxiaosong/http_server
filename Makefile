@@ -32,6 +32,8 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
+           src/sdk/udp/udp_server \
+           src/sdk/udp/udp_client \
            src/sdk/mqtt/mqtt_client \
            src/sdk/mq
 
@@ -41,6 +43,8 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/tcp/tcp_client \
            src/sdk/tcp/tcp_conn_mgr \
            src/sdk/tcp/tcp_handle \
+           src/sdk/udp/udp_server \
+           src/sdk/udp/udp_client \
            src/sdk/mqtt/mqtt_client \
            src/sdk/mqtt/mqtt_handle \
            src/sdk/message \
