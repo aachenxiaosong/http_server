@@ -9,7 +9,7 @@
                 "${workspaceFolder}/src/app/left/lift_control/message_handlers",
                 "${workspaceFolder}/src/app/left/lift_control/message_handlers/wlong",
                 "${workspaceFolder}/src/app/left/lift_control/message_handlers/rili",
-                "${workspaceFolder}/src/app/left/lift_control/message_handlers/sling",
+                "${workspaceFolder}/src/app/left/lift_control/message_handlers/slingsh",
                 "${workspaceFolder}/src/app/up/sulink/data",
                 "${workspaceFolder}/src/app/up/sulink/mqtt/message_handlers",
                 "${workspaceFolder}/src/sdk/mq",

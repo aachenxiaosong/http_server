@@ -51,7 +51,7 @@ int SulinkLiftInitData :: mLoadFromConfig()
             } else if (mGetBrandCode().compare("2") == 0) {
                 msg.brand(msg.BRAND_RILI);
             } else if (mGetBrandCode().compare("3") == 0) {
-                msg.brand(msg.BRAND_SLING);
+                msg.brand(msg.BRAND_SLINGSH);
             } else {
                 msg.brand(msg.BRAND_INVALID);
             }
@@ -97,7 +97,7 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
     }
     else if (mGetBrandCode().compare("3") == 0)
     {
-        msg.brand(msg.BRAND_SLING);
+        msg.brand(msg.BRAND_SLINGSH);
     }
     else
     {

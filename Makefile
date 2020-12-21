@@ -57,10 +57,10 @@ app_src := src/app \
            src/app/left/lift_control/service/mq/handler \
            src/app/left/lift_control/message_handlers/rili \
            src/app/left/lift_control/message_handlers/wlong \
-           src/app/left/lift_control/message_handlers/sling \
+           src/app/left/lift_control/message_handlers/slingsh \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
-           src/app/right/lift_control/sling \
+           src/app/right/lift_control/slingsh \
            src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \
@@ -84,10 +84,10 @@ app_inc := src/app \
            src/app/left/lift_control/message_handlers \
            src/app/left/lift_control/message_handlers/rili \
            src/app/left/lift_control/message_handlers/wlong \
-           src/app/left/lift_control/message_handlers/sling \
+           src/app/left/lift_control/message_handlers/slingsh \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
-           src/app/right/lift_control/sling \
+           src/app/right/lift_control/slingsh \
            src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \
