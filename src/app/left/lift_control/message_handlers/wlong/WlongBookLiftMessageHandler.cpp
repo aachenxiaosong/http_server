@@ -1,6 +1,7 @@
 #include "WlongBookLiftMessageHandler.hpp"
 #include "SulinkLiftInitData.hpp"
 #include "WlongLiftCtrl.hpp"
+#include "UniConfig.hpp"
 #include "UniLog.hpp"
 
 #define WLONG_BOOK_LIFT_MSG_HANDLER_TAG "wlong_book_lift_msg_handler"
@@ -60,9 +61,12 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     //step3: 根据deviceCode找到出发楼层
     string from_floor;
     if (req.deviceCode().empty()) {
-        from_floor = "1";
+        from_floor = unisound::UniConfig::getString("liftcontrl.groundfloor");
     } else {
         from_floor = SulinkLiftInitData :: getDeviceFloorNo(req.deviceCode());
+    }
+    if (from_floor.empty()) {
+        from_floor = "1";
     }
     //step4: 调用wlong远程呼梯接口
     WlongResponse wl_response;

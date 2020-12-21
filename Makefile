@@ -61,6 +61,7 @@ app_src := src/app \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/right/lift_control/slingsh \
+           src/app/right/lift_control/sling \
            src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \

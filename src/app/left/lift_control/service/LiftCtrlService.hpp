@@ -15,6 +15,8 @@
 #include "RiliTakeLiftMessageHandler.hpp"
 #include "RiliLiftStatusMessageHandler.hpp"
 #include "SlingshBookLiftMessageHandler.hpp"
+#include "SlingshCallLiftMessageHandler.hpp"
+#include "SlingshBookLiftInterMessageHandler.hpp"
 #include "Mq.hpp"
 #include <thread>
 
@@ -40,6 +42,8 @@ private:
     LiftCtrlRequestHandler mRiliHttpHandler;
     //sanling shanghai http message handlers
     SlingshBookLiftMessageHandler mSlingshBookLiftHandler;
+    SlingshCallLiftMessageHandler mSlingshCallLiftHandler;
+    SlingshBookLiftInterMessageHandler mSlingshBookLiftInterHandler;
     LiftCtrlRequestHandler mSlingshHttpHandler;
     //wanglong wechat msg handler
     WlongWechatCtrlMessageHandler mWlongWechatLiftCtrlHandler;

@@ -1,5 +1,11 @@
 
 
+v3.3.2
+1. feature
+  1.1 add some other interfaces for sanling shanghai
+2. bugfix
+  2.1 add default ground floor into config file
+
 v3.3.1
 1. feature
   1.1 rename sanling to "sanling shanghai"

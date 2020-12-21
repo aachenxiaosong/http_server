@@ -1,6 +1,7 @@
 #include "SlingshBookLiftMessageHandler.hpp"
 #include "SulinkLiftInitData.hpp"
 #include "SlingshLiftCtrl.hpp"
+#include "UniConfig.hpp"
 #include "UniLog.hpp"
 
 #define SLINGSH_BOOK_LIFT_MSG_HANDLER_TAG "slingsh_book_lift_msg_handler"
@@ -55,9 +56,12 @@ LiftCtrlMessageRsp* SlingshBookLiftMessageHandler :: handle(const LiftCtrlMessag
     //step2: 根据deviceCode找到出发楼层
     string from_floor;
     if (req.deviceCode().empty()) {
-        from_floor = "1";
+        from_floor = unisound::UniConfig::getString("liftcontrl.groundfloor");
     } else {
         from_floor = SulinkLiftInitData :: getDeviceFloorNo(req.deviceCode());
+    }
+    if (from_floor.empty()) {
+        from_floor = "1";
     }
     //step3: 调用slingsh远程呼梯接口
     SlingshLiftCtrl slingsh_lift_ctrl(cluster_url);
