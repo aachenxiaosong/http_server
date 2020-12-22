@@ -33,21 +33,21 @@ LiftCtrlMessageRsp* SlingshBookLiftMessageHandler :: handle(const LiftCtrlMessag
         not_found_msg = "dest floor not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
         return new LiftCtrlMessageBookLiftRsp(rsp);
     }
     if (req.authorizedHomeIds().empty() != true) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("only sigle floor access supported");
         rsp.ackCode(0);
         rsp.elevatorId(-1);
         return new LiftCtrlMessageBookLiftRsp(rsp);
     }
     if (req.mode().compare(req.MODE_UNLOCK) != 0) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("only unlock mode supported");
         rsp.ackCode(0);
         rsp.elevatorId(-1);
@@ -68,13 +68,13 @@ LiftCtrlMessageRsp* SlingshBookLiftMessageHandler :: handle(const LiftCtrlMessag
     int ret = slingsh_lift_ctrl.bookElevator(from_floor, to_floor); 
     if (ret == 0) {
         LOGT(SLINGSH_BOOK_LIFT_MSG_HANDLER_TAG, "handle request of slingsh book lift OK");
-        rsp.retcode(0);
+        rsp.retcode(RETCODE_OK);
         rsp.msg("OK");
         rsp.ackCode(1);
         rsp.elevatorId(-1);
     } else {
         LOGT(SLINGSH_BOOK_LIFT_MSG_HANDLER_TAG, "handle request of slingsh book lift failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling sanling shanghai interface error");
         rsp.ackCode(0);
         rsp.elevatorId(-1);

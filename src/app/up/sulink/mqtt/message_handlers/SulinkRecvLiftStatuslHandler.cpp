@@ -26,6 +26,8 @@ int SulinkRecvLiftStatusHandler :: handle(const Message &message) {
     }
     const SulinkMessageRecvLiftStatus& msg = dynamic_cast<const SulinkMessageRecvLiftStatus&>(message);
     LiftCtrlMessageWechatStatus req;
+    req.retcode(msg.errCode());
+    req.msg(msg.errMessage());
     req.reqId(msg.reqId());
     req.homeId(msg.homeId());
     req.elevatorId(msg.elevatorId());

@@ -19,7 +19,7 @@ LiftCtrlMessageRsp* RiliTakeLiftMessageHandler :: handle(const LiftCtrlMessageRe
     }
     LiftCtrlMessageTakeLiftRsp rsp;
     LOGT(RILI_TAKE_LIFT_MSG_HANDLER_TAG, "request of Rili interface(take lift) not supported");
-    rsp.retcode(-1);
+    rsp.retcode(RETCODE_ERROR);
     rsp.msg("request of Rili interface(take lift) not supported");
     rsp.ackCode(0);
     return new LiftCtrlMessageTakeLiftRsp(rsp);

@@ -14,14 +14,14 @@ LiftCtrlMessageCallLiftReq* LiftCtrlRequestPacker :: unpackCallLiftReq(const str
     string svalue;
     int ivalue;
     if (true != jrequest.Get("homeId", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param homeId");
         return request;
     }
     request->homeId(svalue);
     if (true == jrequest.Get("upDown", svalue)) {
         if ((svalue.compare("up") != 0 && svalue.compare("down") != 0)) {
-            request->retcode(-1);
+            request->retcode(RETCODE_ERROR);
             request->msg("wrong param upDown");
             return request;
         }
@@ -43,7 +43,7 @@ LiftCtrlMessageBookLiftReq* LiftCtrlRequestPacker :: unpackBookLiftReq(const str
     string svalue;
     int ivalue;
     if (true != jrequest.Get("defaultHomeId", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param defaultHomeId");
         return request;
     }
@@ -53,7 +53,7 @@ LiftCtrlMessageBookLiftReq* LiftCtrlRequestPacker :: unpackBookLiftReq(const str
     {
         if (true != jvalue.IsArray())
         {
-            request->retcode(-1);
+            request->retcode(RETCODE_ERROR);
             request->msg("wrong param authorizedHomeIds");
             return request;
         }
@@ -68,7 +68,7 @@ LiftCtrlMessageBookLiftReq* LiftCtrlRequestPacker :: unpackBookLiftReq(const str
      if (true != jrequest.Get("mode", svalue) ||
          (svalue.compare(request->MODE_OPEN) != 0 && svalue.compare(request->MODE_UNLOCK) != 0 &&
           svalue.compare(request->MODE_ALL) != 0 && svalue.compare(request->MODE_NONE) != 0) ) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param mode");
         return request;
     }
@@ -92,13 +92,13 @@ LiftCtrlMessageBookLiftInterReq* LiftCtrlRequestPacker :: unpackBookLiftInterReq
     string svalue;
     int ivalue;
     if (true != jrequest.Get("sHomeId", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param sHomeId");
         return request;
     }
     request->sHomeId(svalue);
     if (true != jrequest.Get("dHomeId", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param dHomeId");
         return request;
     }
@@ -119,13 +119,13 @@ LiftCtrlMessageTakeLiftReq* LiftCtrlRequestPacker :: unpackTakeLiftReq(const str
     string svalue;
     int ivalue;
     if (true != jrequest.Get("defaultHomeId", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param defaultHomeId");
         return request;
     }
     request->defaultHomeId(svalue);
     if (true != jrequest.Get("deviceCode", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param deviceCode");
         return request;
     }
@@ -133,7 +133,7 @@ LiftCtrlMessageTakeLiftReq* LiftCtrlRequestPacker :: unpackTakeLiftReq(const str
     if (true == jrequest.Get("authorizedHomeIds", jvalue)) {
         if (true != jvalue.IsArray())
         {
-            request->retcode(-1);
+            request->retcode(RETCODE_ERROR);
             request->msg("wrong param authorizedHomeIds");
             return request;
         }
@@ -153,13 +153,13 @@ LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker :: unpackLiftStatusReq(const
     int ivalue;
     string svalue;
     if (true != jrequest.Get("homeId", svalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param homeId");
         return request;
     }
     request->homeId(svalue);
     if (true != jrequest.Get("elevatorId", ivalue)) {
-        request->retcode(-1);
+        request->retcode(RETCODE_ERROR);
         request->msg("wrong param elevatorId");
         return request;
     }

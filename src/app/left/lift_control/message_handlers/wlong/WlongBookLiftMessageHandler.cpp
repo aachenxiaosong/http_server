@@ -51,7 +51,7 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
         not_found_msg = "dest floor not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
@@ -97,7 +97,7 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     }   
     if (ret == 0) {
         LOGT(WLONG_BOOK_LIFT_MSG_HANDLER_TAG, "handle request of wlong book lift OK");
-        rsp.retcode(0);
+        rsp.retcode(RETCODE_OK);
         rsp.msg(wl_response.msg);
         if (wl_response.code == 0) {
             rsp.ackCode(1);
@@ -107,7 +107,7 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
         rsp.elevatorId(-1);
     } else {
         LOGT(WLONG_BOOK_LIFT_MSG_HANDLER_TAG, "handle request of wlong book lift failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling WangLong interface error");
         rsp.ackCode(0);
         rsp.elevatorId(-1);

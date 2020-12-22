@@ -191,6 +191,8 @@ class LiftCtrlMessageWechatCtrl : public LiftCtrlMessageReq
     MEMBER(string, toFloor)
 SERI_BEGIN
     SERI(type)
+    SERI(retcode)
+    SERI(msg)
     SERI(reqId)
     SERI(homeId)
     SERI(fromFloor)
@@ -232,6 +234,8 @@ class LiftCtrlMessageWechatStatus : public LiftCtrlMessageReq
     MEMBER(string, elevatorId)
 SERI_BEGIN
     SERI(type)
+    SERI(retcode)
+    SERI(msg)
     SERI(reqId)
     SERI(homeId)
     SERI(elevatorId)

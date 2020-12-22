@@ -33,7 +33,7 @@ LiftCtrlMessageRsp* SlingshCallLiftMessageHandler :: handle(const LiftCtrlMessag
         not_found_msg = "from floor not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
@@ -49,13 +49,13 @@ LiftCtrlMessageRsp* SlingshCallLiftMessageHandler :: handle(const LiftCtrlMessag
     int ret = slingsh_lift_ctrl.bookElevator(from_floor, to_floor); 
     if (ret == 0) {
         LOGT(SLINGSH_CALL_LIFT_MSG_HANDLER_TAG, "handle request of slingsh call lift OK");
-        rsp.retcode(0);
+        rsp.retcode(RETCODE_OK);
         rsp.msg("OK");
         rsp.ackCode(1);
         rsp.elevatorId(-1);
     } else {
         LOGT(SLINGSH_CALL_LIFT_MSG_HANDLER_TAG, "handle request of slingsh call lift failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling sanling shanghai interface error");
         rsp.ackCode(0);
         rsp.elevatorId(-1);

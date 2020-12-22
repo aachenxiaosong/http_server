@@ -494,7 +494,7 @@ L_ERROR:
         info.errCode(0);
     } else {
         LOGE(SULINK_PACKER_TAG, "%s", err_message.c_str());
-        info.errCode(-1);
+        info.errCode(RETCODE_ERROR);
         info.errMessage(err_message);
     }
     return new SulinkMessageRecvLiftInfo(info);
@@ -553,7 +553,7 @@ L_ERROR:
         req.errCode(0);
     } else {
         LOGE(SULINK_PACKER_TAG, "%s", err_message.c_str());
-        req.errCode(-1);
+        req.errCode(RETCODE_ERROR);
         req.errMessage(err_message);
     }
     return new SulinkMessageRecvLiftCtrl(req);
@@ -596,7 +596,7 @@ L_ERROR:
         req.errCode(0);
     } else {
         LOGE(SULINK_PACKER_TAG, "%s", err_message.c_str());
-        req.errCode(-1);
+        req.errCode(RETCODE_ERROR);
         req.errMessage(err_message);
     }
     return new SulinkMessageRecvLiftStatus(req);

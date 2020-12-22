@@ -50,7 +50,7 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
         not_found_msg = "default floor not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         return new LiftCtrlMessageTakeLiftRsp(rsp);
@@ -72,7 +72,7 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
         }
     } else {
         LOGT(WLONG_TAKE_LIFT_MSG_HANDLER_TAG, "handle request of wlong take lift failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling WangLong interface error");
         rsp.ackCode(0);
     }
