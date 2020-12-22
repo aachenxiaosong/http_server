@@ -18,6 +18,7 @@ int WlongWechatCtrlMessageHandler :: handle(const LiftCtrlMessageReq &request)
     if (request.type() != MSG_LIFT_CTRL_WECHAT_CTRL) {
         return -1;
     }
+    LOGT(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "request is being handled");
     const LiftCtrlMessageWechatCtrl& req = dynamic_cast<const LiftCtrlMessageWechatCtrl&>(request);
     LiftCtrlMessageWechatCtrlAck rsp;
     rsp.reqId(req.reqId());
@@ -42,6 +43,11 @@ int WlongWechatCtrlMessageHandler :: handle(const LiftCtrlMessageReq &request)
     if (!not_found_msg.empty()) {
         rsp.retcode(-1);
         rsp.msg(not_found_msg);
+        LOGE(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "%s", not_found_msg.c_str());
+        //send ack
+        string *content = mPacker.pack(rsp);
+        MqData data(MQ_TOPIC_SULINK_LIFT_CTRL, (void *)content->c_str(), content->length() + 1);
+        mMq.send(data);
         return 0;
     }
     int i_cluster_id = atoi(cluster_id.c_str());
