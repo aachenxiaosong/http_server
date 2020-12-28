@@ -38,7 +38,7 @@ LiftCtrlMessageRsp* RiliCallLiftMessageHandler :: handle(const LiftCtrlMessageRe
         not_found_msg = "home number not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
@@ -54,7 +54,7 @@ LiftCtrlMessageRsp* RiliCallLiftMessageHandler :: handle(const LiftCtrlMessageRe
     ret = rili_protocol_send(uri.getHost().c_str(), uri.getPort(), RILI_EVENT_CALL_LIFT, &(request_call_lift), &(response_call_lift));
     if (ret == 0) {
         LOGT(RILI_CALL_LIFT_MSG_HANDLER_TAG, "handle request of rili call lift OK");
-        rsp.retcode(0);
+        rsp.retcode(RETCODE_OK);
         if (response_call_lift.ack_code == 1) {
             rsp.msg("OK");
         } else {
@@ -64,7 +64,7 @@ LiftCtrlMessageRsp* RiliCallLiftMessageHandler :: handle(const LiftCtrlMessageRe
         rsp.elevatorId(-1);
     } else {
         LOGT(RILI_CALL_LIFT_MSG_HANDLER_TAG, "handle request of rili call lift failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling Rili interface error");
         rsp.ackCode(0);
         rsp.elevatorId(-1);

@@ -214,7 +214,7 @@ public:
     SulinkMessageRecvLiftInfo() : SulinkMessage(MSG_SULINK_RECV_LIFT_INFO) {
         method("device-ubox-lift-info");
         timestamp(0);
-        errCode(0);
+        errCode(RETCODE_OK);
     }
     ~SulinkMessageRecvLiftInfo() {}
 };
@@ -248,7 +248,7 @@ class SulinkMessageRecvLiftCtrl : public SulinkMessage {
 public:
     SulinkMessageRecvLiftCtrl() : SulinkMessage(MSG_SULINK_RECV_LIFT_CTRL) {
         method("device-ubox-lift-book");
-        errCode(0);
+        errCode(RETCODE_OK);
     }
     ~SulinkMessageRecvLiftCtrl() {}
 };
@@ -283,7 +283,7 @@ class SulinkMessageRecvLiftStatus : public SulinkMessage {
 public:
     SulinkMessageRecvLiftStatus() : SulinkMessage(MSG_SULINK_RECV_LIFT_STATUS) {
         method("device-ubox-lift-status");
-        errCode(0);
+        errCode(RETCODE_OK);
     }
     ~SulinkMessageRecvLiftStatus() {}
 };

@@ -30,7 +30,7 @@ LiftCtrlMessageRsp* WlongLiftStatusMessageHandler :: handle(const LiftCtrlMessag
         not_found_msg = "cluster url not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         return new LiftCtrlMessageLiftStatusRsp(rsp);
     }
@@ -70,7 +70,7 @@ LiftCtrlMessageRsp* WlongLiftStatusMessageHandler :: handle(const LiftCtrlMessag
         }
     } else {
         LOGT(WLONG_LIFT_STATUS_MSG_HANDLER_TAG, "handle request of wlong lift status failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling WangLong interface error");
     }
     return new LiftCtrlMessageLiftStatusRsp(rsp);

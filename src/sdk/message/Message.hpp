@@ -7,6 +7,10 @@
 
 using namespace boost;
 
+enum RetCode{
+    RETCODE_OK = 0,
+    RETCODE_ERROR = 1
+};
 //for set/get
 #define MEMBER(type, name) \
 protected: type m_##name; \

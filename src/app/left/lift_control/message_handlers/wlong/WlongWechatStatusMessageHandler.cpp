@@ -22,6 +22,15 @@ int WlongWechatStatusMessageHandler :: handle(const LiftCtrlMessageReq &request)
     const LiftCtrlMessageWechatStatus& req = dynamic_cast<const LiftCtrlMessageWechatStatus&>(request);
     LiftCtrlMessageWechatStatusAck rsp;
     rsp.reqId(req.reqId());
+    if (req.retcode() != 0) {
+        rsp.retcode(req.retcode());
+        rsp.msg(req.msg());
+        //send ack
+        string *content = mPacker.pack(rsp);
+        MqData data(MQ_TOPIC_SULINK_LIFT_CTRL, (void *)content->c_str(), content->length() + 1);
+        mMq.send(data);
+        return 0;
+    }
     //step1: 获取基本参数:appId,appSecret,license
     string app_id = SulinkLiftInitData :: getAppId();
     string app_secret = SulinkLiftInitData :: getAppSecret();
@@ -35,7 +44,7 @@ int WlongWechatStatusMessageHandler :: handle(const LiftCtrlMessageReq &request)
         not_found_msg = "cluster url not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         LOGE(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "%s", not_found_msg.c_str());
         //send ack

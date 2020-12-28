@@ -44,7 +44,7 @@ LiftCtrlMessageRsp* WlongBookLiftInterMessageHandler :: handle(const LiftCtrlMes
         not_found_msg = "from floor not found for home id " + req.sHomeId();
     }
     if (!not_found_msg.empty()) {
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
@@ -61,7 +61,7 @@ LiftCtrlMessageRsp* WlongBookLiftInterMessageHandler :: handle(const LiftCtrlMes
     int ret = wlong_lift_ctrl.bookElevator(i_cluster_id, from_floor, up_down, to_floor, req.unlockTime(), wl_response);
     if (ret == 0) {
         LOGT(WLONG_BOOK_LIFT_INTER_MSG_HANDLER_TAG, "handle request of wlong book lift internal OK");
-        rsp.retcode(0);
+        rsp.retcode(RETCODE_OK);
         rsp.msg(wl_response.msg);
         if (wl_response.code == 0) {
             rsp.ackCode(1);
@@ -71,7 +71,7 @@ LiftCtrlMessageRsp* WlongBookLiftInterMessageHandler :: handle(const LiftCtrlMes
         rsp.elevatorId(-1);
     } else {
         LOGT(WLONG_BOOK_LIFT_INTER_MSG_HANDLER_TAG, "handle request of wlong book lift internal failed");
-        rsp.retcode(-1);
+        rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling WangLong interface error");
         rsp.ackCode(0);
         rsp.elevatorId(-1);

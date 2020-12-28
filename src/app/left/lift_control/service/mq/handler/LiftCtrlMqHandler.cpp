@@ -33,7 +33,8 @@ int LiftCtrlMqHandler :: handle(MqTopicType topic, const string& request) {
     LOGT(LIFT_CTRL_MQ_HANDLER_TAG, "Mq request of topic %d is received", topic);
     //step 2: unpack
     LiftCtrlMessageReq *m_req = mPacker.unpack(topic, request);
-    if (m_req == NULL || m_req->retcode() != 0) {
+    //if (m_req == NULL || m_req->retcode() != 0) {
+    if (m_req == NULL) {
         LOGE(LIFT_CTRL_MQ_HANDLER_TAG, "Mq request of topic %d is parsed failed, msg=%s", topic, m_req->msg().c_str());
         return 0;
     }

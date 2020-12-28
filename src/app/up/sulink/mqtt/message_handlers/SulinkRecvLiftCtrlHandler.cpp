@@ -26,6 +26,8 @@ int SulinkRecvLiftCtrlHandler :: handle(const Message &message) {
     }
     const SulinkMessageRecvLiftCtrl& msg = dynamic_cast<const SulinkMessageRecvLiftCtrl&>(message);
     LiftCtrlMessageWechatCtrl req;
+    req.retcode(msg.errCode());
+    req.msg(msg.errMessage());
     req.reqId(msg.reqId());
     req.homeId(msg.homeId());
     req.fromFloor(msg.fromFloor());
