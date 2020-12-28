@@ -26,6 +26,7 @@ struct SlingFloor {
     }
 };
 struct SlingRequestAttribute {
+    int seqNum;
     int clusterId;
     //刷卡位置
     enum {
@@ -33,19 +34,19 @@ struct SlingRequestAttribute {
         ENTRANCE = 2, //玄关
         ROOM = 3,     //卧室
         GATE = 4      //闸机
-    } position;
+    } verificationLocation;
     //刷卡类别
     enum {
         OUTOF_CAR = 1,
         IN_CAR = 2
-    } type;
+    } verificationType;
     
     enum {
         NORMAL = 0,
         HANDICAPPED = 1,
         VIP = 2,
         MGMT = 3
-    } attribute;
+    } callAttribute;
     enum {
         AUTO_HALL = 0,
         UNLOCK_HALL_UNLOCK_CAR = 1,
@@ -61,6 +62,7 @@ struct SlingRequestAttribute {
 };
 
 struct SlingResponseAttribute {
+    int seqNum;
     enum {
         REGISTED,
         UNLOCKED,
