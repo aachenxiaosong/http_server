@@ -2,6 +2,7 @@
 #include "UniLog.hpp"
 #include "Poco/Net/DatagramSocket.h"
 #include "Poco/Net/SocketAddress.h"
+#include "Poco/Net/NetException.h"
 
 #define UDP_SERVER_TAG mName.c_str()
 
@@ -41,21 +42,40 @@ int UdpServer:: start()
 void UdpServer:: recvTask(void *arg)
 {
     UdpServer *me = (UdpServer*)arg;
-    Poco::Net::SocketAddress sa(me->mPort);
-    Poco::Net::DatagramSocket dgs(sa);
-    char recv_buf[1500];
-    int recv_len;
-    while (1) {
-        Poco::Net::SocketAddress sender;
-        recv_len = dgs.receiveFrom(recv_buf, sizeof(recv_buf), sender);
-        me->mHandlerLock.readLock();
-        for (auto handler : me->mHandlers) {
-            if (0 == handler->handle((const char*)recv_buf, recv_len)) {
-                LOGT(UDP_SERVER_TAG1, "udp data is handled by %s", handler->getName().c_str());
-                break;
+    try
+    {
+        Poco::Net::SocketAddress sa(me->mPort);
+        Poco::Net::DatagramSocket dgs;
+        dgs.bind(sa, true, true);
+        char recv_buf[1500];
+        int recv_len;
+        while (1)
+        {
+            Poco::Net::SocketAddress sender;
+            recv_len = dgs.receiveFrom(recv_buf, sizeof(recv_buf), sender);
+            //LOGT(UDP_SERVER_TAG1, "udp data recved, size=%d", recv_len);
+            me->mHandlerLock.readLock();
+            for (auto handler : me->mHandlers)
+            {
+                if (0 == handler->handle((const char *)recv_buf, recv_len))
+                {
+                    LOGT(UDP_SERVER_TAG1, "udp data is handled by %s", handler->getName().c_str());
+                    break;
+                }
             }
+            me->mHandlerLock.readUnlock();
         }
-        me->mHandlerLock.readUnlock();
+        dgs.close();
     }
-    dgs.close();
+    catch (Poco::Net::HostNotFoundException e)
+    {
+        LOGE(UDP_SERVER_TAG1, "udp server recv failed for %s", e.what());
+    }
+    catch (Poco::Net::NetException e)
+    {
+        LOGE(UDP_SERVER_TAG1, "udp server recv failed for %s", e.what());
+    } catch (...)
+    {
+        LOGE(UDP_SERVER_TAG1, "udp server recv failed for unknown exception");
+    }
 }

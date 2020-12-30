@@ -193,6 +193,8 @@ void AppTest() {
     SlingLiftCtrl lift_ctrl("tcp://192.168.4.222:52000");
     SlingFloor from_floor(1);
     SlingFloor to_floor(6);
+    vector<SlingFloor> to_floors;
+    to_floors.push_back(to_floor);
     SlingRequestAttribute req_attr;
     req_attr.seqNum = 1;
     req_attr.clusterId = 1;
@@ -200,8 +202,10 @@ void AppTest() {
     req_attr.verificationType = req_attr.OUTOF_CAR;
     req_attr.callAttribute = req_attr.NORMAL;
     req_attr.hallCallMode = req_attr.REGISTER_HALL;
-    SlingResponseAttribute rsp_attr;
+    SlingResponse rsp_attr;
     lift_ctrl.bookElevator(from_floor, to_floor, req_attr, rsp_attr);
+    sleep(5);
+    lift_ctrl.bookElevator(from_floor, to_floors, req_attr, rsp_attr);
     
 #endif
 }

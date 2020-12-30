@@ -61,7 +61,7 @@ struct SlingRequestAttribute {
     } carCallMode;
 };
 
-struct SlingResponseAttribute {
+struct SlingResponse {
     int seqNum;
     enum {
         REGISTED,
@@ -71,15 +71,41 @@ struct SlingResponseAttribute {
     int elevatorNum;
 };
 
+struct SlingHb {
+    int seqNum;
+    bool having_data;
+    uint8_t data1;
+    uint8_t data2;
+};
+
 class SlingLiftCtrl : public IUdpDataHandler {
 private:
     string mElsgwIp;
     int mElsgwPort;
     static UdpServer mUdpServer;
+    static UdpClient mUdpClient;
+private:
+    //for recved data
+    struct {
+        enum {
+            IDLE,
+            EMPTY,
+            FULL
+        } status;
+        SlingResponse rsp;
+    } mWaitRsp;
+    struct {
+        enum {
+            IDLE,
+            EMPTY,
+            FULL
+        } status;
+        SlingHb hb;
+    } mWaitHb;
 public:
     SlingLiftCtrl(const string& url);
     ~SlingLiftCtrl();
-    int bookElevator(const SlingFloor& from_floor, const SlingFloor& to_floor, const SlingRequestAttribute& request, SlingResponseAttribute& response);
-    int bookElevator(const SlingFloor& from_floor, const vector<SlingFloor>& to_floors, const SlingRequestAttribute& request, SlingResponseAttribute& response);
+    int bookElevator(const SlingFloor& from_floor, const SlingFloor& to_floor, const SlingRequestAttribute& request, SlingResponse& response);
+    int bookElevator(const SlingFloor& from_floor, const vector<SlingFloor>& to_floors, const SlingRequestAttribute& request, SlingResponse& response);
     int handle(const char*data, int data_len);
 };

@@ -4,17 +4,10 @@
 class UdpClient {
 private:
     std::string mName;
-    std::string mServerIp;
-    int mServerPort;
     int mClientPort;
+    void *mDgs;
 public:
-    UdpClient(const char* name, const char* server_ip, int server_port, int client_port = -1)
-    {
-        mName = name;
-        mServerIp = server_ip;
-        mServerPort = server_port;
-        mClientPort = client_port;
-    }
-    ~UdpClient() = default;
-    int send(const char* data, int data_len);
+    UdpClient(const char* name, int client_port = -1);
+    ~UdpClient();
+    int send(const std::string& server_ip, int server_port, const char* data, int data_len);
 };
