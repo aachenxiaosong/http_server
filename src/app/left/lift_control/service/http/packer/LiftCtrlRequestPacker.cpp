@@ -7,48 +7,57 @@
 
 using namespace neb;
 
-LiftCtrlMessageCallLiftReq* LiftCtrlRequestPacker :: unpackCallLiftReq(const string& raw_data)
+LiftCtrlMessageCallLiftReq *LiftCtrlRequestPacker ::unpackCallLiftReq(const string &raw_data)
 {
-    LiftCtrlMessageCallLiftReq* request = new LiftCtrlMessageCallLiftReq();
+    LiftCtrlMessageCallLiftReq *request = new LiftCtrlMessageCallLiftReq();
     CJsonObject jrequest(raw_data);
     string svalue;
     int ivalue;
-    if (true != jrequest.Get("homeId", svalue)) {
+    if (true != jrequest.Get("homeId", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param homeId");
         return request;
     }
     request->homeId(svalue);
-    if (true == jrequest.Get("upDown", svalue)) {
-        if ((svalue.compare("up") != 0 && svalue.compare("down") != 0)) {
+    if (true == jrequest.Get("upDown", svalue))
+    {
+        if ((svalue.compare("up") != 0 && svalue.compare("down") != 0))
+        {
             request->retcode(RETCODE_ERROR);
             request->msg("wrong param upDown");
             return request;
         }
         request->upDown(svalue);
     }
-    if (true == jrequest.Get("unlockTime", ivalue)) {
+    if (true == jrequest.Get("unlockTime", ivalue))
+    {
         request->unlockTime(ivalue);
-    } else {
+    }
+    else
+    {
         request->unlockTime(SulinkLiftInitData::getUnlockTime());
     }
     return request;
 }
 
-LiftCtrlMessageBookLiftReq* LiftCtrlRequestPacker :: unpackBookLiftReq(const string& raw_data)
+LiftCtrlMessageBookLiftReq *LiftCtrlRequestPacker ::unpackBookLiftReq(const string &raw_data)
 {
-    LiftCtrlMessageBookLiftReq* request = new LiftCtrlMessageBookLiftReq();
+    LiftCtrlMessageBookLiftReq *request = new LiftCtrlMessageBookLiftReq();
     CJsonObject jrequest(raw_data);
     CJsonObject jvalue;
     string svalue;
     int ivalue;
-    if (true != jrequest.Get("defaultHomeId", svalue)) {
+    /* if (true != jrequest.Get("defaultHomeId", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param defaultHomeId");
         return request;
     }
-    request->defaultHomeId(svalue);
-
+    request->defaultHomeId(svalue); */
+    if (true == jrequest.Get("defaultHomeId", svalue)) {
+        request->defaultHomeId(svalue);
+    }
     if (true == jrequest.Get("authorizedHomeIds", jvalue))
     {
         if (true != jvalue.IsArray())
@@ -65,100 +74,120 @@ LiftCtrlMessageBookLiftReq* LiftCtrlRequestPacker :: unpackBookLiftReq(const str
         }
     }
 
-     if (true != jrequest.Get("mode", svalue) ||
-         (svalue.compare(request->MODE_OPEN) != 0 && svalue.compare(request->MODE_UNLOCK) != 0 &&
-          svalue.compare(request->MODE_ALL) != 0 && svalue.compare(request->MODE_NONE) != 0) ) {
+    if (true != jrequest.Get("mode", svalue) ||
+        (svalue.compare(request->MODE_OPEN) != 0 && svalue.compare(request->MODE_UNLOCK) != 0 &&
+         svalue.compare(request->MODE_ALL) != 0 && svalue.compare(request->MODE_NONE) != 0))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param mode");
         return request;
     }
     request->mode(svalue);
-    
-    if (true == jrequest.Get("deviceCode", svalue)) {
+
+    if (true == jrequest.Get("deviceCode", svalue))
+    {
         request->deviceCode(svalue);
     }
-    if (true == jrequest.Get("unlockTime", ivalue)) {
+    if (true == jrequest.Get("unlockTime", ivalue))
+    {
         request->unlockTime(ivalue);
-    } else {
+    }
+    else
+    {
         request->unlockTime(SulinkLiftInitData::getUnlockTime());
     }
     return request;
 }
 
-LiftCtrlMessageBookLiftInterReq* LiftCtrlRequestPacker :: unpackBookLiftInterReq(const string& raw_data)
+LiftCtrlMessageBookLiftInterReq *LiftCtrlRequestPacker ::unpackBookLiftInterReq(const string &raw_data)
 {
-    LiftCtrlMessageBookLiftInterReq* request = new LiftCtrlMessageBookLiftInterReq();
+    LiftCtrlMessageBookLiftInterReq *request = new LiftCtrlMessageBookLiftInterReq();
     CJsonObject jrequest(raw_data);
     string svalue;
     int ivalue;
-    if (true != jrequest.Get("sHomeId", svalue)) {
+    if (true != jrequest.Get("sHomeId", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param sHomeId");
         return request;
     }
     request->sHomeId(svalue);
-    if (true != jrequest.Get("dHomeId", svalue)) {
+    if (true != jrequest.Get("dHomeId", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param dHomeId");
         return request;
     }
     request->dHomeId(svalue);
-    if (true == jrequest.Get("unlockTime", ivalue)) {
+    if (true == jrequest.Get("unlockTime", ivalue))
+    {
         request->unlockTime(ivalue);
-    } else {
+    }
+    else
+    {
         request->unlockTime(SulinkLiftInitData::getUnlockTime());
     }
     return request;
 }
 
-LiftCtrlMessageTakeLiftReq* LiftCtrlRequestPacker :: unpackTakeLiftReq(const string& raw_data)
+LiftCtrlMessageTakeLiftReq *LiftCtrlRequestPacker ::unpackTakeLiftReq(const string &raw_data)
 {
-    LiftCtrlMessageTakeLiftReq* request = new LiftCtrlMessageTakeLiftReq();
+    LiftCtrlMessageTakeLiftReq *request = new LiftCtrlMessageTakeLiftReq();
     CJsonObject jrequest(raw_data);
     CJsonObject jvalue;
     string svalue;
     int ivalue;
-    if (true != jrequest.Get("defaultHomeId", svalue)) {
+   /*  if (true != jrequest.Get("defaultHomeId", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param defaultHomeId");
         return request;
     }
-    request->defaultHomeId(svalue);
-    if (true != jrequest.Get("deviceCode", svalue)) {
+    request->defaultHomeId(svalue); */
+    if (true == jrequest.Get("defaultHomeId", svalue))
+    {
+        request->defaultHomeId(svalue); 
+    }
+    if (true != jrequest.Get("deviceCode", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param deviceCode");
         return request;
     }
     request->deviceCode(svalue);
-    if (true == jrequest.Get("authorizedHomeIds", jvalue)) {
+    if (true == jrequest.Get("authorizedHomeIds", jvalue))
+    {
         if (true != jvalue.IsArray())
         {
             request->retcode(RETCODE_ERROR);
             request->msg("wrong param authorizedHomeIds");
             return request;
         }
-        for (int i = 0; i < jvalue.GetArraySize(); i++) {
+        for (int i = 0; i < jvalue.GetArraySize(); i++)
+        {
             string home_id;
             jvalue.Get(i, home_id);
             request->authorizedHomeIds().push_back(home_id);
         }
-    } 
+    }
     return request;
 }
 
-LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker :: unpackLiftStatusReq(const string& raw_data)
+LiftCtrlMessageLiftStatusReq *LiftCtrlRequestPacker ::unpackLiftStatusReq(const string &raw_data)
 {
-    LiftCtrlMessageLiftStatusReq* request = new LiftCtrlMessageLiftStatusReq();
+    LiftCtrlMessageLiftStatusReq *request = new LiftCtrlMessageLiftStatusReq();
     CJsonObject jrequest(raw_data);
     int ivalue;
     string svalue;
-    if (true != jrequest.Get("homeId", svalue)) {
+    if (true != jrequest.Get("homeId", svalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param homeId");
         return request;
     }
     request->homeId(svalue);
-    if (true != jrequest.Get("elevatorId", ivalue)) {
+    if (true != jrequest.Get("elevatorId", ivalue))
+    {
         request->retcode(RETCODE_ERROR);
         request->msg("wrong param elevatorId");
         return request;
@@ -167,7 +196,7 @@ LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker :: unpackLiftStatusReq(const
     return request;
 }
 
-string* LiftCtrlRequestPacker :: packRsp(const LiftCtrlMessageRsp &message)
+string *LiftCtrlRequestPacker ::packRsp(const LiftCtrlMessageRsp &message)
 {
     CJsonObject jresponse;
     jresponse.Add("retcode", message.retcode());
@@ -175,19 +204,7 @@ string* LiftCtrlRequestPacker :: packRsp(const LiftCtrlMessageRsp &message)
     return new string(jresponse.ToString());
 }
 
-string* LiftCtrlRequestPacker :: packCallLiftRsp(const LiftCtrlMessageCallLiftRsp &message)
-{
-    CJsonObject jresponse;
-    jresponse.Add("retcode", message.retcode());
-    jresponse.Add("msg", message.msg());
-    CJsonObject jdata;
-    jdata.Add("ackCode", message.ackCode());
-    jdata.Add("elevatorId", message.elevatorId());
-    jresponse.Add("data", jdata);
-    return new string(jresponse.ToString());
-}
-
-string* LiftCtrlRequestPacker :: packBookLiftRsp(const LiftCtrlMessageBookLiftRsp &message)
+string *LiftCtrlRequestPacker ::packCallLiftRsp(const LiftCtrlMessageCallLiftRsp &message)
 {
     CJsonObject jresponse;
     jresponse.Add("retcode", message.retcode());
@@ -199,7 +216,7 @@ string* LiftCtrlRequestPacker :: packBookLiftRsp(const LiftCtrlMessageBookLiftRs
     return new string(jresponse.ToString());
 }
 
-string* LiftCtrlRequestPacker :: packBookLiftInterRsp(const LiftCtrlMessageBookLiftInterRsp &message)
+string *LiftCtrlRequestPacker ::packBookLiftRsp(const LiftCtrlMessageBookLiftRsp &message)
 {
     CJsonObject jresponse;
     jresponse.Add("retcode", message.retcode());
@@ -211,7 +228,19 @@ string* LiftCtrlRequestPacker :: packBookLiftInterRsp(const LiftCtrlMessageBookL
     return new string(jresponse.ToString());
 }
 
-string* LiftCtrlRequestPacker :: packTakeLiftRsp(const LiftCtrlMessageTakeLiftRsp &message)
+string *LiftCtrlRequestPacker ::packBookLiftInterRsp(const LiftCtrlMessageBookLiftInterRsp &message)
+{
+    CJsonObject jresponse;
+    jresponse.Add("retcode", message.retcode());
+    jresponse.Add("msg", message.msg());
+    CJsonObject jdata;
+    jdata.Add("ackCode", message.ackCode());
+    jdata.Add("elevatorId", message.elevatorId());
+    jresponse.Add("data", jdata);
+    return new string(jresponse.ToString());
+}
+
+string *LiftCtrlRequestPacker ::packTakeLiftRsp(const LiftCtrlMessageTakeLiftRsp &message)
 {
     CJsonObject jresponse;
     jresponse.Add("retcode", message.retcode());
@@ -222,7 +251,7 @@ string* LiftCtrlRequestPacker :: packTakeLiftRsp(const LiftCtrlMessageTakeLiftRs
     return new string(jresponse.ToString());
 }
 
-string* LiftCtrlRequestPacker :: packLiftStatusRsp(const LiftCtrlMessageLiftStatusRsp &message)
+string *LiftCtrlRequestPacker ::packLiftStatusRsp(const LiftCtrlMessageLiftStatusRsp &message)
 {
     CJsonObject jresponse;
     jresponse.Add("retcode", message.retcode());
@@ -236,7 +265,7 @@ string* LiftCtrlRequestPacker :: packLiftStatusRsp(const LiftCtrlMessageLiftStat
     return new string(jresponse.ToString());
 }
 
-LiftCtrlMessageReq* LiftCtrlRequestPacker :: unpack(const string& path, const string& raw_data)
+LiftCtrlMessageReq *LiftCtrlRequestPacker ::unpack(const string &path, const string &raw_data)
 {
     if (path.compare("/liftCtrl/v3/callLift") == 0)
     {
@@ -262,27 +291,34 @@ LiftCtrlMessageReq* LiftCtrlRequestPacker :: unpack(const string& path, const st
     return NULL;
 }
 
-string* LiftCtrlRequestPacker :: pack(const LiftCtrlMessageRsp &message)
+string *LiftCtrlRequestPacker ::pack(const LiftCtrlMessageRsp &message)
 {
-    switch (message.type()) {
-        case MSG_LIFT_CTRL_RSP: {
-            return packRsp(dynamic_cast<const LiftCtrlMessageRsp&>(message));
-        }
-        case MSG_LIFT_CTRL_CALL_LIFT_RSP: {
-            return packCallLiftRsp(dynamic_cast<const LiftCtrlMessageCallLiftRsp&>(message));
-        }
-        case MSG_LIFT_CTRL_BOOK_LIFT_RSP: {
-            return packBookLiftRsp(dynamic_cast<const LiftCtrlMessageBookLiftRsp&>(message));
-        }
-        case MSG_LIFT_CTRL_BOOK_LIFT_INTER_RSP: {
-            return packBookLiftInterRsp(dynamic_cast<const LiftCtrlMessageBookLiftInterRsp&>(message));
-        }
-        case MSG_LIFT_CTRL_TAKE_LIFT_RSP: {
-            return packTakeLiftRsp(dynamic_cast<const LiftCtrlMessageTakeLiftRsp&>(message));
-        }
-        case MSG_LIFT_CTRL_LIFT_STATUS_RSP: {
-            return packLiftStatusRsp(dynamic_cast<const LiftCtrlMessageLiftStatusRsp&>(message));
-        }
+    switch (message.type())
+    {
+    case MSG_LIFT_CTRL_RSP:
+    {
+        return packRsp(dynamic_cast<const LiftCtrlMessageRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_CALL_LIFT_RSP:
+    {
+        return packCallLiftRsp(dynamic_cast<const LiftCtrlMessageCallLiftRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_BOOK_LIFT_RSP:
+    {
+        return packBookLiftRsp(dynamic_cast<const LiftCtrlMessageBookLiftRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_BOOK_LIFT_INTER_RSP:
+    {
+        return packBookLiftInterRsp(dynamic_cast<const LiftCtrlMessageBookLiftInterRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_TAKE_LIFT_RSP:
+    {
+        return packTakeLiftRsp(dynamic_cast<const LiftCtrlMessageTakeLiftRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_LIFT_STATUS_RSP:
+    {
+        return packLiftStatusRsp(dynamic_cast<const LiftCtrlMessageLiftStatusRsp &>(message));
+    }
     }
     LOGT(LIFT_CTRL_PACKER_TAG, "unsupport response type %d", message.type());
     return NULL;

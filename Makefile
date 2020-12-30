@@ -62,6 +62,7 @@ app_src := src/app \
            src/app/left/lift_control/message_handlers/rili \
            src/app/left/lift_control/message_handlers/wlong \
            src/app/left/lift_control/message_handlers/slingsh \
+           src/app/left/lift_control/message_handlers/sling \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/right/lift_control/slingsh \
@@ -90,6 +91,7 @@ app_inc := src/app \
            src/app/left/lift_control/message_handlers/rili \
            src/app/left/lift_control/message_handlers/wlong \
            src/app/left/lift_control/message_handlers/slingsh \
+           src/app/left/lift_control/message_handlers/sling \
            src/app/right/lift_control/rili \
            src/app/right/lift_control/wlong \
            src/app/right/lift_control/slingsh \

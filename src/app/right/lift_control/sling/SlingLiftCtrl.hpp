@@ -14,7 +14,7 @@ struct SlingFloor {
     int floor;
     SlingFloor() {
         openDoor = FRONT;
-        this->floor = 0;
+        this->floor = -1;
     }
     SlingFloor(int floor) {
         openDoor = FRONT;
@@ -26,8 +26,8 @@ struct SlingFloor {
     }
 };
 struct SlingRequestAttribute {
-    int seqNum;
-    int clusterId;
+    uint8_t seqNum;
+    uint8_t clusterId;
     //刷卡位置
     enum {
         LOBBY = 1,    //层站

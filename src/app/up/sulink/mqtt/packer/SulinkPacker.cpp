@@ -109,6 +109,7 @@ string* SulinkPacker :: packRecvLiftInfo(const SulinkMessageRecvLiftInfo& messag
     for (int i = 0; i < msg.accessDevices().size(); i++) {
         CJsonObject jdevice;
         jdevice.Add("deviceCode", msg.accessDevices()[i].deviceCode());
+        jdevice.Add("deviceSpaceId", msg.accessDevices()[i].spaceId());
         jdevice.Add("workMode", msg.accessDevices()[i].workMode());
         jdevice.Add("floorMap", msg.accessDevices()[i].floorMap());
         jdevice.Add("publicFloor", msg.accessDevices()[i].publicFloor());
@@ -434,6 +435,10 @@ SulinkMessageRecvLiftInfo* SulinkPacker :: unpackRecvLiftInfo(const string& raw_
             //LOGE(SULINK_PACKER_TAG, "parse device deviceCode failed");
             //return NULL;
             err_message = "parse childDevices.deviceCode failed, i:" + to_string(i);
+            goto L_ERROR;
+        }
+        if (jdevice.Get("deviceSpaceId", svalue) != true) {
+            err_message = "parse childDevices.deviceSpaceId failed, i:" + to_string(i);
             goto L_ERROR;
         }
         device.deviceCode(svalue);

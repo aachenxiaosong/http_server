@@ -38,6 +38,7 @@ private:
     int mGetDeviceWorkMode(const string& device_code);
     string mGetDevicePubFloors(const string& device_code);
     string mGetDeviceLiftId(const string& device_code);
+    string mGetDeviceSpaceId(const string& device_code);
     const string mToString();
 public:
     //不直接定义mInfo成静态成员的原因是,读文件的部分需要静态初始化,所以要借助静态的mData成员
@@ -60,6 +61,7 @@ public:
     static int getDeviceWorkMode(const string& device_code);
     static string getDevicePubFloors(const string& device_code);
     static string getDeviceLiftId(const string& device_code);
+    static string getDeviceSpaceId(const string& device_code);
     static const string toString();
 };
 

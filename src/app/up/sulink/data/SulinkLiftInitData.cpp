@@ -319,6 +319,22 @@ string SulinkLiftInitData :: mGetDeviceLiftId(const string& device_code)
     return lift_id;
 }
 
+string SulinkLiftInitData :: mGetDeviceSpaceId(const string& device_code)
+{
+    if (mInfo == NULL) {
+        LOGE(SULINK_LIFT_INFO_DATA_TAG, "get device lift id failed for lift not inited");
+        return "";
+    }
+    string space_id = "";
+    for (int i = 0; i < mInfo->accessDevices().size(); i++) {
+        if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
+            space_id = mInfo->accessDevices()[i].spaceId();
+            break;
+        }
+    }
+    return space_id;
+}
+
 const string SulinkLiftInitData :: mToString()
 {
     SulinkPacker packer;
@@ -426,6 +442,11 @@ string SulinkLiftInitData :: getDevicePubFloors(const string& device_code)
 string SulinkLiftInitData :: getDeviceLiftId(const string& device_code)
 {
     return mData.mGetDeviceLiftId(device_code);
+}
+
+string SulinkLiftInitData :: getDeviceSpaceId(const string& device_code)
+{
+    return mData.mGetDeviceSpaceId(device_code);
 }
 
 const string SulinkLiftInitData :: toString()

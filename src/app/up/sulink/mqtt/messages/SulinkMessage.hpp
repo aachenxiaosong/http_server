@@ -158,6 +158,7 @@ class LiftInfoBrand {
 };
 class LiftInfoAccessDevice {
     MEMBER(string, deviceCode)
+    MEMBER(string, spaceId)
     //工作模式(1.世茂梯控板(轿厢外),2.工控机模式(轿厢内),3.工控机模式(轿厢外))
     MEMBER(int, workMode)
     //楼层信息(以，号分割)
@@ -172,6 +173,7 @@ class LiftInfoAccessDevice {
     MEMBER(long, timestamp)
     SERI_BEGIN
     SERI(deviceCode)
+    SERI(spaceId)
     SERI(workMode)
     SERI(floorMap)
     SERI(publicFloor)
