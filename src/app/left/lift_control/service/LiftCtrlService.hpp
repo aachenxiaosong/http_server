@@ -20,6 +20,7 @@
 #include "SlingBookLiftMessageHandler.hpp"
 #include "SlingCallLiftMessageHandler.hpp"
 #include "SlingBookLiftInterMessageHandler.hpp"
+#include "SlingTakeLiftMessageHandler.hpp"
 #include "Mq.hpp"
 #include <thread>
 
@@ -52,6 +53,7 @@ private:
     SlingBookLiftMessageHandler mSlingBookLiftHandler;
     SlingCallLiftMessageHandler mSlingCallLiftHandler;
     SlingBookLiftInterMessageHandler mSlingBookLiftInterHandler;
+    SlingTakeLiftMessageHandler mSlingTakeLiftHandler;
     LiftCtrlRequestHandler mSlingHttpHandler;
     //wanglong wechat msg handler
     WlongWechatCtrlMessageHandler mWlongWechatLiftCtrlHandler;

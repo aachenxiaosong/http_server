@@ -31,6 +31,7 @@ LiftCtrlService :: LiftCtrlService() :
     mSlingHttpHandler.addMessageHandler(&mSlingBookLiftHandler);
     mSlingHttpHandler.addMessageHandler(&mSlingCallLiftHandler);
     mSlingHttpHandler.addMessageHandler(&mSlingBookLiftInterHandler);
+    mSlingHttpHandler.addMessageHandler(&mSlingTakeLiftHandler);
 
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftCtrlHandler);
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftStatusHandler);

@@ -171,11 +171,18 @@ int SlingLiftCtrl :: bookElevator(const SlingFloor& from_floor, const SlingFloor
     req.body.data_length = 18;
     req.body.device_number = htons(0);
     req.body.verification_type = request.verificationType;
-    req.body.verification_location = request.verificationLocation;
-    req.body.button_attribute = 16; // auto
-    req.body.boarding_floor = htons(from_floor.floor);
+    if (request.verificationType == request.OUTOF_CAR) {
+        req.body.verification_location = request.verificationLocation;
+        req.body.button_attribute = 16; // auto
+        req.body.boarding_floor = htons(from_floor.floor);
+        req.body.boarding_front_rear = from_floor.openDoor;
+    } else {
+        req.body.verification_location = request.elevatorId;
+        req.body.button_attribute = 1; // normal passenger front door
+        req.body.boarding_floor = 0;
+        req.body.boarding_front_rear = 0;
+    }
     req.body.destination_floor = htons(to_floor.floor);
-    req.body.boarding_front_rear = from_floor.openDoor;
     req.body.destination_front_rear = to_floor.openDoor;
     req.body.call_attribute = request.callAttribute;
     req.body.nonstop_operation = 0;
@@ -224,10 +231,17 @@ int SlingLiftCtrl :: bookElevator(const SlingFloor& from_floor, const vector<Sli
     req.body.data_length = 82;
     req.body.device_number = htons(0);
     req.body.verification_type = request.verificationType;
-    req.body.verification_location = request.verificationLocation;
-    req.body.button_attribute = 16; // auto
-    req.body.boarding_floor = htons(from_floor.floor);
-    req.body.boarding_front_rear = from_floor.openDoor;
+     if (request.verificationType == request.OUTOF_CAR) {
+        req.body.verification_location = request.verificationLocation;
+        req.body.button_attribute = 16; // auto
+        req.body.boarding_floor = htons(from_floor.floor);
+        req.body.boarding_front_rear = from_floor.openDoor;
+    } else {
+        req.body.verification_location = request.elevatorId;
+        req.body.button_attribute = 1; // normal passenger front door
+        req.body.boarding_floor = 0;
+        req.body.boarding_front_rear = 0;
+    }
     req.body.call_attribute = request.callAttribute;
     req.body.nonstop_operation = 0;
     req.body.call_registration_mode = request.hallCallMode;

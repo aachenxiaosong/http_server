@@ -29,12 +29,15 @@ struct SlingRequestAttribute {
     uint8_t seqNum;
     uint8_t clusterId;
     //刷卡位置
-    enum {
+    enum
+    {
         LOBBY = 1,    //层站
         ENTRANCE = 2, //玄关
         ROOM = 3,     //卧室
         GATE = 4      //闸机
     } verificationLocation;
+    //elevator id
+    uint8_t elevatorId;
     //刷卡类别
     enum {
         OUTOF_CAR = 1,
