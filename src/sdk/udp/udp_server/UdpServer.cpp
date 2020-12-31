@@ -6,6 +6,34 @@
 
 #define UDP_SERVER_TAG mName.c_str()
 
+UdpServer ::UdpServer(const char *name, int port)
+{
+    mDgs = NULL;
+    mName = name;
+    mPort = port;
+    mThread = NULL;
+    Poco::Net::SocketAddress sa(mPort);
+    Poco::Net::DatagramSocket *dgs = new Poco::Net::DatagramSocket(Poco::Net::IPAddress::IPv4);
+    dgs->bind(sa, true, true);
+    mDgs = dgs;
+}
+
+UdpServer ::~UdpServer()
+{
+    if (mDgs != NULL) {
+        Poco::Net::DatagramSocket *dgs = (Poco::Net::DatagramSocket *)mDgs;
+        mDgs = NULL;
+        dgs->close();
+        delete dgs;
+    }
+    mHandlers.clear();
+    if (mThread != NULL)
+    {
+        mThread->join();
+        delete mThread;
+    }
+}
+
 void UdpServer :: addHandler(IUdpDataHandler *handler)
 {
     mHandlerLock.writeLock();
@@ -31,11 +59,45 @@ int UdpServer:: start()
         LOGT(UDP_SERVER_TAG, "udp server repeatedly started");
         return 0;
     }
+    if (mDgs == NULL) return -1;
     mThread = new std::thread(recvTask, this);
     LOGT(UDP_SERVER_TAG, "udp server started");
     return 0;
 }
 
+int UdpServer :: send(const std::string& server_ip, int server_port, const char* data, int data_len) {
+    int ret = 0;
+    if (mDgs == NULL) return -1;
+    Poco::Net::DatagramSocket *dgs = (Poco::Net::DatagramSocket *)mDgs;
+    try
+    {
+        Poco::Net::SocketAddress sa(server_ip, server_port);
+        if (data_len == dgs->sendTo(data, data_len, sa))
+        {
+            LOGT(UDP_SERVER_TAG, "udp data sent OK");
+        }
+        else
+        {
+            LOGE(UDP_SERVER_TAG, "udp data sent failed");
+            ret = -1;
+        }
+    }
+    catch (Poco::Net::HostNotFoundException e)
+    {
+        LOGE(UDP_SERVER_TAG, "udp data sent failed for %s", e.what());
+        ret = -1;
+    }
+    catch (Poco::Net::NetException e)
+    {
+        LOGE(UDP_SERVER_TAG, "udp data sent failed for %s", e.what());
+        ret = -1;
+    } catch (...)
+    {
+        LOGE(UDP_SERVER_TAG, "udp data sent failed for unknown exception");
+        ret = -1;
+    }
+    return ret;
+}
 
 #define UDP_SERVER_TAG1 me->mName.c_str()
 
@@ -44,15 +106,13 @@ void UdpServer:: recvTask(void *arg)
     UdpServer *me = (UdpServer*)arg;
     try
     {
-        Poco::Net::SocketAddress sa(me->mPort);
-        Poco::Net::DatagramSocket dgs;
-        dgs.bind(sa, true, true);
+        Poco::Net::DatagramSocket *dgs = (Poco::Net::DatagramSocket *)me->mDgs;
         char recv_buf[1500];
         int recv_len;
         while (1)
         {
             Poco::Net::SocketAddress sender;
-            recv_len = dgs.receiveFrom(recv_buf, sizeof(recv_buf), sender);
+            recv_len = dgs->receiveFrom(recv_buf, sizeof(recv_buf), sender);
             //LOGT(UDP_SERVER_TAG1, "udp data recved, size=%d", recv_len);
             me->mHandlerLock.readLock();
             for (auto handler : me->mHandlers)
@@ -65,7 +125,6 @@ void UdpServer:: recvTask(void *arg)
             }
             me->mHandlerLock.readUnlock();
         }
-        dgs.close();
     }
     catch (Poco::Net::HostNotFoundException e)
     {

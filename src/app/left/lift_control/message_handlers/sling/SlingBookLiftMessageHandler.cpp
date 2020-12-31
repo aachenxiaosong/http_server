@@ -20,6 +20,7 @@ LiftCtrlMessageRsp* SlingBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     if (request.type() != MSG_LIFT_CTRL_BOOK_LIFT_REQ) {
         return NULL;
     }
+    LOGT(SLING_BOOK_LIFT_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageBookLiftReq& req = (LiftCtrlMessageBookLiftReq &)request;
     LiftCtrlMessageBookLiftRsp rsp;
     
@@ -33,20 +34,20 @@ LiftCtrlMessageRsp* SlingBookLiftMessageHandler :: handle(const LiftCtrlMessageR
         cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(device_space_id);
     }
     string not_found_msg = "";
+    //TODO: change empty check like following
     if (device_space_id.empty()) {
         not_found_msg = "space id not found for device " + req.deviceCode();
-    }
-    if (cluster_id.empty()) {
-        not_found_msg = "cluster id not found for device " + req.deviceCode();
-    }
-    if (cluster_url.empty()) {
-        not_found_msg = "cluster url not found for device " + req.deviceCode();
+    } else if (cluster_id.empty()) {
+        not_found_msg = "cluster id not found for space " + device_space_id + " of device " + req.deviceCode();
+    } else if (cluster_url.empty()) {
+        not_found_msg = "cluster url not found for space " + device_space_id + " of device " + req.deviceCode();
     }
     if (!not_found_msg.empty()) {
         rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
+        LOGE(SLING_BOOK_LIFT_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageBookLiftRsp(rsp);
     }
     SlingFloor to_floor(-1);

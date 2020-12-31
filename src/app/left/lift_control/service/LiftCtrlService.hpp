@@ -17,6 +17,9 @@
 #include "SlingshBookLiftMessageHandler.hpp"
 #include "SlingshCallLiftMessageHandler.hpp"
 #include "SlingshBookLiftInterMessageHandler.hpp"
+#include "SlingBookLiftMessageHandler.hpp"
+#include "SlingCallLiftMessageHandler.hpp"
+#include "SlingBookLiftInterMessageHandler.hpp"
 #include "Mq.hpp"
 #include <thread>
 
@@ -45,6 +48,11 @@ private:
     SlingshCallLiftMessageHandler mSlingshCallLiftHandler;
     SlingshBookLiftInterMessageHandler mSlingshBookLiftInterHandler;
     LiftCtrlRequestHandler mSlingshHttpHandler;
+    //sanling http message handlers
+    SlingBookLiftMessageHandler mSlingBookLiftHandler;
+    SlingCallLiftMessageHandler mSlingCallLiftHandler;
+    SlingBookLiftInterMessageHandler mSlingBookLiftInterHandler;
+    LiftCtrlRequestHandler mSlingHttpHandler;
     //wanglong wechat msg handler
     WlongWechatCtrlMessageHandler mWlongWechatLiftCtrlHandler;
     WlongWechatStatusMessageHandler mWlongWechatLiftStatusHandler;
@@ -56,6 +64,7 @@ public:
         LIFT_VENDER_WLONG,
         LIFT_VENDER_RILI,
         LIFT_VENDER_SLINGSH,
+        LIFT_VENDER_SLING,
     };
     LiftVenderType mVenderType;
 private:

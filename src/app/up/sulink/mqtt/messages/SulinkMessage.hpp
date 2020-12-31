@@ -158,7 +158,7 @@ class LiftInfoBrand {
 };
 class LiftInfoAccessDevice {
     MEMBER(string, deviceCode)
-    MEMBER(string, spaceId)
+    MEMBER(int, spaceId)
     //工作模式(1.世茂梯控板(轿厢外),2.工控机模式(轿厢内),3.工控机模式(轿厢外))
     MEMBER(int, workMode)
     //楼层信息(以，号分割)

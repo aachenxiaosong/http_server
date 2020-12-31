@@ -51,6 +51,32 @@ std::string unisound::UniDeviceInfo ::getMac()
 #endif
 }
 
+std::string unisound::UniDeviceInfo ::getIp()
+{
+#ifdef IS_VMWARE
+    return "192.168.4.75";
+#else
+    string ip = "";
+    char cip[32] = {0};
+    int sock, ret;
+    struct ifreq ifr;
+    memset(&ifr, 0, sizeof(ifr));
+    if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) == 0) {
+        LOGE(DEVICE_INFO_TAG, "socket create failed");
+        return ip;
+    }
+    strcpy(ifr.ifr_name, getNetName().c_str());
+    if (ioctl(sock, SIOCGIFADDR, &ifr) == 0) {
+        snprintf(cip, sizeof(cip), "%s", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
+        ip = cip;
+    } else {
+        LOGE(DEVICE_INFO_TAG, "get ip failed");        
+    }
+    close(sock);
+    return ip;
+#endif
+}
+
 std::string unisound::UniDeviceInfo ::getUdid()
 {
 #ifdef IS_VMWARE

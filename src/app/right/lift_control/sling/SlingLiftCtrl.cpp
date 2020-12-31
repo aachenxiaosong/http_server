@@ -136,14 +136,13 @@ struct _SlingHb {
 
 
 UdpServer SlingLiftCtrl :: mUdpServer("sling_lift_ctrl_udp_server", 52000);
-UdpClient SlingLiftCtrl :: mUdpClient("sling_lift_ctrl_udp_client", 52000);
 
 SlingLiftCtrl :: SlingLiftCtrl(const string& url) : IUdpDataHandler("sling_lift_ctrl_udp_data_handler")
 {
     Poco::URI uri(url);
     mElsgwIp = uri.getHost();
     mElsgwPort = uri.getPort();
-    LOGE(SLING_LIFT_CTRL_TAG, "sling lift controller created, ip %s port %d", mElsgwIp.c_str(), mElsgwPort);
+    LOGT(SLING_LIFT_CTRL_TAG, "sling lift controller created, ip %s port %d", mElsgwIp.c_str(), mElsgwPort);
     mUdpServer.addHandler(this);
     mWaitHb.status = mWaitHb.IDLE;
     mWaitRsp.status = mWaitRsp.IDLE;
@@ -182,7 +181,7 @@ int SlingLiftCtrl :: bookElevator(const SlingFloor& from_floor, const SlingFloor
     req.body.nonstop_operation = 0;
     req.body.call_registration_mode = request.hallCallMode;
     req.body.sequence_number = request.seqNum;
-    if (0 != mUdpClient.send(mElsgwIp, mElsgwPort, (const char*)&req, sizeof(req))) {
+    if (0 != mUdpServer.send(mElsgwIp, mElsgwPort, (const char*)&req, sizeof(req))) {
         LOGE(SLING_LIFT_CTRL_TAG, "send sling book lift request failed");
         return -1;
     }
@@ -243,7 +242,7 @@ int SlingLiftCtrl :: bookElevator(const SlingFloor& from_floor, const vector<Sli
             req.body.rear_destination_floors[(floor.floor - 1) / 8] |= (1 << ((floor.floor - 1) % 8));
         }
     }
-    if (0 != mUdpClient.send(mElsgwIp, mElsgwPort, (const char*)&req, sizeof(req))) {
+    if (0 != mUdpServer.send(mElsgwIp, mElsgwPort, (const char*)&req, sizeof(req))) {
         LOGE(SLING_LIFT_CTRL_TAG, "send sling book lift request failed");
         return -1;
     }
@@ -292,6 +291,7 @@ int SlingLiftCtrl :: handle(const char*data, int data_len)
             mWaitRsp.rsp.status = mWaitRsp.rsp.FAILED;
         }
         mWaitRsp.status = mWaitRsp.FULL;
+        return 0;
     }
     if (sling_data->body.command_number == 0xf1 && mWaitHb.status == mWaitHb.EMPTY) {
         _SlingHb *sling_hb = (_SlingHb *)data;
@@ -299,7 +299,8 @@ int SlingLiftCtrl :: handle(const char*data, int data_len)
         mWaitHb.hb.data1 = sling_hb->body.data1;
         mWaitHb.hb.data2 = sling_hb->body.data2;
         mWaitHb.status = mWaitHb.FULL;
+        return 0;
     }
-    return 0;
+    return -1;
 }
 

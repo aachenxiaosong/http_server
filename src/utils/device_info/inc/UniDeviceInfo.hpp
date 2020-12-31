@@ -11,6 +11,7 @@ namespace unisound {
         static std::string mAppVersion;
     public:
         static std::string getMac();
+        static std::string getIp();
         static std::string getUdid();
         static std::string getType();
         static std::string getNetName();

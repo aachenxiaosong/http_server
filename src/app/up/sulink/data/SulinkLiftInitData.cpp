@@ -32,14 +32,19 @@ int SulinkLiftInitData :: mLoadFromConfig()
     mInfo = NULL;
     if (!raw_data.empty())
     {
-        //SulinkPacker packer;
-        //mInfo = dynamic_cast<SulinkMessageRecvLiftInfo *>(packer.unpack(raw_data));
+    #if 0
+        SulinkPacker packer;
+        SulinkMessageRecvLiftInfo *info = dynamic_cast<SulinkMessageRecvLiftInfo *>(packer.unpack(raw_data));
+        mUpdateInfo(*info);
+        delete info;
+    #else
         SulinkMessageRecvLiftInfo info = unisound::UniSerialization<SulinkMessageRecvLiftInfo>::deseri(raw_data);
         if (info.deviceCode().empty() == false) {
             mInfo = new SulinkMessageRecvLiftInfo(info);
         } else {
             LOGW(SULINK_LIFT_INFO_DATA_TAG, "deserialization for lift ctrl init info failed");
         }
+    #endif
         if (mInfo != NULL) {
             ret = 0;
             LOGT(SULINK_LIFT_INFO_DATA_TAG, "init info loaded from config %s: \n%s", config_path.c_str(), mToString().c_str());
@@ -52,6 +57,8 @@ int SulinkLiftInitData :: mLoadFromConfig()
                 msg.brand(msg.BRAND_RILI);
             } else if (mGetBrandCode().compare("3") == 0) {
                 msg.brand(msg.BRAND_SLINGSH);
+            } else if (mGetBrandCode().compare("4") == 0) {
+                msg.brand(msg.BRAND_SLING);
             } else {
                 msg.brand(msg.BRAND_INVALID);
             }
@@ -98,6 +105,10 @@ void SulinkLiftInitData :: mUpdateInfo(const SulinkMessageRecvLiftInfo &info)
     else if (mGetBrandCode().compare("3") == 0)
     {
         msg.brand(msg.BRAND_SLINGSH);
+    }
+    else if (mGetBrandCode().compare("4") == 0)
+    {
+        msg.brand(msg.BRAND_SLING);
     }
     else
     {
@@ -328,7 +339,7 @@ string SulinkLiftInitData :: mGetDeviceSpaceId(const string& device_code)
     string space_id = "";
     for (int i = 0; i < mInfo->accessDevices().size(); i++) {
         if (mInfo->accessDevices()[i].deviceCode().compare(device_code) == 0) {
-            space_id = mInfo->accessDevices()[i].spaceId();
+            space_id = to_string(mInfo->accessDevices()[i].spaceId());
             break;
         }
     }

@@ -17,9 +17,14 @@ class UniSerialization {
 public:
     static std::string seri(const T& t) {
         stringstream ss;
-        archive::text_oarchive(ss) << t;
+        try {
+            archive::text_oarchive(ss) << t;
+        } catch (archive::archive_exception e) {
+            LOGE(SERIALIZATION_TAG, "serialization exception: %s", e.what());
+        } catch (...) {
+            LOGE(SERIALIZATION_TAG, "other serialization exception");
+        }
         return ss.str();
-        
     }
 
     static T deseri(const string& str) {
@@ -29,6 +34,8 @@ public:
             archive::text_iarchive(ss) >> t;
         } catch (archive::archive_exception e) {
             LOGE(SERIALIZATION_TAG, "deserialization exception: %s", e.what());
+        } catch (...) {
+            LOGE(SERIALIZATION_TAG, "other deserialization exception");
         }
         return t;
     }

@@ -194,7 +194,6 @@ int HttpClient::postHttps(const string& url, const string& content, string &resu
             Timespan time_span(timeout, 0);
             session.setTimeout(time_span);
         }
-        LOGE(HTTP_CLIENT_TAG, "content before sent:" + content);//for debug, seems content may be changed by sendRequest
         //request.setContentLength(content.length());
         session.sendRequest(request) << content;
         LOGT(HTTP_CLIENT_TAG, "post request sent -----\nurl:%s\nheaders:%s\ncontent:%s\ntimeout:%d\n",

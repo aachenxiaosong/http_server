@@ -83,7 +83,6 @@ private:
     string mElsgwIp;
     int mElsgwPort;
     static UdpServer mUdpServer;
-    static UdpClient mUdpClient;
 private:
     //for recved data
     struct {

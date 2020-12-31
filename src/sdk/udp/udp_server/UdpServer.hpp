@@ -12,27 +12,16 @@ private:
     std::vector<IUdpDataHandler*> mHandlers;
     UniRwLock mHandlerLock;
     std::thread *mThread;
+    void *mDgs;
 public:
-    UdpServer(const char* name, int port)
-    {
-        mName = name;
-        mPort = port;
-        mThread = NULL;
-    }
-    ~UdpServer()
-    {
-        mHandlers.clear();
-        if (mThread != NULL)
-        {
-            mThread->join();
-            delete mThread;
-        }
-    }
+    UdpServer(const char* name, int port);
+    ~UdpServer();
     void addHandler(IUdpDataHandler *handler);
     void delHandler(IUdpDataHandler *handler);
     int start();
     bool isStarted() {
         return (mThread != NULL);
     }
+    int send(const std::string& server_ip, int server_port, const char* data, int data_len);    
     static void recvTask(void *arg);
 };

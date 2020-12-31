@@ -437,11 +437,12 @@ SulinkMessageRecvLiftInfo* SulinkPacker :: unpackRecvLiftInfo(const string& raw_
             err_message = "parse childDevices.deviceCode failed, i:" + to_string(i);
             goto L_ERROR;
         }
-        if (jdevice.Get("deviceSpaceId", svalue) != true) {
+        device.deviceCode(svalue);
+        if (jdevice.Get("deviceSpaceId", ivalue) != true) {
             err_message = "parse childDevices.deviceSpaceId failed, i:" + to_string(i);
             goto L_ERROR;
         }
-        device.deviceCode(svalue);
+        device.spaceId(ivalue);
         if (jdevice.Get("workMode", ivalue) != true) {
             //LOGE(SULINK_PACKER_TAG, "parse device workMode failed");
             //return NULL;
