@@ -11,6 +11,7 @@ private:
     LiftCtrlMessageBookLiftSimpleReq* unpackBookLiftSimpleReq(const string& raw_data);
     LiftCtrlMessageTakeLiftSimpleReq* unpackTakeLiftSimpleReq(const string& raw_data);
     LiftCtrlMessageLiftStatusReq* unpackLiftStatusReq(const string& raw_data);
+    LiftCtrlMessageQueryAccessibleFloorsReq* unpackQueryAccessibleFloorsReq(const string& raw_data);
     string* packRsp(const LiftCtrlMessageRsp &message);
     string* packCallLiftRsp(const LiftCtrlMessageCallLiftRsp &message);
     string* packBookLiftRsp(const LiftCtrlMessageBookLiftRsp &message);
@@ -19,6 +20,7 @@ private:
     string* packBookLiftSimpleRsp(const LiftCtrlMessageBookLiftSimpleRsp &message);
     string* packTakeLiftSimpleRsp(const LiftCtrlMessageTakeLiftSimpleRsp &message);
     string* packLiftStatusRsp(const LiftCtrlMessageLiftStatusRsp &message);
+    string* packQueryAccessibleFloorsRsp(const LiftCtrlMessageQueryAccessibleFloorsRsp& message);
 
 public:
     LiftCtrlRequestPacker() = default;

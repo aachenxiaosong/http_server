@@ -1,14 +1,12 @@
 #pragma once
 
 #include "LiftCtrlRequestHandler.hpp"
+#include "QueryAccessibleFloorsMessageHandler.hpp"
 #include "WlongBookLiftMessageHandler.hpp"
 #include "WlongCallLiftMessageHandler.hpp"
 #include "WlongBookLiftInterMessageHandler.hpp"
 #include "WlongTakeLiftMessageHandler.hpp"
 #include "WlongLiftStatusMessageHandler.hpp"
-#include "LiftCtrlMqHandler.hpp"
-#include "WlongWechatCtrlMessageHandler.hpp"
-#include "WlongWechatStatusMessageHandler.hpp"
 #include "RiliBookLiftMessageHandler.hpp"
 #include "RiliCallLiftMessageHandler.hpp"
 #include "RiliBookLiftInterMessageHandler.hpp"
@@ -23,6 +21,9 @@
 #include "SlingTakeLiftMessageHandler.hpp"
 #include "SlingBookLiftSimpleMessageHandler.hpp"
 #include "SlingTakeLiftSimpleMessageHandler.hpp"
+#include "LiftCtrlMqHandler.hpp"
+#include "WlongWechatCtrlMessageHandler.hpp"
+#include "WlongWechatStatusMessageHandler.hpp"
 #include "Mq.hpp"
 #include <thread>
 
@@ -32,6 +33,8 @@ private:
     Mq *mMq;
     thread *mMqThread;
     bool mMqThreadRunning;
+    //common http message handlers
+    QueryAccessibleFloorsMessageHandler mQueryAccessibleFloorsHandler;
    //wanglong http message handlers
     WlongBookLiftMessageHandler mWlongBookLiftHandler;
     WlongCallLiftMessageHandler mWlongCallLiftHandler;

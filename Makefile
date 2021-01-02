@@ -59,6 +59,7 @@ app_src := src/app \
            src/app/left/lift_control/service/http/handler \
            src/app/left/lift_control/service/mq/packer \
            src/app/left/lift_control/service/mq/handler \
+           src/app/left/lift_control/message_handlers \
            src/app/left/lift_control/message_handlers/rili \
            src/app/left/lift_control/message_handlers/wlong \
            src/app/left/lift_control/message_handlers/slingsh \

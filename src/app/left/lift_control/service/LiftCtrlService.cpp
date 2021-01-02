@@ -17,16 +17,19 @@ LiftCtrlService :: LiftCtrlService() :
     mWlongHttpHandler.addMessageHandler(&mWlongBookLiftInterHandler);
     mWlongHttpHandler.addMessageHandler(&mWlongTakeLiftHandler);
     mWlongHttpHandler.addMessageHandler(&mWlongLiftStatusHandler);
+    mWlongHttpHandler.addMessageHandler(&mQueryAccessibleFloorsHandler);
 
     mRiliHttpHandler.addMessageHandler(&mRiliBookLiftHandler);
     mRiliHttpHandler.addMessageHandler(&mRiliCallLiftHandler);
     mRiliHttpHandler.addMessageHandler(&mRiliBookLiftInterHandler);
     mRiliHttpHandler.addMessageHandler(&mRiliTakeLiftHandler);
     mRiliHttpHandler.addMessageHandler(&mRiliLiftStatusHandler);
+    mRiliHttpHandler.addMessageHandler(&mQueryAccessibleFloorsHandler);
 
     mSlingshHttpHandler.addMessageHandler(&mSlingshBookLiftHandler);
     mSlingshHttpHandler.addMessageHandler(&mSlingshCallLiftHandler);
     mSlingshHttpHandler.addMessageHandler(&mSlingshBookLiftInterHandler);
+    mSlingshHttpHandler.addMessageHandler(&mQueryAccessibleFloorsHandler);
 
     mSlingHttpHandler.addMessageHandler(&mSlingBookLiftHandler);
     mSlingHttpHandler.addMessageHandler(&mSlingCallLiftHandler);
@@ -34,6 +37,7 @@ LiftCtrlService :: LiftCtrlService() :
     mSlingHttpHandler.addMessageHandler(&mSlingTakeLiftHandler);
     mSlingHttpHandler.addMessageHandler(&mSlingBookLiftSimpleHandler);
     mSlingHttpHandler.addMessageHandler(&mSlingTakeLiftSimpleHandler);
+    mSlingHttpHandler.addMessageHandler(&mQueryAccessibleFloorsHandler);
 
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftCtrlHandler);
     mWlongMqHandler.addMessageHandler(&mWlongWechatLiftStatusHandler);

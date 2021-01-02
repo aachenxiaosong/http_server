@@ -63,7 +63,7 @@ LiftCtrlMessageBookLiftReq *LiftCtrlRequestPacker ::unpackBookLiftReq(const stri
         if (true != jvalue.IsArray())
         {
             request->retcode(RETCODE_ERROR);
-            request->msg("wrong param authorizedHomeIds");
+            request->msg("wrong param authorizedHomeIds, should be array");
             return request;
         }
         for (int i = 0; i < jvalue.GetArraySize(); i++)
@@ -213,7 +213,7 @@ LiftCtrlMessageTakeLiftSimpleReq* LiftCtrlRequestPacker :: unpackTakeLiftSimpleR
     return request;
 }
 
-LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker ::unpackLiftStatusReq(const string &raw_data)
+LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker :: unpackLiftStatusReq(const string &raw_data)
 {
     LiftCtrlMessageLiftStatusReq *request = new LiftCtrlMessageLiftStatusReq();
     CJsonObject jrequest(raw_data);
@@ -233,6 +233,36 @@ LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker ::unpackLiftStatusReq(const 
         return request;
     }
     request->elevatorId(ivalue);
+    return request;
+}
+
+LiftCtrlMessageQueryAccessibleFloorsReq* LiftCtrlRequestPacker :: unpackQueryAccessibleFloorsReq(const string& raw_data)
+{
+    LiftCtrlMessageQueryAccessibleFloorsReq *request = new LiftCtrlMessageQueryAccessibleFloorsReq();
+    CJsonObject jrequest(raw_data);
+    CJsonObject jvalue;
+    string svalue;
+     if (true != jrequest.Get("deviceCode", svalue)) {
+        request->retcode(RETCODE_ERROR);
+        request->msg("wrong param deviceCode");
+        return request;
+    }
+    request->deviceCode(svalue);
+    if (true == jrequest.Get("authorizedHomeIds", jvalue))
+    {
+        if (true != jvalue.IsArray())
+        {
+            request->retcode(RETCODE_ERROR);
+            request->msg("wrong param authorizedHomeIds, should be array");
+            return request;
+        }
+        for (int i = 0; i < jvalue.GetArraySize(); i++)
+        {
+            string home_id;
+            jvalue.Get(i, home_id);
+            request->authorizedHomeIds().push_back(home_id);
+        }
+    }
     return request;
 }
 
@@ -328,6 +358,21 @@ string* LiftCtrlRequestPacker :: packLiftStatusRsp(const LiftCtrlMessageLiftStat
     return new string(jresponse.ToString());
 }
 
+string* LiftCtrlRequestPacker :: packQueryAccessibleFloorsRsp(const LiftCtrlMessageQueryAccessibleFloorsRsp& message)
+{
+    LiftCtrlMessageQueryAccessibleFloorsRsp msg = message;
+    CJsonObject jresponse;
+    jresponse.Add("retcode", message.retcode());
+    jresponse.Add("msg", message.msg());
+    CJsonObject jdata;
+    jdata.AddEmptySubArray("accessibleFloors");
+    for (auto floor :  msg.accessibleFloors()) {
+        jdata["accessibleFloors"].Add(floor);
+    }
+    jresponse.Add("data", jdata);
+    return new string(jresponse.ToString());
+}
+
 LiftCtrlMessageReq *LiftCtrlRequestPacker ::unpack(const string &path, const string &raw_data)
 {
     if (path.compare("/liftCtrl/v3/callLift") == 0)
@@ -357,6 +402,10 @@ LiftCtrlMessageReq *LiftCtrlRequestPacker ::unpack(const string &path, const str
     else if (path.compare("/liftCtrl/v3/liftStatus") == 0)
     {
         return unpackLiftStatusReq(raw_data);
+    }
+    else if (path.compare("/liftCtrl/v3/queryAccessibleFloors") == 0)
+    {
+        return unpackQueryAccessibleFloorsReq(raw_data);
     }
     LOGT(LIFT_CTRL_PACKER_TAG, "unsupport request path %s", path.c_str());
     return NULL;
@@ -397,6 +446,10 @@ string *LiftCtrlRequestPacker ::pack(const LiftCtrlMessageRsp &message)
     case MSG_LIFT_CTRL_LIFT_STATUS_RSP:
     {
         return packLiftStatusRsp(dynamic_cast<const LiftCtrlMessageLiftStatusRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_QUERY_ACCESSIBLE_FLOORS_RSP:
+    {
+        return packQueryAccessibleFloorsRsp(dynamic_cast<const LiftCtrlMessageQueryAccessibleFloorsRsp &>(message));
     }
     }
     LOGT(LIFT_CTRL_PACKER_TAG, "unsupport response type %d", message.type());
