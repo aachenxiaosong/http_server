@@ -28,8 +28,7 @@ LiftCtrlMessageRsp* SlingshBookLiftMessageHandler :: handle(const LiftCtrlMessag
     string not_found_msg = "";
     if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.defaultHomeId();
-    }
-    if (to_floor.empty()) {
+    } else if (to_floor.empty()) {
         not_found_msg = "dest floor not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {

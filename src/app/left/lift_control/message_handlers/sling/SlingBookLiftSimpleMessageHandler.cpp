@@ -28,7 +28,7 @@ LiftCtrlMessageRsp* SlingBookLiftSimpleMessageHandler :: handle(const LiftCtrlMe
     string device_space_id = SulinkLiftInitData::getDeviceSpaceId(req.deviceCode());
     string cluster_url = "";
     string cluster_id = "";
-    if (device_space_id.empty() != true) {
+    if (device_space_id.empty() == false) {
         cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(device_space_id);
         cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(device_space_id);
     }

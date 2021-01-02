@@ -25,22 +25,29 @@ LiftCtrlMessageRsp* SlingBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     LiftCtrlMessageBookLiftRsp rsp;
     
     //step1: get cluster info through device space
-    //TODO: change in other files
     string device_space_id = SulinkLiftInitData::getDeviceSpaceId(req.deviceCode());
     string cluster_url = "";
     string cluster_id = "";
-    if (device_space_id.empty() != true) {
+    if (req.defaultHomeId().empty() == false) {
+        cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.defaultHomeId());
+        cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.defaultHomeId());
+    } else if (device_space_id.empty() == false) {
         cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(device_space_id);
         cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(device_space_id);
     }
     string not_found_msg = "";
-    //TODO: change empty check like following
-    if (device_space_id.empty()) {
-        not_found_msg = "space id not found for device " + req.deviceCode();
-    } else if (cluster_id.empty()) {
-        not_found_msg = "cluster id not found for space " + device_space_id + " of device " + req.deviceCode();
+    if (cluster_id.empty()) {
+        if (req.defaultHomeId().empty() == false) {
+            not_found_msg = "cluster id not found for home id " + req.defaultHomeId();
+        } else {
+            not_found_msg = "cluster id not found for space " + device_space_id + " of device " + req.deviceCode();
+        }
     } else if (cluster_url.empty()) {
-        not_found_msg = "cluster url not found for space " + device_space_id + " of device " + req.deviceCode();
+        if (req.defaultHomeId().empty() == false) {
+            not_found_msg = "cluster url not found for home id " + req.defaultHomeId();
+        } else {
+            not_found_msg = "cluster url not found for space " + device_space_id + " of device " + req.deviceCode();
+        }
     }
     if (!not_found_msg.empty()) {
         rsp.retcode(RETCODE_ERROR);

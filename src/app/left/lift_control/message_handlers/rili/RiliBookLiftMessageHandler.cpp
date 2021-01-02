@@ -31,11 +31,9 @@ LiftCtrlMessageRsp* RiliBookLiftMessageHandler :: handle(const LiftCtrlMessageRe
     string not_found_msg = "";
     if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.defaultHomeId();
-    }
-    if (home_num.empty()) {
+    } else if (home_num.empty()) {
         not_found_msg = "home number not found for home id " + req.defaultHomeId();
-    }
-    if (hall_num.empty()) {
+    } else if (hall_num.empty()) {
         not_found_msg = "hall number not found for home id " + req.defaultHomeId();
     }
     if (!not_found_msg.empty()) {

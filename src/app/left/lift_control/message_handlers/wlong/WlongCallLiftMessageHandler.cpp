@@ -33,11 +33,9 @@ LiftCtrlMessageRsp* WlongCallLiftMessageHandler :: handle(const LiftCtrlMessageR
     string not_found_msg = "";
     if (cluster_id.empty()) {
         not_found_msg = "cluster id not found for home id " + req.homeId();
-    }
-    if (cluster_url.empty()) {
+    } else if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.homeId();
-    }
-    if (from_floor.empty()) {
+    } else if (from_floor.empty()) {
         not_found_msg = "from floor not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {

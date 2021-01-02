@@ -28,8 +28,7 @@ LiftCtrlMessageRsp* RiliLiftStatusMessageHandler :: handle(const LiftCtrlMessage
     string not_found_msg = "";
     if (building_num.empty()) {
         not_found_msg = "building number not found for home id " + req.homeId();
-    }
-    if (cluster_url.empty()) {
+    } else if (cluster_url.empty()) {
         not_found_msg = "cluster url not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {

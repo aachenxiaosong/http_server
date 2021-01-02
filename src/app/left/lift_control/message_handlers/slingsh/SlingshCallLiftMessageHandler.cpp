@@ -24,12 +24,11 @@ LiftCtrlMessageRsp* SlingshCallLiftMessageHandler :: handle(const LiftCtrlMessag
     //step1: 根据homeId获取群控器的ip和端口
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.homeId());
     string not_found_msg = "";
-    if (cluster_url.empty()) {
-        not_found_msg = "cluster url not found for home id " + req.homeId();
-    }
     //step2: 根据homeId找到出发楼层，到达楼层设置为1
     string from_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.homeId());
-    if (from_floor.empty()) {
+    if (cluster_url.empty()) {
+        not_found_msg = "cluster url not found for home id " + req.homeId();
+    } else if (from_floor.empty()) {
         not_found_msg = "from floor not found for home id " + req.homeId();
     }
     if (!not_found_msg.empty()) {
