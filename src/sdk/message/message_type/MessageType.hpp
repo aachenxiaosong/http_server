@@ -1,8 +1,10 @@
 #ifndef SDK_MESSAGE_MESSAGE_TYPE_HPP_
 #define SDK_MESSAGE_MESSAGE_TYPE_HPP_
 
+#include <string>
+
 enum MessageType {
-    MSG_INVALID = -1,
+    MSG_INVALID = 0,
     //dechang
     MSG_DECHANG_RECEIVE_HB,
     MSG_DECHANG_RECEIVE_HB_ACK,
@@ -54,5 +56,7 @@ enum MessageType {
     MSG_LIFT_CTRL_WECHAT_STATUS,
     MSG_LIFT_CTRL_WECHAT_STATUS_ACK,
 };
+
+std::string to_string(MessageType type);
 
 #endif  //  SDK_MESSAGE_MESSAGE_TYPE_HPP_

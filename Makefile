@@ -35,6 +35,7 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/udp/udp_server \
            src/sdk/udp/udp_client \
            src/sdk/mqtt/mqtt_client \
+           src/sdk/message/message_type \
            src/sdk/mq
 
 sdk_inc := src/sdk/http/http_server \
