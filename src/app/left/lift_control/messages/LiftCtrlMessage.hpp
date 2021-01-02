@@ -41,6 +41,27 @@ public:
     {}
 };
 
+class LiftCtrlMessageQueryAccessibleFloorsReq : public LiftCtrlMessageReq
+{
+    PMEMBER(vector<string>, authorizedHomeIds)
+    MEMBER(string, deviceCode)
+public:
+    LiftCtrlMessageQueryAccessibleFloorsReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_QUERY_ACCESSIBLE_FLOORS_REQ)
+    {
+    }
+    ~LiftCtrlMessageQueryAccessibleFloorsReq()
+    {}
+};
+class LiftCtrlMessageQueryAccessibleFloorsRsp : public LiftCtrlMessageRsp
+{
+    PMEMBER(vector<string>, accessibleFloors)
+public:
+    LiftCtrlMessageQueryAccessibleFloorsRsp() : LiftCtrlMessageRsp(MSG_LIFT_CTRL_QUERY_ACCESSIBLE_FLOORS_RSP)
+    {}
+    ~LiftCtrlMessageQueryAccessibleFloorsRsp()
+    {}
+};
+
 class LiftCtrlMessageCallLiftReq : public LiftCtrlMessageReq
 {
     MEMBER(string, homeId)
@@ -138,6 +159,48 @@ public:
     LiftCtrlMessageTakeLiftRsp() : LiftCtrlMessageRsp(MSG_LIFT_CTRL_TAKE_LIFT_RSP)
     {}
     ~LiftCtrlMessageTakeLiftRsp()
+    {}
+};
+
+class LiftCtrlMessageBookLiftSimpleReq : public LiftCtrlMessageReq
+{
+    MEMBER(string, toFloor)
+    MEMBER(string, deviceCode)
+public:
+    LiftCtrlMessageBookLiftSimpleReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_BOOK_LIFT_SIMPLE_REQ)
+    {}
+    ~LiftCtrlMessageBookLiftSimpleReq()
+    {}
+};
+class LiftCtrlMessageBookLiftSimpleRsp : public LiftCtrlMessageRsp
+{
+    MEMBER(int, ackCode)
+    MEMBER(int, elevatorId)
+public:
+    LiftCtrlMessageBookLiftSimpleRsp() : LiftCtrlMessageRsp(MSG_LIFT_CTRL_BOOK_LIFT_SIMPLE_RSP)
+    {}
+    ~LiftCtrlMessageBookLiftSimpleRsp()
+    {}
+};
+
+
+class LiftCtrlMessageTakeLiftSimpleReq : public LiftCtrlMessageReq
+{
+    MEMBER(string, toFloor)
+    MEMBER(string, deviceCode)
+public:
+    LiftCtrlMessageTakeLiftSimpleReq() : LiftCtrlMessageReq(MSG_LIFT_CTRL_TAKE_LIFT_SIMPLE_REQ)
+    {}
+    ~LiftCtrlMessageTakeLiftSimpleReq()
+    {}
+};
+class LiftCtrlMessageTakeLiftSimpleRsp : public LiftCtrlMessageRsp
+{
+    MEMBER(int, ackCode)
+public:
+    LiftCtrlMessageTakeLiftSimpleRsp() : LiftCtrlMessageRsp(MSG_LIFT_CTRL_TAKE_LIFT_SIMPLE_RSP)
+    {}
+    ~LiftCtrlMessageTakeLiftSimpleRsp()
     {}
 };
 

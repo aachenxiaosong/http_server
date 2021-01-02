@@ -22,17 +22,24 @@ LiftCtrlMessageRsp* SlingTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
     LOGT(SLING_TAKE_LIFT_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageTakeLiftReq& req = (LiftCtrlMessageTakeLiftReq&)request;
     LiftCtrlMessageTakeLiftRsp rsp;
-    //step1: 根据homeId获取群控器的ip和端口
-    string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.defaultHomeId());
-    string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.defaultHomeId());
+    //step1: get cluster info through device space
+    string device_space_id = SulinkLiftInitData::getDeviceSpaceId(req.deviceCode());
+    string cluster_url = "";
+    string cluster_id = "";
+    if (device_space_id.empty() != true) {
+        cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(device_space_id);
+        cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(device_space_id);
+    }
     //step2: 根据设备编码找到电梯id
     int elevator_id = atoi(SulinkLiftInitData :: getDeviceLiftId(req.deviceCode()).c_str());
     string not_found_msg = "";
-    if (cluster_id.empty()) {
-        not_found_msg = "cluster id not found for home id " + req.defaultHomeId();
+     if (device_space_id.empty()) {
+        not_found_msg = "space id not found for device " + req.deviceCode();
+    } else if (cluster_id.empty()) {
+        not_found_msg = "cluster id not found for space " + device_space_id + " of device " + req.deviceCode();
     } else if (cluster_url.empty()) {
-        not_found_msg = "cluster url not found for home id " + req.defaultHomeId();
-    } 
+        not_found_msg = "cluster url not found for space " + device_space_id + " of device " + req.deviceCode();
+    }
     if (!not_found_msg.empty()) {
         rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
@@ -85,12 +92,12 @@ LiftCtrlMessageRsp* SlingTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
         ret = lift_ctrl.bookElevator(0, to_floors, sling_req, sling_rsp);
     }
     if (ret == 0) {
-        LOGT(SLING_TAKE_LIFT_MSG_HANDLER_TAG, "handle request of sling book lift OK");
+        LOGT(SLING_TAKE_LIFT_MSG_HANDLER_TAG, "handle request of sling take lift OK");
         rsp.retcode(RETCODE_OK);
         rsp.msg("OK");
         rsp.ackCode(1);
     } else {
-        LOGT(SLING_TAKE_LIFT_MSG_HANDLER_TAG, "handle request of sling book lift failed");
+        LOGT(SLING_TAKE_LIFT_MSG_HANDLER_TAG, "handle request of sling take lift failed");
         rsp.retcode(RETCODE_ERROR);
         rsp.msg("calling sanling interface error");
         rsp.ackCode(0);

@@ -173,7 +173,47 @@ LiftCtrlMessageTakeLiftReq *LiftCtrlRequestPacker ::unpackTakeLiftReq(const stri
     return request;
 }
 
-LiftCtrlMessageLiftStatusReq *LiftCtrlRequestPacker ::unpackLiftStatusReq(const string &raw_data)
+LiftCtrlMessageBookLiftSimpleReq* LiftCtrlRequestPacker :: unpackBookLiftSimpleReq(const string& raw_data)
+{
+    LiftCtrlMessageBookLiftSimpleReq *request = new LiftCtrlMessageBookLiftSimpleReq();
+    CJsonObject jrequest(raw_data);
+    string svalue;
+    if (true != jrequest.Get("toFloor", svalue)) {
+        request->retcode(RETCODE_ERROR);
+        request->msg("wrong param toFloor");
+        return request;
+    }
+    request->toFloor(svalue);
+    if (true != jrequest.Get("deviceCode", svalue)) {
+        request->retcode(RETCODE_ERROR);
+        request->msg("wrong param deviceCode");
+        return request;
+    }
+    request->deviceCode(svalue);
+    return request;
+}
+
+LiftCtrlMessageTakeLiftSimpleReq* LiftCtrlRequestPacker :: unpackTakeLiftSimpleReq(const string& raw_data)
+{
+    LiftCtrlMessageTakeLiftSimpleReq *request = new LiftCtrlMessageTakeLiftSimpleReq();
+    CJsonObject jrequest(raw_data);
+    string svalue;
+    if (true != jrequest.Get("toFloor", svalue)) {
+        request->retcode(RETCODE_ERROR);
+        request->msg("wrong param toFloor");
+        return request;
+    }
+    request->toFloor(svalue);
+    if (true != jrequest.Get("deviceCode", svalue)) {
+        request->retcode(RETCODE_ERROR);
+        request->msg("wrong param deviceCode");
+        return request;
+    }
+    request->deviceCode(svalue);
+    return request;
+}
+
+LiftCtrlMessageLiftStatusReq* LiftCtrlRequestPacker ::unpackLiftStatusReq(const string &raw_data)
 {
     LiftCtrlMessageLiftStatusReq *request = new LiftCtrlMessageLiftStatusReq();
     CJsonObject jrequest(raw_data);
@@ -251,7 +291,30 @@ string *LiftCtrlRequestPacker ::packTakeLiftRsp(const LiftCtrlMessageTakeLiftRsp
     return new string(jresponse.ToString());
 }
 
-string *LiftCtrlRequestPacker ::packLiftStatusRsp(const LiftCtrlMessageLiftStatusRsp &message)
+string* LiftCtrlRequestPacker :: packBookLiftSimpleRsp(const LiftCtrlMessageBookLiftSimpleRsp &message)
+{
+    CJsonObject jresponse;
+    jresponse.Add("retcode", message.retcode());
+    jresponse.Add("msg", message.msg());
+    CJsonObject jdata;
+    jdata.Add("ackCode", message.ackCode());
+    jdata.Add("elevatorId", message.elevatorId());
+    jresponse.Add("data", jdata);
+    return new string(jresponse.ToString());
+}
+
+string* LiftCtrlRequestPacker :: packTakeLiftSimpleRsp(const LiftCtrlMessageTakeLiftSimpleRsp &message)
+{
+    CJsonObject jresponse;
+    jresponse.Add("retcode", message.retcode());
+    jresponse.Add("msg", message.msg());
+    CJsonObject jdata;
+    jdata.Add("ackCode", message.ackCode());
+    jresponse.Add("data", jdata);
+    return new string(jresponse.ToString());
+}
+
+string* LiftCtrlRequestPacker :: packLiftStatusRsp(const LiftCtrlMessageLiftStatusRsp &message)
 {
     CJsonObject jresponse;
     jresponse.Add("retcode", message.retcode());
@@ -282,6 +345,14 @@ LiftCtrlMessageReq *LiftCtrlRequestPacker ::unpack(const string &path, const str
     else if (path.compare("/liftCtrl/v3/takeLift") == 0)
     {
         return unpackTakeLiftReq(raw_data);
+    }
+    else if (path.compare("/liftCtrl/v3/bookLiftSimple") == 0)
+    {
+        return unpackBookLiftSimpleReq(raw_data);
+    }
+    else if (path.compare("/liftCtrl/v3/takeLiftSimple") == 0)
+    {
+        return unpackTakeLiftSimpleReq(raw_data);
     }
     else if (path.compare("/liftCtrl/v3/liftStatus") == 0)
     {
@@ -314,6 +385,14 @@ string *LiftCtrlRequestPacker ::pack(const LiftCtrlMessageRsp &message)
     case MSG_LIFT_CTRL_TAKE_LIFT_RSP:
     {
         return packTakeLiftRsp(dynamic_cast<const LiftCtrlMessageTakeLiftRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_BOOK_LIFT_SIMPLE_RSP:
+    {
+        return packBookLiftSimpleRsp(dynamic_cast<const LiftCtrlMessageBookLiftSimpleRsp &>(message));
+    }
+    case MSG_LIFT_CTRL_TAKE_LIFT_SIMPLE_RSP:
+    {
+        return packTakeLiftSimpleRsp(dynamic_cast<const LiftCtrlMessageTakeLiftSimpleRsp &>(message));
     }
     case MSG_LIFT_CTRL_LIFT_STATUS_RSP:
     {
