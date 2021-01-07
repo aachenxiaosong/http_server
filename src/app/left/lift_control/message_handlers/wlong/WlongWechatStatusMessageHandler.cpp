@@ -86,11 +86,15 @@ int WlongWechatStatusMessageHandler :: handle(const LiftCtrlMessageReq &request)
             } else {
                 rsp.doorStatus("error");
             }
+        } else {
+            rsp.retcode(1);
+            rsp.msg("calling WangLong lift status interface rejected for " + wl_lift_status.msg);
+            LOGT(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "calling WangLong lift status interface rejected for " + wl_lift_status.msg);
         }
     } else {
         rsp.retcode(1);
         rsp.msg("calling WangLong lift status interface failed");
-        LOGT(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "handle request of wlong lift status failed");
+        LOGT(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "calling WangLong lift status interface failed");
     }
     //send ack
     string *content = mPacker.pack(rsp);

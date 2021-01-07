@@ -78,20 +78,30 @@ int WlongWechatCtrlMessageHandler :: handle(const LiftCtrlMessageReq &request)
             WlongLiftStatus status;
             ret = wlong_lift_ctrl.getElevatorStatus(atoi(rsp.elevatorId().c_str()), status);
             if (ret == 0) {
-                rsp.curFloor(to_string(status.cur_floor));
-                if (status.upward) {
-                    rsp.upDown("up");
+                if (status.code == 0)
+                {
+                    rsp.curFloor(to_string(status.cur_floor));
+                    if (status.upward)
+                    {
+                        rsp.upDown("up");
+                    }
+                    else
+                    {
+                        rsp.upDown("down");
+                    }
                 } else {
-                    rsp.upDown("down");
+                    rsp.msg("get lift status failed for calling Wanglong interface rejected for " + status.msg);
+                    LOGE(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "get lift status failed for calling Wanglong interface rejected for " + status.msg);
                 }
             } else {
                 //booking lift ok, but geting status fialed => still set retcode as 0
-                rsp.msg(rsp.msg() + ", get lift status failed");
-                LOGE(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "calling Wanglong get status interface failed");
+                rsp.msg("get lift status failed for calling WangLong interface failed");
+                LOGE(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "get lift status failed for calling WangLong interface failed");
             }
         } else {
-            LOGT(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "calling WangLong book lift interface succeed, but request is rejected");
+            LOGT(WLONG_WECHAT_CTRL_MSG_HANDLER_TAG, "calling WangLong book lift interface rejected for " + wl_response.msg);
             rsp.retcode(1);
+            rsp.msg(rsp.msg() + "calling WangLong book lift interface rejected for " + wl_response.msg);
         }
     } else {
         rsp.retcode(1);
