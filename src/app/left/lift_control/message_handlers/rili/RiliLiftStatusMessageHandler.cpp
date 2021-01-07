@@ -19,6 +19,7 @@ LiftCtrlMessageRsp* RiliLiftStatusMessageHandler :: handle(const LiftCtrlMessage
     if (request.type() != MSG_LIFT_CTRL_LIFT_STATUS_REQ) {
         return NULL;
     }
+    LOGT(RILI_LIFT_STATUS_MSG_HANDLER_TAG, "request message is handling...");
     const LiftCtrlMessageLiftStatusReq& req = dynamic_cast<const LiftCtrlMessageLiftStatusReq&>(request);
     LiftCtrlMessageLiftStatusRsp rsp;
     //step1: 获取homeId获取楼栋
@@ -34,7 +35,7 @@ LiftCtrlMessageRsp* RiliLiftStatusMessageHandler :: handle(const LiftCtrlMessage
     if (!not_found_msg.empty()) {
         rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
-        
+        LOGE(RILI_LIFT_STATUS_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageLiftStatusRsp(rsp);
     }
     //step2: 调用rili电梯状态接口

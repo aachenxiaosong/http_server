@@ -18,6 +18,7 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
     if (request.type() != MSG_LIFT_CTRL_TAKE_LIFT_REQ) {
         return NULL;
     }
+    LOGT(WLONG_TAKE_LIFT_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageTakeLiftReq& req = (LiftCtrlMessageTakeLiftReq&)request;
     LiftCtrlMessageTakeLiftRsp rsp;
     //step1: 获取基本参数:appId,appSecret,license
@@ -52,6 +53,7 @@ LiftCtrlMessageRsp* WlongTakeLiftMessageHandler :: handle(const LiftCtrlMessageR
         rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
+        LOGE(WLONG_TAKE_LIFT_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageTakeLiftRsp(rsp);
     }
     //step4: 根据设备编码找到电梯id

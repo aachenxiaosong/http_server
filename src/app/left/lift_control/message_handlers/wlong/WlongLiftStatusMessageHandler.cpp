@@ -18,6 +18,7 @@ LiftCtrlMessageRsp* WlongLiftStatusMessageHandler :: handle(const LiftCtrlMessag
     if (request.type() != MSG_LIFT_CTRL_LIFT_STATUS_REQ) {
         return NULL;
     }
+    LOGT(WLONG_LIFT_STATUS_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageLiftStatusReq& req = (LiftCtrlMessageLiftStatusReq&)request;
     LiftCtrlMessageLiftStatusRsp rsp;
     //step1: 获取基本参数:appId,appSecret,license
@@ -32,6 +33,7 @@ LiftCtrlMessageRsp* WlongLiftStatusMessageHandler :: handle(const LiftCtrlMessag
     if (!not_found_msg.empty()) {
         rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
+        LOGE(WLONG_LIFT_STATUS_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageLiftStatusRsp(rsp);
     }
     //step2: 调用wlong乘梯接口

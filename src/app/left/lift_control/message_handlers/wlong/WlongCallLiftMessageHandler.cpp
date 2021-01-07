@@ -18,6 +18,7 @@ LiftCtrlMessageRsp* WlongCallLiftMessageHandler :: handle(const LiftCtrlMessageR
     if (request.type() != MSG_LIFT_CTRL_CALL_LIFT_REQ) {
         return NULL;
     }
+    LOGT(WLONG_CALL_LIFT_MSG_HANDLER_TAG, "request message is handling...");
     const LiftCtrlMessageCallLiftReq& req = dynamic_cast<const LiftCtrlMessageCallLiftReq&>(request);
     LiftCtrlMessageCallLiftRsp rsp;
     //step1: 获取基本参数:appId,appSecret,license
@@ -43,6 +44,7 @@ LiftCtrlMessageRsp* WlongCallLiftMessageHandler :: handle(const LiftCtrlMessageR
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
+        LOGE(WLONG_CALL_LIFT_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageCallLiftRsp(rsp);
     }
     int i_cluster_id = atoi(cluster_id.c_str());

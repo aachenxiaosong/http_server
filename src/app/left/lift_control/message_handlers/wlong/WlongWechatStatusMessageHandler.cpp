@@ -18,7 +18,7 @@ int WlongWechatStatusMessageHandler :: handle(const LiftCtrlMessageReq &request)
     if (request.type() != MSG_LIFT_CTRL_WECHAT_STATUS) {
         return -1;
     }
-    LOGT(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "request is being handled");
+    LOGT(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "request message is handling...");
     const LiftCtrlMessageWechatStatus& req = dynamic_cast<const LiftCtrlMessageWechatStatus&>(request);
     LiftCtrlMessageWechatStatusAck rsp;
     rsp.reqId(req.reqId());
@@ -46,7 +46,7 @@ int WlongWechatStatusMessageHandler :: handle(const LiftCtrlMessageReq &request)
     if (!not_found_msg.empty()) {
         rsp.retcode(RETCODE_ERROR);
         rsp.msg(not_found_msg);
-        LOGE(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, "%s", not_found_msg.c_str());
+        LOGE(WLONG_WECHAT_STATUS_MSG_HANDLER_TAG, not_found_msg);
         //send ack
         string *content = mPacker.pack(rsp);
         MqData data(MQ_TOPIC_SULINK_LIFT_CTRL, (void *)content->c_str(), content->length() + 1);

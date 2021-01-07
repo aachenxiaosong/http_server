@@ -19,6 +19,7 @@ LiftCtrlMessageRsp* SlingshCallLiftMessageHandler :: handle(const LiftCtrlMessag
     if (request.type() != MSG_LIFT_CTRL_CALL_LIFT_REQ) {
         return NULL;
     }
+    LOGT(SLINGSH_CALL_LIFT_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageCallLiftReq& req = (LiftCtrlMessageCallLiftReq &)request;
     LiftCtrlMessageCallLiftRsp rsp;
     //step1: 根据homeId获取群控器的ip和端口
@@ -36,6 +37,7 @@ LiftCtrlMessageRsp* SlingshCallLiftMessageHandler :: handle(const LiftCtrlMessag
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
+        LOGE(SLINGSH_CALL_LIFT_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageCallLiftRsp(rsp);
     }
     //TODO: 只支持到达1楼，updown参数无效了

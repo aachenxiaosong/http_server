@@ -19,6 +19,7 @@ LiftCtrlMessageRsp* SlingshBookLiftInterMessageHandler :: handle(const LiftCtrlM
     if (request.type() != MSG_LIFT_CTRL_BOOK_LIFT_INTER_REQ) {
         return NULL;
     }
+    LOGT(SLINGSH_BOOK_LIFT_INTER_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageBookLiftInterReq& req = (LiftCtrlMessageBookLiftInterReq &)request;
     LiftCtrlMessageBookLiftInterRsp rsp;
     
@@ -40,6 +41,7 @@ LiftCtrlMessageRsp* SlingshBookLiftInterMessageHandler :: handle(const LiftCtrlM
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
+        LOGE(SLINGSH_BOOK_LIFT_INTER_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageBookLiftInterRsp(rsp);
     }
     //step3: 调用slingsh远程呼梯接口

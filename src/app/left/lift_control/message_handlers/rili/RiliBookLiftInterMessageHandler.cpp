@@ -19,6 +19,7 @@ LiftCtrlMessageRsp* RiliBookLiftInterMessageHandler :: handle(const LiftCtrlMess
     if (request.type() != MSG_LIFT_CTRL_BOOK_LIFT_INTER_REQ) {
         return NULL;
     }
+    LOGT(RILI_BOOK_LIFT_INTER_MSG_HANDLER_TAG, "request message is handling...");
     const LiftCtrlMessageBookLiftInterReq& req = dynamic_cast<const LiftCtrlMessageBookLiftInterReq&>(request);
     LiftCtrlMessageBookLiftInterRsp rsp;
     //step1: 获取dHomeId获取楼栋
@@ -43,6 +44,7 @@ LiftCtrlMessageRsp* RiliBookLiftInterMessageHandler :: handle(const LiftCtrlMess
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
+        LOGE(RILI_BOOK_LIFT_INTER_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageBookLiftInterRsp(rsp);
     }
     //step4: 调用rili远程呼梯接口

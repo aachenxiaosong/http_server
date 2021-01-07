@@ -19,6 +19,7 @@ LiftCtrlMessageRsp* SlingshBookLiftMessageHandler :: handle(const LiftCtrlMessag
     if (request.type() != MSG_LIFT_CTRL_BOOK_LIFT_REQ) {
         return NULL;
     }
+    LOGT(SLINGSH_BOOK_LIFT_MSG_HANDLER_TAG, "request message is handling...");
     LiftCtrlMessageBookLiftReq& req = (LiftCtrlMessageBookLiftReq &)request;
     LiftCtrlMessageBookLiftRsp rsp;
     
@@ -36,6 +37,7 @@ LiftCtrlMessageRsp* SlingshBookLiftMessageHandler :: handle(const LiftCtrlMessag
         rsp.msg(not_found_msg);
         rsp.ackCode(0);
         rsp.elevatorId(-1);
+        LOGE(SLINGSH_BOOK_LIFT_MSG_HANDLER_TAG, not_found_msg);
         return new LiftCtrlMessageBookLiftRsp(rsp);
     }
     if (req.authorizedHomeIds().empty() != true) {
