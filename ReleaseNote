@@ -1,3 +1,7 @@
+v3.4.1
+1. feature
+2. bugfix
+  2.1 fix bug of not checking retcode of wlong getting lift status interface
 
 v3.4.0
 1. feature
