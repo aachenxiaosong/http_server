@@ -18,25 +18,37 @@ LiftCtrlMessageRsp* QueryAccessibleFloorsMessageHandler :: handle(const LiftCtrl
     if (request.type() != MSG_LIFT_CTRL_QUERY_ACCESSIBLE_FLOORS_REQ) {
         return NULL;
     }
+    string accessible_floors = "";
     LiftCtrlMessageQueryAccessibleFloorsReq& req = (LiftCtrlMessageQueryAccessibleFloorsReq &)request;
     LiftCtrlMessageQueryAccessibleFloorsRsp rsp;
     LOGT(QUERY_ACCESSIBLE_FLOORS_MSG_HANDLER_TAG, "request message is handling...");
     //part1: user authorized floors
     for (auto home_id : req.authorizedHomeIds()) {
-        rsp.accessibleFloors().push_back(SulinkLiftInitData :: getFloorNoBySpaceId(home_id));
+        string floor = SulinkLiftInitData :: getFloorNoBySpaceId(home_id);
+        if (floor.empty()) {
+	  LOGE(QUERY_ACCESSIBLE_FLOORS_MSG_HANDLER_TAG, "floor number not found for home_id" + home_id);
+        } else {
+          rsp.accessibleFloors().push_back(floor);
+          accessible_floors += floor;
+          accessible_floors += " ";
+        }
     }
     //part2: public floors
     char_separator<char> sep(",");
     tokenizer<char_separator<char> > tok(SulinkLiftInitData :: getDevicePubFloors(req.deviceCode()), sep);
     for (auto substr :  tok) {
         rsp.accessibleFloors().push_back(substr);
+        accessible_floors += substr;
+        accessible_floors += " ";
     }
     if (rsp.accessibleFloors().empty()) {
         rsp.retcode(RETCODE_ERROR);
         rsp.msg("no accessible floor found");
+	LOGE(QUERY_ACCESSIBLE_FLOORS_MSG_HANDLER_TAG, "no accessible floor found");
     } else {
         rsp.retcode(RETCODE_OK);
         rsp.msg("OK");
+	LOGT(QUERY_ACCESSIBLE_FLOORS_MSG_HANDLER_TAG, "get accessible floor " + accessible_floors);
     }
     return new LiftCtrlMessageQueryAccessibleFloorsRsp(rsp);
 }
