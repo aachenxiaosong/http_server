@@ -7,6 +7,8 @@
 #include "WlongBookLiftInterMessageHandler.hpp"
 #include "WlongTakeLiftMessageHandler.hpp"
 #include "WlongLiftStatusMessageHandler.hpp"
+#include "WlongBookLiftSimpleMessageHandler.hpp"
+#include "WlongTakeLiftSimpleMessageHandler.hpp"
 #include "RiliBookLiftMessageHandler.hpp"
 #include "RiliCallLiftMessageHandler.hpp"
 #include "RiliBookLiftInterMessageHandler.hpp"
@@ -41,6 +43,8 @@ private:
     WlongBookLiftInterMessageHandler mWlongBookLiftInterHandler;
     WlongTakeLiftMessageHandler mWlongTakeLiftHandler;
     WlongLiftStatusMessageHandler mWlongLiftStatusHandler;
+	WlongBookLiftSimpleMessageHandler mWlongBookLiftSimpleHandler;
+	WlongTakeLiftSimpleMessageHandler mWlongTakeLiftSimpleHandler;
     LiftCtrlRequestHandler mWlongHttpHandler;
     //rili http message handlers
     RiliBookLiftMessageHandler mRiliBookLiftHandler;

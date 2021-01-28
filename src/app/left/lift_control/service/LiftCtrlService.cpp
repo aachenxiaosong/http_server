@@ -17,6 +17,8 @@ LiftCtrlService :: LiftCtrlService() :
     mWlongHttpHandler.addMessageHandler(&mWlongBookLiftInterHandler);
     mWlongHttpHandler.addMessageHandler(&mWlongTakeLiftHandler);
     mWlongHttpHandler.addMessageHandler(&mWlongLiftStatusHandler);
+	mWlongHttpHandler.addMessageHandler(&mWlongBookLiftSimpleHandler);
+	mWlongHttpHandler.addMessageHandler(&mWlongTakeLiftSimpleHandler);
     mWlongHttpHandler.addMessageHandler(&mQueryAccessibleFloorsHandler);
 
     mRiliHttpHandler.addMessageHandler(&mRiliBookLiftHandler);
