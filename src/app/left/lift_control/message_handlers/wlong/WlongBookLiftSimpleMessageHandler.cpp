@@ -7,7 +7,7 @@
 
 #define WLONG_BOOK_LIFT_SIMPLE_MSG_HANDLER_TAG "wlong_book_lift_simple_msg_handler"
 
-WlongBookLiftSimpleMessageHandler :: WlongBookLiftSimpleMessageHandler() : ILiftCtrlHttpMessageHandler("sling_book_lift_simple_handler")
+WlongBookLiftSimpleMessageHandler :: WlongBookLiftSimpleMessageHandler() : ILiftCtrlHttpMessageHandler("wlong_book_lift_simple_handler")
 {
 }
 

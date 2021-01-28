@@ -43,8 +43,8 @@ private:
     WlongBookLiftInterMessageHandler mWlongBookLiftInterHandler;
     WlongTakeLiftMessageHandler mWlongTakeLiftHandler;
     WlongLiftStatusMessageHandler mWlongLiftStatusHandler;
-	WlongBookLiftSimpleMessageHandler mWlongBookLiftSimpleHandler;
-	WlongTakeLiftSimpleMessageHandler mWlongTakeLiftSimpleHandler;
+    WlongBookLiftSimpleMessageHandler mWlongBookLiftSimpleHandler;
+    WlongTakeLiftSimpleMessageHandler mWlongTakeLiftSimpleHandler;
     LiftCtrlRequestHandler mWlongHttpHandler;
     //rili http message handlers
     RiliBookLiftMessageHandler mRiliBookLiftHandler;
