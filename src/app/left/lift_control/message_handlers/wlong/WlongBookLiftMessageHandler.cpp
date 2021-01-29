@@ -30,14 +30,14 @@ LiftCtrlMessageRsp* WlongBookLiftMessageHandler :: handle(const LiftCtrlMessageR
     string cluster_id = SulinkLiftInitData :: getClusterIdBySpaceId(req.defaultHomeId());
     string cluster_url = SulinkLiftInitData :: getClusterUrlBySpaceId(req.defaultHomeId());
     string open_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.defaultHomeId());
-    string unlock_floors = open_floor;//for wlong, no open floor supported, so add it to unlock list
+    string unlock_floors = "";
     for (int i = 0; i < req.authorizedHomeIds().size(); i++) {
         string unlock_floor = SulinkLiftInitData :: getFloorNoBySpaceId(req.authorizedHomeIds()[i]);
         if (unlock_floor.empty() != true) {
-            /* if (unlock_floors.empty() != true) {
+            if (unlock_floors.empty() != true) {
                 unlock_floors += ",";
-            }*/
-            unlock_floors += ",";
+            }
+            //unlock_floors += ",";
             unlock_floors += unlock_floor;
         }
     }

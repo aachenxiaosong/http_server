@@ -1,3 +1,10 @@
+v3.4.3
+1. feature
+2. bugfix
+  2.1 remove repeated floors in queryAccessibleFloors interface
+  2.2 split open floor and unlock floor in wanglong bookElevator interface
+
+
 v3.4.1
 1. feature
 2. bugfix
