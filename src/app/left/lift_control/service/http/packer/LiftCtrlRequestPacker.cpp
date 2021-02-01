@@ -90,7 +90,16 @@ LiftCtrlMessageBookLiftReq *LiftCtrlRequestPacker ::unpackBookLiftReq(const stri
     }
     if (true == jrequest.Get("unlockTime", ivalue))
     {
-        request->unlockTime(ivalue);
+        if (ivalue == 0 &&
+            (request->mode().compare(request->MODE_UNLOCK) == 0 ||
+             request->mode().compare(request->MODE_ALL) == 0))
+        {
+            request->unlockTime(SulinkLiftInitData::getUnlockTime());
+        }
+        else
+        {
+            request->unlockTime(ivalue);
+        }
     }
     else
     {
