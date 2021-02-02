@@ -14,32 +14,43 @@ SlingshLiftCtrl :: SlingshLiftCtrl(const string& url)
 
 int SlingshLiftCtrl :: bookElevator(const string& from_floor, const string& to_floor)
 {
-    //only front door
-    unsigned char request[12] = {0x02, 0x00, 0x01, 0x06, 0x01, 0x00, 0x90, 0xFF, 0x00, 0xFF, 0xFF, 0x03};
-    request[7] = (unsigned char)atoi(from_floor.c_str());
-    request[9] = (unsigned char)atoi(to_floor.c_str());
-    request[10] = (~(request[1] + request[2] + request[3] + request[4] + request[5] + request[6] + request[7] + request[8] + request[9])) + 1;
     unsigned char response[10] = {0};
     int response_len = 10;
-    LOGT(SLINGSH_LIFT_CTRL_TAG, "book elevator request: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
-         request[0], request[1], request[2], request[3], request[4], request[5], request[6], request[7], request[8], request[9], request[10], request[11]);
-    if (0 != tcpSend(request, sizeof(request), response, &response_len)) {
-        LOGE(SLINGSH_LIFT_CTRL_TAG, "book elevator request is sent failed");
-        return -1;
-    }
-    if (response_len < 9) {
-        LOGE(SLINGSH_LIFT_CTRL_TAG, "book elevator response is too short(%d bytes, 9 bytes expected)", response_len);
-        return -1;
-    }
-    LOGT(SLINGSH_LIFT_CTRL_TAG, "book elevator response: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
-         response[0], response[1], response[2], response[3], response[4], response[5], response[6], response[7], response[8]);
-    unsigned char expected_response[] = {0x02, 0x80, 0x03, 0x03, 0x91, 0xFF, 0x00, 0xEA, 0x03};
-    for (int i = 0; i < sizeof(expected_response); i++) {
-        if (response[i] != expected_response[i]) {
-            LOGE(SLINGSH_LIFT_CTRL_TAG, "book elevator response does not match");
+	
+    //only front door
+    unsigned char request[12] = {0x02, 0x00, 0x01, 0x06, 0x01, 0x00, 0x90, 0xFF, 0x00, 0xFF, 0xFF, 0x03};
+	for(int i_no = 0; i_no < 2; i_no++) {
+		if(i_no == 1) {
+            request[6] = 0x81;
+	    }
+	    request[7] = (unsigned char)atoi(from_floor.c_str());
+        request[9] = (unsigned char)atoi(to_floor.c_str());
+        request[10] = (~(request[1] + request[2] + request[3] + request[4] + request[5] + request[6] + request[7] + request[8] + request[9])) + 1;
+
+    
+        memset(response, 0, 10);
+    	response_len = 10;
+        LOGT(SLINGSH_LIFT_CTRL_TAG, "book elevator request: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
+             request[0], request[1], request[2], request[3], request[4], request[5], request[6], request[7], request[8], request[9], request[10], request[11]);
+        if (0 != tcpSend(request, sizeof(request), response, &response_len)) {
+            LOGE(SLINGSH_LIFT_CTRL_TAG, "book elevator request is sent failed");
             return -1;
         }
+        if (response_len < 9) {
+            LOGE(SLINGSH_LIFT_CTRL_TAG, "book elevator response is too short(%d bytes, 9 bytes expected)", response_len);
+            return -1;
+        }
+        LOGT(SLINGSH_LIFT_CTRL_TAG, "book elevator response: 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x 0x%x",
+             response[0], response[1], response[2], response[3], response[4], response[5], response[6], response[7], response[8]);
+        unsigned char expected_response[] = {0x02, 0x80, 0x03, 0x03, 0x91, 0xFF, 0x00, 0xEA, 0x03};
+        for (int i = 0; i < sizeof(expected_response); i++) {
+            if (response[i] != expected_response[i]) {
+                LOGE(SLINGSH_LIFT_CTRL_TAG, "book elevator response does not match");
+                return -1;
+            }
+        }
     }
+
     return 0;
 }
 
