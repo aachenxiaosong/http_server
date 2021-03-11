@@ -3,23 +3,23 @@
 
 #include <string>
 #include <vector>
-#include "IMqttMessage.hpp"
+#include "ISulinkMessage.hpp"
 
 using namespace std;
 
 
 /* data<-->数据结构 */
-class IMqttPacker {
+class ISulinkPacker {
 private:
     string mName;
 public:
-    IMqttPacker(const char *name) {mName = name;}
+    ISulinkPacker(const char *name) {mName = name;}
     string getName() {return mName;}
-    virtual ~IMqttPacker() {};
+    virtual ~ISulinkPacker() {};
     //return message need to be released by app
-    virtual IMqttMessage* unpack(const string& raw_data) = 0;
+    virtual ISulinkMessage* unpack(const string& raw_data) = 0;
     //return string need to be released by app
-    virtual string* pack(const IMqttMessage &message) = 0;
+    virtual string* pack(const ISulinkMessage &message) = 0;
 };
 
 #endif  //  SDK_MQTT_MQTT_HANDLE_IMQTT_PACKER_HPP_

@@ -1,14 +1,14 @@
-#include "Dechang.hpp"
-#include "SulinkSignature.hpp"
-#include "SulinkDeviceRegister.hpp"
+//#include "Dechang.hpp"
+//#include "SulinkSignature.hpp"
+//#include "SulinkDeviceRegister.hpp"
 #include "SulinkTraceid.hpp"
-#include "SulinkClient.hpp"
-#include "SulinkMessage.hpp"
-#include "SulinkHb.hpp"
-#include "SulinkTimeSync.hpp"
+//#include "SulinkClient.hpp"
+//#include "SulinkMessage.hpp"
+//#include "SulinkHb.hpp"
+//#include "SulinkTimeSync.hpp"
 #include "SulinkLiftInitData.hpp"
 #include "Mq.hpp"
-#include "UniDeviceInfo.hpp"
+//#include "UniDeviceInfo.hpp"
 #include "UniUtil.hpp"
 #include <iostream>
 #include <unistd.h>
@@ -23,6 +23,7 @@ using namespace std;
 
 #define TEST_NUM 11
 
+#if 0
 Dechang dechang;
 
 static void _send_add_card() {
@@ -62,7 +63,7 @@ static void _send_del_all_card() {
         sleep(5);
     }
 }
-
+#endif
 struct MqTest {
     int i;
     string s;

@@ -34,7 +34,6 @@ sdk_src := src/sdk/http/http_server \
            src/sdk/tcp/tcp_conn_mgr \
            src/sdk/udp/udp_server \
            src/sdk/udp/udp_client \
-           src/sdk/mqtt/mqtt_client \
            src/sdk/message/message_type \
            src/sdk/mq
 
@@ -46,8 +45,7 @@ sdk_inc := src/sdk/http/http_server \
            src/sdk/tcp/tcp_handle \
            src/sdk/udp/udp_server \
            src/sdk/udp/udp_client \
-           src/sdk/mqtt/mqtt_client \
-           src/sdk/mqtt/mqtt_handle \
+           src/sdk/sulink/sulink_handle \
            src/sdk/message \
            src/sdk/message/message_type \
            src/sdk/message/message_handler \
@@ -72,13 +70,12 @@ app_src := src/app \
            src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \
-           src/app/up/sulink/mqtt \
-           src/app/up/sulink/mqtt/packer \
-           src/app/up/sulink/mqtt/message_handlers \
-           src/app/down/child_device/dechang \
-           src/app/down/child_device/dechang/tcp \
-           src/app/down/child_device/dechang/tcp/packer \
-           src/app/down/child_device/dechang/tcp/message_handlers
+           src/app/up/sulink/http/packer \
+           src/app/up/sulink/http/message_handlers \
+#           src/app/down/child_device/dechang \
+#           src/app/down/child_device/dechang/tcp \
+#           src/app/down/child_device/dechang/tcp/packer \
+#           src/app/down/child_device/dechang/tcp/message_handlers
 
 app_inc := src/app \
            src/app/config \
@@ -101,15 +98,14 @@ app_inc := src/app \
            src/app/up/sulink \
            src/app/up/sulink/data \
            src/app/up/sulink/http \
-           src/app/up/sulink/mqtt \
-           src/app/up/sulink/mqtt/messages \
-           src/app/up/sulink/mqtt/packer \
-           src/app/up/sulink/mqtt/message_handlers \
-           src/app/down/child_device/dechang \
-           src/app/down/child_device/dechang/tcp \
-           src/app/down/child_device/dechang/tcp/messages \
-           src/app/down/child_device/dechang/tcp/packer \
-           src/app/down/child_device/dechang/tcp/message_handlers
+           src/app/up/sulink/http/messages \
+           src/app/up/sulink/http/packer \
+           src/app/up/sulink/http/message_handlers \
+#           src/app/down/child_device/dechang \
+#           src/app/down/child_device/dechang/tcp \
+#           src/app/down/child_device/dechang/tcp/messages \
+#           src/app/down/child_device/dechang/tcp/packer \
+#           src/app/down/child_device/dechang/tcp/message_handlers
 
 lib_inc := lib/libevent/inc \
            lib/mqtt/inc \
@@ -123,6 +119,7 @@ test_inc := src/sdk/tcp/test
 
 SRC := $(utils_src) $(sdk_src) $(app_src) $(test_src)
 INC := $(utils_inc) $(sdk_inc) $(app_inc) $(lib_inc) $(test_inc)
+
 
 # functions -----------------------
 change_file_location = $(foreach f,$1,$2/$(notdir $(f)))

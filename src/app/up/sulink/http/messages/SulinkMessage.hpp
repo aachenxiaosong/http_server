@@ -1,7 +1,7 @@
 #ifndef APP_UP_SULINK_MQTT_MESSAGES_SULINK_MESSAGE_HPP_
 #define APP_UP_SULINK_MQTT_MESSAGES_SULINK_MESSAGE_HPP_
 
-#include "IMqttMessage.hpp"
+#include "ISulinkMessage.hpp"
 #include <string>
 
 #define SPACE_TYPE_HOME     "home"
@@ -11,7 +11,7 @@
 
 using namespace std;
 //基础消息
-class SulinkMessage : public IMqttMessage {
+class SulinkMessage : public ISulinkMessage {
     MEMBER(string, traceId)
     MEMBER(int, payloadVersion)
     MEMBER(string, brand)
@@ -25,7 +25,7 @@ class SulinkMessage : public IMqttMessage {
     SERI(method)
     SERI_END
 public:
-    SulinkMessage(MessageType type) : IMqttMessage(type) {
+    SulinkMessage(MessageType type) : ISulinkMessage(type) {
         payloadVersion(1);
     }
     virtual ~SulinkMessage() {}

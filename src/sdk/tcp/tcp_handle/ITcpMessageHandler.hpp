@@ -15,7 +15,7 @@ class ITcpMessageHandler : public IMessageHandler {
     ITcpMessageHandler(const char* name) : IMessageHandler(name) {}
     virtual ~ITcpMessageHandler() {}
     void setConn(TcpConn *conn) { mConn = conn; }
-    virtual int handle(const Message &message) = 0;
+    virtual Message* handle(const Message &message) = 0;
 };
 
 #endif  //   SDK_TCP_TCP_HANDLE_I_TCP_MESSAGE_HANDLER_HPP_
