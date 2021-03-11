@@ -15,22 +15,6 @@ int SulinkRequestHandler :: addMessageHandler(ISulinkMessageHandler *handler) {
     return 0;
 }
 
-string SulinkRequestHandler :: failureResponse(int ret_code, string msg) {
-    string ret = "";
-    #if 0
-    LiftCtrlMessageRsp m_rsp;
-    m_rsp.retcode(ret_code);
-    m_rsp.msg(msg);
-    string *rsp = mPacker.pack(m_rsp);
-    if (NULL != rsp)
-    {
-        ret = *rsp;
-        delete rsp;
-    }
-    #endif
-    return ret;
-}
-
 int SulinkRequestHandler :: handle(const string& path, const string& request, string& response) {
     int ret = -1;
     ISulinkMessageHandler *i_handler = NULL;
