@@ -1,16 +1,23 @@
 #ifndef APP_UP_SULINK_SULINK_HPP_
 #define APP_UP_SULINK_SULINK_HPP_
 
-#include "SulinkHb.hpp"
-#include "SulinkClient.hpp"
+#include "SulinkRequestHandler.hpp"
+#include "SulinkPacker.hpp"
+#include "SulinkRecvLiftInfoHandler.hpp"
+//#include "SulinkRecvLiftCtrlHandler.hpp"
+//#include "SulinkRecvLiftStatusHandler.hpp"
 
 class Sulink {
 private:
-    SulinkHb mHb;
-    SulinkClient mMqttClient;
+    SulinkPacker mPacker;
+    SulinkRecvLiftInfoHandler mRecvLiftInfoHandler;
+    //SulinkRecvLiftCtrlHandler mRecvLiftCtrlHandler;
+    //SulinkRecvLiftStatusHandler mRecvLiftStatusHandler;
+    
+    SulinkRequestHandler mSulinkHttpHandler;
 public:
-    Sulink() = default;
-    ~Sulink() = default;
+    Sulink();
+    ~Sulink(){}
     int init();
 };
 
